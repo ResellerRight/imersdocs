@@ -5,41 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMersDocs | Digital Asset Vault</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <style>
         :root {
             --accent-copper: #C68642;
-            --accent-gold: #FFD700;
             --bg-dark: #0A0A0B;
-            --card-dark: rgba(20, 20, 22, 0.8);
             --bg-light: #FDFCFB; 
-            --card-light: rgba(255, 255, 255, 0.9);
-            --border-glow: rgba(198, 134, 66, 0.2);
+            --ivory: #F5F5F0;
         }
 
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.5s ease; overflow-x: hidden; }
-        .dark { background-color: var(--bg-dark); color: #F5F5F0; }
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            transition: background-color 0.5s ease; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .dark { background-color: var(--bg-dark); color: var(--ivory); }
         .light { background-color: var(--bg-light); color: #1A1A1A; }
 
+        /* Glassmorphism Refinement */
         .glass-card {
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .box-art {
-            height: 140px;
+        /* Admin Field Refinement: No more "rapet" */
+        .admin-field {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: var(--ivory) !important;
+            border-radius: 12px;
+            padding: 0.85rem 1.2rem;
             width: 100%;
+            outline: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .admin-field:focus { border-color: var(--accent-copper) !important; background: rgba(255, 255, 255, 0.05) !important; }
+        
+        select.admin-field option { background-color: #121214; color: white; }
+
+        /* Product Box Art - More subtle */
+        .box-art {
+            height: 100px;
+            width: 100%;
+            border-radius: 20px 20px 0 0;
             position: relative;
             overflow: hidden;
-            border-radius: 24px 24px 0 0;
+            opacity: 0.9;
         }
-
-        .box-wamel { background: linear-gradient(135deg, #059669, #10b981); }
-        .box-gate { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
-        .box-aibox { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
-        .box-vault { background: linear-gradient(135deg, #b45309, #f59e0b); }
+        .box-wamel { background: linear-gradient(135deg, #064e3b, #059669); }
+        .box-gate { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+        .box-aibox { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
+        .box-vault { background: linear-gradient(135deg, #78350f, #d97706); }
 
         .text-gradient {
             background: linear-gradient(135deg, #FFF 0%, var(--accent-copper) 100%);
@@ -47,139 +68,212 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .copy-button:active { transform: scale(0.9); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes subtleFade {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-slide { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+        .animate-vault { animation: subtleFade 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+
+        .asset-card {
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.015);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        .asset-card:hover { 
+            border-color: rgba(198, 134, 66, 0.25);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .code-font { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
+
+        .preview-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(15px);
+            display: none;
+            padding: 2rem;
+        }
+
+        /* Smaller Button Style */
+        .btn-premium {
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s;
+        }
     </style>
 </head>
 <body class="dark">
 
-    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center backdrop-blur-xl border-b border-white/5">
-        <div class="flex items-center gap-3 cursor-pointer group" id="logoContainer">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-copper rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500">
-                <i class="fas fa-crown text-black text-lg"></i>
+    <!-- Navbar: Slimmer & Cleaner -->
+    <nav class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5">
+        <div class="flex items-center gap-4 cursor-pointer group" id="logoContainer">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-copper rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-3 transition-transform duration-500">
+                <i class="fas fa-layer-group text-black text-lg"></i>
             </div>
-            <h1 class="text-xl font-extrabold tracking-tighter">iMers<span class="text-[#C68642]">Docs</span></h1>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight leading-none text-white">iMers<span class="text-copper">Docs</span></h1>
+                <p class="text-[7px] font-bold opacity-30 uppercase tracking-[0.3em] mt-0.5">Asset Ecosystem</p>
+            </div>
         </div>
 
-        <div class="flex items-center gap-3">
-            <div id="bc" class="hidden md:flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/10">
-                <span onclick="showHome()" class="cursor-pointer opacity-50 hover:opacity-100">Home</span>
-                <span class="opacity-20">/</span>
-                <span id="bcActive" class="text-copper">Vault</span>
+        <div class="flex items-center gap-4">
+            <div id="navContext" class="hidden md:flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
+                <button onclick="showHome()" class="text-[9px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity">Library</button>
+                <i class="fas fa-chevron-right text-[7px] opacity-20"></i>
+                <span id="activeVaultName" class="text-[9px] font-bold uppercase tracking-widest text-copper">Select</span>
             </div>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10">
-                <i class="fas fa-moon text-sm" id="themeIcon"></i>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:bg-white/10">
+                <i class="fas fa-adjust text-xs" id="themeIcon"></i>
             </button>
         </div>
     </nav>
 
-    <main id="homeView" class="pt-32 pb-20 px-6 max-w-7xl mx-auto animate-slide">
-        <header class="text-center mb-16">
-            <h2 class="text-5xl md:text-7xl font-black mb-6 text-gradient tracking-tighter leading-none">
-                Copy. Paste. <span class="italic font-serif opacity-90 text-white">Convert.</span>
+    <!-- Home View: Reduced Font Sizes -->
+    <main id="homeView" class="pt-40 pb-20 px-8 max-w-6xl mx-auto animate-vault">
+        <header class="max-w-2xl mb-20">
+            <h2 class="text-3xl md:text-5xl font-bold mb-5 text-gradient tracking-tight leading-tight">
+                Library Aset <br><span class="text-white opacity-70">Terorganisir & Efisien.</span>
             </h2>
-            <div class="relative max-w-2xl mx-auto group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-copper/20 to-orange-500/20 rounded-3xl blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
-                <div class="relative glass-card rounded-2xl overflow-hidden bg-white/5">
-                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Search assets, prompts, or scripts..." 
-                        class="w-full bg-transparent py-6 pl-14 pr-6 text-lg outline-none placeholder:text-white/20">
-                    <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-copper/50"></i>
+            <p class="text-white/40 max-w-md text-base font-normal leading-relaxed mb-10">
+                Akses cepat ke copywriting, visual, dan kode HTML premium untuk kebutuhan marketing Anda.
+            </p>
+            <div class="relative group max-w-lg">
+                <div class="absolute -inset-0.5 bg-copper/10 rounded-xl blur opacity-20 group-focus-within:opacity-100 transition duration-500"></div>
+                <div class="relative glass-card rounded-xl overflow-hidden bg-white/5 flex items-center">
+                    <i class="fas fa-search ml-5 text-copper/30 text-sm"></i>
+                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari aset..." 
+                        class="w-full bg-transparent py-4 px-5 text-sm outline-none placeholder:text-white/20">
                 </div>
             </div>
         </header>
 
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Product Cards will appear here -->
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Product Cards dynamic -->
         </div>
     </main>
 
-    <section id="vaultView" class="hidden pt-32 pb-20 px-6 max-w-4xl mx-auto animate-slide">
-        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <div>
-                <h3 id="vaultTitle" class="text-4xl font-black mb-2 italic">Vault Explorer</h3>
-                <p id="vaultDesc" class="opacity-40 text-[10px] font-bold uppercase tracking-[0.2em]">Browsing Content Library</p>
+    <!-- Vault View: Cleaner Hierarchy -->
+    <section id="vaultView" class="hidden pt-40 pb-20 px-8 max-w-6xl mx-auto animate-vault">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
+            <div class="max-w-md">
+                <div id="vaultBadge" class="inline-block px-2.5 py-1 rounded-md bg-copper/10 border border-copper/15 text-copper text-[8px] font-bold uppercase tracking-widest mb-3">Verified Vault</div>
+                <h3 id="vaultTitle" class="text-3xl md:text-4xl font-bold mb-2 uppercase tracking-tight text-white">Product Name</h3>
+                <p id="vaultSummary" class="opacity-30 text-xs font-medium">Katalog aset pemasaran yang siap digunakan secara instan.</p>
             </div>
             <div id="filterTabs" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
                 <!-- Filters dynamic -->
             </div>
         </div>
         
-        <div id="contentList" class="space-y-4">
-            <!-- Items dynamic -->
+        <div id="contentGroups" class="space-y-24">
+            <!-- Items grouped by category -->
         </div>
     </section>
 
-    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-3xl bg-black/90 flex items-center justify-center p-6">
-        <div class="glass-card p-10 w-full max-w-sm text-center rounded-[32px] border-white/10">
-            <div class="w-16 h-16 bg-gradient-to-br from-copper to-orange-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-2xl">
-                <i class="fas fa-key text-black text-2xl"></i>
+    <!-- HTML Preview -->
+    <div id="htmlPreview" class="preview-overlay">
+        <div class="w-full h-full flex flex-col max-w-5xl mx-auto">
+            <div class="flex justify-between items-center mb-5">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-white">Live <span class="text-copper">Preview</span></h3>
+                <button onclick="closeHtmlPreview()" class="w-10 h-10 glass-card rounded-xl flex items-center justify-center text-white">
+                    <i class="fas fa-times text-xs"></i>
+                </button>
             </div>
-            <h3 class="text-2xl font-bold mb-2">Vault Master Key</h3>
-            <p class="text-white/40 text-sm mb-8">Access the backstage asset management.</p>
-            <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-center tracking-[0.5em] mb-6 outline-none focus:border-copper transition-all">
-            <div class="flex gap-3">
-                <button onclick="closeAdmin()" class="flex-1 py-4 text-[10px] font-bold opacity-40 uppercase tracking-widest">Cancel</button>
-                <button onclick="verifyAccess()" class="flex-[2] bg-gradient-to-r from-copper to-orange-500 py-4 rounded-2xl font-black text-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all">VERIFY</button>
+            <div class="flex-1 bg-white rounded-2xl overflow-hidden shadow-2xl">
+                <iframe id="previewFrame" class="w-full h-full border-none"></iframe>
             </div>
         </div>
     </div>
 
-    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-[#0A0A0B] overflow-y-auto">
-        <div class="max-w-6xl mx-auto p-6 md:p-12">
-            <div class="flex justify-between items-center mb-12">
-                <h2 class="text-3xl font-black italic">Backstage <span class="text-copper">Control</span></h2>
-                <button onclick="closeAdmin()" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-white/10"><i class="fas fa-times"></i></button>
+    <!-- Admin Master Key -->
+    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-xl bg-black/80 flex items-center justify-center p-6">
+        <div class="glass-card p-10 w-full max-w-xs text-center rounded-[32px] border-white/10 shadow-2xl">
+            <div class="w-16 h-16 bg-white/5 rounded-2xl mx-auto mb-6 flex items-center justify-center border border-white/10">
+                <i class="fas fa-shield-alt text-copper text-2xl"></i>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <h3 class="text-lg font-bold mb-8 uppercase tracking-widest text-white">Verify Access</h3>
+            <input type="password" id="adminPass" placeholder="••••" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-center tracking-[0.5em] mb-6 outline-none focus:border-copper text-white font-bold">
+            <div class="flex gap-3">
+                <button onclick="closeAdmin()" class="flex-1 py-3 text-[9px] font-bold opacity-40 uppercase tracking-widest">Cancel</button>
+                <button onclick="verifyAccess()" class="flex-[2] bg-copper text-black py-3 rounded-xl font-bold uppercase text-[9px] tracking-widest hover:brightness-110">Enter</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard: More Airy -->
+    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-[#080809] overflow-y-auto">
+        <div class="max-w-6xl mx-auto p-8 md:p-20">
+            <div class="flex justify-between items-center mb-16">
+                <div>
+                    <h2 class="text-2xl font-bold text-white uppercase tracking-tight">Backstage <span class="text-copper">Management</span></h2>
+                    <p class="text-white/20 text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5">Control center for digital assets</p>
+                </div>
+                <button onclick="closeAdmin()" class="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-white hover:bg-white/5"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                <!-- FORM -->
                 <div class="lg:col-span-5">
-                    <form id="adminForm" onsubmit="saveAsset(event)" class="glass-card p-8 space-y-4 rounded-[32px] sticky top-12">
+                    <form id="adminForm" onsubmit="saveAsset(event)" class="glass-card p-8 space-y-6 rounded-[30px] sticky top-12 bg-white/[0.02]">
                         <input type="hidden" id="editId">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Product</label>
-                                <select id="fProduct" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper appearance-none">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest text-white">Product</label>
+                                <select id="fProduct" class="admin-field">
                                     <option value="iMersWAMEL">iMersWAMEL</option>
                                     <option value="iMersGate">iMersGate</option>
                                     <option value="iMersAiBox">iMersAiBox</option>
                                     <option value="ResellerVault">ResellerVault</option>
                                 </select>
                             </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Category</label>
-                                <input type="text" id="fCategory" placeholder="e.g. Promo" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper">
+                            <div class="space-y-2">
+                                <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest text-white">Category</label>
+                                <input type="text" id="fCategory" placeholder="e.g. WA Script" class="admin-field">
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Title</label>
-                            <input type="text" id="fTitle" placeholder="Asset Heading" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper">
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest text-white">Asset Title</label>
+                            <input type="text" id="fTitle" placeholder="Headline..." class="admin-field">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Content</label>
-                            <textarea id="fContent" rows="8" placeholder="The conversion copy..." class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper resize-none"></textarea>
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest text-white">Image URL</label>
+                            <input type="text" id="fImage" placeholder="https://..." class="admin-field">
                         </div>
-                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-copper to-orange-500 py-5 rounded-2xl font-black text-black shadow-xl hover:shadow-copper/20 transition-all">PUBLISH ASSET</button>
+                        <div class="space-y-2">
+                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest text-white">Content / HTML</label>
+                            <textarea id="fContent" rows="6" placeholder="Paste content here..." class="admin-field resize-none leading-relaxed code-font"></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn" class="w-full bg-copper py-4 rounded-xl font-bold text-black text-[10px] uppercase tracking-widest hover:brightness-110 transition-all shadow-lg shadow-copper/10">
+                            Push to Database
+                        </button>
                     </form>
                 </div>
+                <!-- LIST -->
                 <div class="lg:col-span-7">
+                    <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-30 mb-6 text-white">Database Snapshot</h4>
                     <div id="adminList" class="space-y-3">
-                        <!-- Admin list dynamic -->
+                        <!-- Admin list items -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
+    <!-- Feedback Toast -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all duration-500">
-        <div class="glass-card bg-black/80 px-8 py-4 rounded-full border border-copper/30 flex items-center gap-3">
-            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-            <span class="text-sm font-bold tracking-tight">Copied to Vault</span>
+        <div class="glass-card bg-black/90 px-8 py-3 rounded-2xl border border-copper/20 flex items-center gap-3">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <span class="text-[9px] font-bold tracking-widest uppercase text-white">Aset Disalin</span>
         </div>
     </div>
 
@@ -196,39 +290,37 @@
                 const json = await res.json();
                 allData = json.status === 'success' ? json.data : [];
                 renderGrid();
-            } catch (e) {
-                console.error('Connection failed:', e);
-            }
+            } catch (e) { console.error('Connection failed'); }
         }
 
         function renderGrid() {
             const products = [
-                { id: 'iMersWAMEL', name: 'iMersWAMEL', class: 'box-wamel', icon: 'fa-whatsapp', desc: 'Closing Scripts' },
-                { id: 'iMersGate', name: 'iMersGate', class: 'box-gate', icon: 'fa-rocket', desc: 'Conversion Gates' },
-                { id: 'iMersAiBox', name: 'iMersAiBox', class: 'box-aibox', icon: 'fa-brain', desc: 'Expert AI Prompts' },
-                { id: 'ResellerVault', name: 'ResellerVault', class: 'box-vault', icon: 'fa-gem', desc: 'Marketing Assets' }
+                { id: 'iMersWAMEL', name: 'iMersWAMEL', class: 'box-wamel', icon: 'fa-whatsapp', desc: 'Scripts' },
+                { id: 'iMersGate', name: 'iMersGate', class: 'box-gate', icon: 'fa-bolt', desc: 'Tech' },
+                { id: 'iMersAiBox', name: 'iMersAiBox', class: 'box-aibox', icon: 'fa-microchip', desc: 'Prompts' },
+                { id: 'ResellerVault', name: 'ResellerVault', class: 'box-vault', icon: 'fa-box-open', desc: 'Assets' }
             ];
 
             const grid = document.getElementById('productGrid');
             grid.innerHTML = products.map(p => {
                 const count = allData.filter(d => d.product === p.id).length;
                 return `
-                    <div onclick="openVault('${p.id}')" class="glass-card group flex flex-col rounded-[32px] overflow-hidden cursor-pointer hover:-translate-y-2 border-white/5 bg-white/[0.02]">
+                    <div onclick="openVault('${p.id}')" class="glass-card group flex flex-col rounded-[28px] overflow-hidden cursor-pointer hover:-translate-y-2 border-white/5 bg-white/[0.01]">
                         <div class="box-art ${p.class}">
                             <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl group-hover:scale-110 transition-all duration-500">
-                                    <i class="fas ${p.icon} text-3xl text-white"></i>
+                                <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-105 transition-all duration-500">
+                                    <i class="fas ${p.icon} text-lg text-white"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="p-8">
-                            <h4 class="text-2xl font-black mb-1">${p.name}</h4>
-                            <p class="text-[10px] opacity-30 uppercase tracking-[0.2em] mb-6 font-bold">${p.desc}</p>
-                            <div class="flex justify-between items-center">
-                                <span class="bg-copper/10 text-copper px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-copper/10">
-                                    ${count} ASSETS
+                            <h4 class="text-xl font-bold mb-1 text-white tracking-tight">${p.name}</h4>
+                            <p class="text-[8px] opacity-30 uppercase tracking-[0.2em] mb-6 font-bold">${p.desc}</p>
+                            <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                                <span class="text-[9px] font-bold opacity-40 uppercase tracking-widest text-copper">
+                                    ${count} Aset
                                 </span>
-                                <i class="fas fa-arrow-right text-xs opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                                <i class="fas fa-arrow-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
                             </div>
                         </div>
                     </div>
@@ -240,49 +332,106 @@
             currentProduct = id;
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('vaultView').classList.remove('hidden');
-            document.getElementById('bc').classList.remove('hidden');
+            document.getElementById('navContext').classList.remove('hidden');
             document.getElementById('vaultTitle').innerText = id;
-            document.getElementById('bcActive').innerText = id;
+            document.getElementById('activeVaultName').innerText = id;
             renderFilters(id);
             renderContent(id);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showHome() {
             document.getElementById('homeView').classList.remove('hidden');
             document.getElementById('vaultView').classList.add('hidden');
-            document.getElementById('bc').classList.add('hidden');
+            document.getElementById('navContext').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderFilters(id) {
             const data = allData.filter(d => d.product === id);
-            const cats = ['All', ...new Set(data.map(d => d.category))];
+            const cats = ['All Assets', ...new Set(data.map(d => d.category))];
             document.getElementById('filterTabs').innerHTML = cats.map(c => `
-                <button onclick="renderContent('${id}', '${c}')" class="px-6 py-2 whitespace-nowrap rounded-full glass-card text-[10px] font-black uppercase tracking-widest hover:bg-copper hover:text-black transition-all">
+                <button onclick="renderContent('${id}', '${c}')" class="px-5 py-2 whitespace-nowrap rounded-lg glass-card text-[9px] font-bold uppercase tracking-widest hover:bg-copper hover:text-black transition-all border border-white/5 text-white/50 hover:text-black">
                     ${c}
                 </button>
             `).join('');
         }
 
-        function renderContent(id, filter = 'All') {
+        function renderContent(id, filter = 'All Assets') {
             let data = allData.filter(d => d.product === id);
-            if(filter !== 'All') data = data.filter(d => d.category === filter);
+            if(filter !== 'All Assets') data = data.filter(d => d.category === filter);
 
-            document.getElementById('contentList').innerHTML = data.map(item => `
-                <div class="glass-card p-6 rounded-[28px] border-white/5 bg-white/[0.03]">
-                    <div class="flex justify-between items-start gap-4">
-                        <div class="flex-1">
-                            <span class="text-[9px] font-black uppercase text-copper tracking-[0.2em] mb-2 block">${item.category}</span>
-                            <h4 class="text-xl font-bold mb-4">${item.title}</h4>
-                            <div class="bg-black/40 p-5 rounded-2xl text-sm leading-relaxed opacity-80 border border-white/5 font-light">
-                                ${item.content}
-                            </div>
+            const categories = [...new Set(data.map(d => d.category))];
+            const container = document.getElementById('contentGroups');
+            
+            if (data.length === 0) {
+                container.innerHTML = `<div class="text-center opacity-10 py-32 font-bold text-2xl uppercase tracking-widest text-white">Empty Vault</div>`;
+                return;
+            }
+
+            container.innerHTML = categories.map(cat => {
+                const items = data.filter(i => i.category === cat);
+                return `
+                    <div class="animate-vault">
+                        <div class="flex items-center gap-6 mb-8">
+                            <h4 class="text-xl font-bold text-copper uppercase tracking-tight">${cat}</h4>
+                            <div class="h-[1px] flex-1 bg-white/5"></div>
+                            <span class="text-[8px] font-bold opacity-30 uppercase tracking-widest text-white">${items.length} Items</span>
                         </div>
-                        <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="copy-button w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-copper hover:text-black transition-all">
-                            <i class="fas fa-copy"></i>
-                        </button>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${items.map(item => {
+                                const isHtml = item.content.trim().startsWith('<');
+                                return `
+                                    <div class="asset-card group">
+                                        ${item.image_url ? `
+                                            <div class="relative overflow-hidden">
+                                                <img src="${item.image_url}" class="asset-image group-hover:scale-105 transition-transform duration-1000" onerror="this.parentElement.style.display='none'">
+                                                <div class="absolute top-3 right-3 flex gap-2">
+                                                    <a href="${item.image_url}" target="_blank" download class="w-8 h-8 bg-black/50 backdrop-blur-lg rounded-lg flex items-center justify-center text-white hover:bg-copper hover:text-black transition-all">
+                                                        <i class="fas fa-download text-[10px]"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ` : ''}
+                                        <div class="p-6 flex flex-col h-full">
+                                            <div class="flex justify-between items-start mb-3">
+                                                <h5 class="font-bold text-base leading-snug text-white/90">${item.title}</h5>
+                                                ${isHtml ? `<span class="bg-blue-500/10 text-blue-400 text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest border border-blue-500/20">HTML</span>` : ''}
+                                            </div>
+                                            <div class="bg-black/20 rounded-xl p-4 text-[11px] leading-relaxed opacity-50 border border-white/5 mb-6 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[220px] no-scrollbar ${isHtml ? 'code-font' : ''}">
+                                                ${item.content}
+                                            </div>
+                                            <div class="flex gap-2">
+                                                <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
+                                                    class="flex-1 py-3 rounded-xl bg-white/5 hover:bg-copper hover:text-black font-bold text-[9px] tracking-widest transition-all uppercase border border-white/5 text-white/70">
+                                                    Salin Aset
+                                                </button>
+                                                ${isHtml ? `
+                                                    <button onclick="openHtmlPreview(\`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
+                                                        class="w-12 h-12 rounded-xl bg-white/5 hover:bg-blue-500/20 hover:text-blue-400 flex items-center justify-center border border-white/5 transition-all text-white/50">
+                                                        <i class="fas fa-eye text-xs"></i>
+                                                    </button>
+                                                ` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        function openHtmlPreview(content) {
+            const overlay = document.getElementById('htmlPreview');
+            const frame = document.getElementById('previewFrame');
+            overlay.style.display = 'block';
+            frame.srcdoc = content;
+        }
+
+        function closeHtmlPreview() {
+            document.getElementById('htmlPreview').style.display = 'none';
         }
 
         function copyContent(e, text) {
@@ -304,18 +453,34 @@
 
         function handleSearch() {
             const q = document.getElementById('globalSearch').value.toLowerCase();
-            const filtered = allData.filter(d => 
-                d.title.toLowerCase().includes(q) || 
-                d.content.toLowerCase().includes(q) || 
-                d.category.toLowerCase().includes(q)
-            );
-            // If searching, show result view
             if(q.length > 0) {
-                document.getElementById('productGrid').classList.add('hidden');
-                // Could render a special search result list here
-            } else {
-                document.getElementById('productGrid').classList.remove('hidden');
+                const filtered = allData.filter(d => 
+                    d.title.toLowerCase().includes(q) || 
+                    d.content.toLowerCase().includes(q) || 
+                    d.category.toLowerCase().includes(q)
+                );
+                renderSearchResults(filtered);
+            } else { renderGrid(); }
+        }
+
+        function renderSearchResults(data) {
+            const grid = document.getElementById('productGrid');
+            if(data.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-bold text-xl uppercase tracking-widest text-white">No matches found</div>`;
+                return;
             }
+            grid.innerHTML = data.map(item => `
+                <div class="glass-card p-6 rounded-2xl border-white/5 bg-white/[0.02]">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-[7px] font-bold uppercase text-copper border border-copper/20 px-2 py-0.5 rounded-full">${item.product}</span>
+                        <span class="opacity-20 text-[7px] font-bold uppercase tracking-widest text-white">${item.category}</span>
+                    </div>
+                    <h5 class="text-sm font-bold mb-5 text-white/90">${item.title}</h5>
+                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-3 rounded-xl bg-copper text-black font-bold text-[9px] tracking-widest uppercase">
+                        Copy Asset
+                    </button>
+                </div>
+            `).join('');
         }
 
         document.getElementById('logoContainer').onclick = () => {
@@ -333,25 +498,27 @@
 
         async function verifyAccess() {
             const pass = document.getElementById('adminPass').value;
-            const res = await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'VERIFY', password: pass })
-            });
-            const data = await res.json();
-            if(data.status === 'success') {
-                adminPassword = pass;
-                document.getElementById('adminAuth').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
-                renderAdminList();
-            } else {
-                alert('Invalid Key');
-            }
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'VERIFY', password: pass })
+                });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    adminPassword = pass;
+                    document.getElementById('adminAuth').classList.add('hidden');
+                    document.getElementById('adminPanel').classList.remove('hidden');
+                    renderAdminList();
+                } else { alert('Access Denied'); }
+            } catch (e) { alert('Server Error'); }
         }
 
-        async function saveAsset(e) {
-            e.preventDefault();
+        async function saveAsset(event) {
+            event.preventDefault();
             const btn = document.getElementById('submitBtn');
-            btn.innerText = "PUBLISHING...";
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
             
             const payload = {
                 action: document.getElementById('editId').value ? 'UPDATE' : 'ADD',
@@ -360,23 +527,26 @@
                 product: document.getElementById('fProduct').value,
                 category: document.getElementById('fCategory').value,
                 title: document.getElementById('fTitle').value,
-                content: document.getElementById('fContent').value
+                content: document.getElementById('fContent').value,
+                image_url: document.getElementById('fImage').value
             };
 
-            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-            const data = await res.json();
-            
-            if(data.status === 'success') {
-                document.getElementById('adminForm').reset();
-                document.getElementById('editId').value = '';
-                btn.innerText = "PUBLISH ASSET";
-                await loadData();
-                renderAdminList();
-            }
+            try {
+                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                if(data.status === 'success') {
+                    document.getElementById('adminForm').reset();
+                    document.getElementById('editId').value = '';
+                    await loadData();
+                    renderAdminList();
+                    btn.innerText = "Done!";
+                    setTimeout(() => { btn.innerText = "Push to Database"; btn.disabled = false; }, 2000);
+                } else { alert('Error: ' + data.message); btn.innerText = "Error"; btn.disabled = false; }
+            } catch (e) { alert('Network error'); btn.innerText = "Error"; btn.disabled = false; }
         }
 
         async function deleteItem(id) {
-            if(!confirm('Delete this asset?')) return;
+            if(!confirm('Permanently remove this asset?')) return;
             await fetch(API_URL, {
                 method: 'POST',
                 body: JSON.stringify({ action: 'DELETE', password: adminPassword, id: id })
@@ -392,19 +562,28 @@
             document.getElementById('fCategory').value = item.category;
             document.getElementById('fTitle').value = item.title;
             document.getElementById('fContent').value = item.content;
-            document.getElementById('submitBtn').innerText = "UPDATE ASSET";
+            document.getElementById('fImage').value = item.image_url || '';
+            document.getElementById('submitBtn').innerText = "Update Info";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderAdminList() {
-            document.getElementById('adminList').innerHTML = allData.map(item => `
-                <div class="glass-card p-4 rounded-2xl flex justify-between items-center bg-white/[0.02]">
-                    <div>
-                        <p class="text-[9px] opacity-40 font-bold uppercase">${item.product} / ${item.category}</p>
-                        <p class="font-bold text-sm">${item.title}</p>
+            const sorted = [...allData].sort((a,b) => a.product.localeCompare(b.product));
+            document.getElementById('adminList').innerHTML = sorted.map(item => `
+                <div class="glass-card p-4 rounded-xl flex justify-between items-center bg-white/[0.01] border-white/5 hover:bg-white/[0.03] transition-all">
+                    <div class="flex items-center gap-4 text-left text-white">
+                        ${item.image_url ? `<img src="${item.image_url}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shadow-lg">` : `<div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center opacity-10 border border-white/10"><i class="fas fa-file text-[10px]"></i></div>`}
+                        <div>
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <span class="text-[7px] font-bold uppercase text-copper tracking-[0.1em]">${item.product}</span>
+                                <span class="text-[7px] opacity-20 font-bold uppercase tracking-[0.1em]">• ${item.category}</span>
+                            </div>
+                            <p class="font-bold text-[13px] tracking-tight">${item.title}</p>
+                        </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="editItem('${item.id}')" class="w-10 h-10 rounded-xl hover:bg-blue-500/20 text-blue-400 transition-all"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteItem('${item.id}')" class="w-10 h-10 rounded-xl hover:bg-red-500/20 text-red-400 transition-all"><i class="fas fa-trash"></i></button>
+                    <div class="flex gap-1.5">
+                        <button onclick="editItem('${item.id}')" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-copper/10 text-copper transition-all border border-white/5"><i class="fas fa-edit text-[10px]"></i></button>
+                        <button onclick="deleteItem('${item.id}')" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-red-500/10 text-red-500 transition-all border border-white/5"><i class="fas fa-trash-alt text-[10px]"></i></button>
                     </div>
                 </div>
             `).join('');
@@ -414,7 +593,7 @@
             document.body.classList.toggle('light');
             document.body.classList.toggle('dark');
             const icon = document.getElementById('themeIcon');
-            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-adjust');
             icon.classList.toggle('fa-sun');
         }
 
