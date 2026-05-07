@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iMersDocs | Digital Asset Vault</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <style>
+        :root {
+            --accent-copper: #C68642;
+            --accent-gold: #FFD700;
+            --bg-dark: #0A0A0B;
+            --card-dark: rgba(20, 20, 22, 0.8);
+            --bg-light: #FDFCFB; 
+            --card-light: rgba(255, 255, 255, 0.9);
+            --border-glow: rgba(198, 134, 66, 0.2);
+        }
+
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.5s ease; overflow-x: hidden; }
+        .dark { background-color: var(--bg-dark); color: #F5F5F0; }
+        .light { background-color: var(--bg-light); color: #1A1A1A; }
+
+        .glass-card {
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .box-art {
+            height: 140px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .box-wamel { background: linear-gradient(135deg, #059669, #10b981); }
+        .box-gate { background: linear-gradient(135deg, #1d4ed8, #3b82f6); }
+        .box-aibox { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .box-vault { background: linear-gradient(135deg, #b45309, #f59e0b); }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #FFF 0%, var(--accent-copper) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .copy-button:active { transform: scale(0.9); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide { animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    </style>
+</head>
+<body class="dark">
+
+    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center backdrop-blur-xl border-b border-white/5">
+        <div class="flex items-center gap-3 cursor-pointer group" id="logoContainer">
+            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-copper rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-12 transition-transform duration-500">
+                <i class="fas fa-crown text-black text-lg"></i>
+            </div>
+            <h1 class="text-xl font-extrabold tracking-tighter">iMers<span class="text-[#C68642]">Docs</span></h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div id="bc" class="hidden md:flex items-center gap-2 bg-white/5 px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/10">
+                <span onclick="showHome()" class="cursor-pointer opacity-50 hover:opacity-100">Home</span>
+                <span class="opacity-20">/</span>
+                <span id="bcActive" class="text-copper">Vault</span>
+            </div>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/10">
+                <i class="fas fa-moon text-sm" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <main id="homeView" class="pt-32 pb-20 px-6 max-w-7xl mx-auto animate-slide">
+        <header class="text-center mb-16">
+            <h2 class="text-5xl md:text-7xl font-black mb-6 text-gradient tracking-tighter leading-none">
+                Copy. Paste. <span class="italic font-serif opacity-90 text-white">Convert.</span>
+            </h2>
+            <div class="relative max-w-2xl mx-auto group">
+                <div class="absolute -inset-1 bg-gradient-to-r from-copper/20 to-orange-500/20 rounded-3xl blur opacity-25 group-focus-within:opacity-100 transition duration-1000"></div>
+                <div class="relative glass-card rounded-2xl overflow-hidden bg-white/5">
+                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Search assets, prompts, or scripts..." 
+                        class="w-full bg-transparent py-6 pl-14 pr-6 text-lg outline-none placeholder:text-white/20">
+                    <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-copper/50"></i>
+                </div>
+            </div>
+        </header>
+
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Product Cards will appear here -->
+        </div>
+    </main>
+
+    <section id="vaultView" class="hidden pt-32 pb-20 px-6 max-w-4xl mx-auto animate-slide">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+                <h3 id="vaultTitle" class="text-4xl font-black mb-2 italic">Vault Explorer</h3>
+                <p id="vaultDesc" class="opacity-40 text-[10px] font-bold uppercase tracking-[0.2em]">Browsing Content Library</p>
+            </div>
+            <div id="filterTabs" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <!-- Filters dynamic -->
+            </div>
+        </div>
+        
+        <div id="contentList" class="space-y-4">
+            <!-- Items dynamic -->
+        </div>
+    </section>
+
+    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-3xl bg-black/90 flex items-center justify-center p-6">
+        <div class="glass-card p-10 w-full max-w-sm text-center rounded-[32px] border-white/10">
+            <div class="w-16 h-16 bg-gradient-to-br from-copper to-orange-600 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-2xl">
+                <i class="fas fa-key text-black text-2xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-2">Vault Master Key</h3>
+            <p class="text-white/40 text-sm mb-8">Access the backstage asset management.</p>
+            <input type="password" id="adminPass" placeholder="••••••••" class="w-full bg-white/5 border border-white/10 rounded-2xl p-5 text-center tracking-[0.5em] mb-6 outline-none focus:border-copper transition-all">
+            <div class="flex gap-3">
+                <button onclick="closeAdmin()" class="flex-1 py-4 text-[10px] font-bold opacity-40 uppercase tracking-widest">Cancel</button>
+                <button onclick="verifyAccess()" class="flex-[2] bg-gradient-to-r from-copper to-orange-500 py-4 rounded-2xl font-black text-black shadow-lg hover:scale-[1.02] active:scale-95 transition-all">VERIFY</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-[#0A0A0B] overflow-y-auto">
+        <div class="max-w-6xl mx-auto p-6 md:p-12">
+            <div class="flex justify-between items-center mb-12">
+                <h2 class="text-3xl font-black italic">Backstage <span class="text-copper">Control</span></h2>
+                <button onclick="closeAdmin()" class="w-12 h-12 rounded-full glass-card flex items-center justify-center hover:bg-white/10"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-5">
+                    <form id="adminForm" onsubmit="saveAsset(event)" class="glass-card p-8 space-y-4 rounded-[32px] sticky top-12">
+                        <input type="hidden" id="editId">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Product</label>
+                                <select id="fProduct" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper appearance-none">
+                                    <option value="iMersWAMEL">iMersWAMEL</option>
+                                    <option value="iMersGate">iMersGate</option>
+                                    <option value="iMersAiBox">iMersAiBox</option>
+                                    <option value="ResellerVault">ResellerVault</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Category</label>
+                                <input type="text" id="fCategory" placeholder="e.g. Promo" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Title</label>
+                            <input type="text" id="fTitle" placeholder="Asset Heading" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-30 uppercase ml-2">Content</label>
+                            <textarea id="fContent" rows="8" placeholder="The conversion copy..." class="w-full bg-white/5 border border-white/10 rounded-xl p-4 outline-none focus:border-copper resize-none"></textarea>
+                        </div>
+                        <button type="submit" id="submitBtn" class="w-full bg-gradient-to-r from-copper to-orange-500 py-5 rounded-2xl font-black text-black shadow-xl hover:shadow-copper/20 transition-all">PUBLISH ASSET</button>
+                    </form>
+                </div>
+                <div class="lg:col-span-7">
+                    <div id="adminList" class="space-y-3">
+                        <!-- Admin list dynamic -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all duration-500">
+        <div class="glass-card bg-black/80 px-8 py-4 rounded-full border border-copper/30 flex items-center gap-3">
+            <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+            <span class="text-sm font-bold tracking-tight">Copied to Vault</span>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxxi-CuUu-jaXm5XN8pVl9xqQIHsBTHzPCu72clX210iTxaaFXc7yfh5R2uKXXTzFa3/exec';
+        let allData = [];
+        let currentProduct = '';
+        let logoClicks = 0;
+        let adminPassword = '';
+
+        async function loadData() {
+            try {
+                const res = await fetch(API_URL);
+                const json = await res.json();
+                allData = json.status === 'success' ? json.data : [];
+                renderGrid();
+            } catch (e) {
+                console.error('Connection failed:', e);
+            }
+        }
+
+        function renderGrid() {
+            const products = [
+                { id: 'iMersWAMEL', name: 'iMersWAMEL', class: 'box-wamel', icon: 'fa-whatsapp', desc: 'Closing Scripts' },
+                { id: 'iMersGate', name: 'iMersGate', class: 'box-gate', icon: 'fa-rocket', desc: 'Conversion Gates' },
+                { id: 'iMersAiBox', name: 'iMersAiBox', class: 'box-aibox', icon: 'fa-brain', desc: 'Expert AI Prompts' },
+                { id: 'ResellerVault', name: 'ResellerVault', class: 'box-vault', icon: 'fa-gem', desc: 'Marketing Assets' }
+            ];
+
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => {
+                const count = allData.filter(d => d.product === p.id).length;
+                return `
+                    <div onclick="openVault('${p.id}')" class="glass-card group flex flex-col rounded-[32px] overflow-hidden cursor-pointer hover:-translate-y-2 border-white/5 bg-white/[0.02]">
+                        <div class="box-art ${p.class}">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-3xl flex items-center justify-center border border-white/20 shadow-2xl group-hover:scale-110 transition-all duration-500">
+                                    <i class="fas ${p.icon} text-3xl text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-8">
+                            <h4 class="text-2xl font-black mb-1">${p.name}</h4>
+                            <p class="text-[10px] opacity-30 uppercase tracking-[0.2em] mb-6 font-bold">${p.desc}</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-copper/10 text-copper px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-copper/10">
+                                    ${count} ASSETS
+                                </span>
+                                <i class="fas fa-arrow-right text-xs opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function openVault(id) {
+            currentProduct = id;
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('vaultView').classList.remove('hidden');
+            document.getElementById('bc').classList.remove('hidden');
+            document.getElementById('vaultTitle').innerText = id;
+            document.getElementById('bcActive').innerText = id;
+            renderFilters(id);
+            renderContent(id);
+        }
+
+        function showHome() {
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('vaultView').classList.add('hidden');
+            document.getElementById('bc').classList.add('hidden');
+        }
+
+        function renderFilters(id) {
+            const data = allData.filter(d => d.product === id);
+            const cats = ['All', ...new Set(data.map(d => d.category))];
+            document.getElementById('filterTabs').innerHTML = cats.map(c => `
+                <button onclick="renderContent('${id}', '${c}')" class="px-6 py-2 whitespace-nowrap rounded-full glass-card text-[10px] font-black uppercase tracking-widest hover:bg-copper hover:text-black transition-all">
+                    ${c}
+                </button>
+            `).join('');
+        }
+
+        function renderContent(id, filter = 'All') {
+            let data = allData.filter(d => d.product === id);
+            if(filter !== 'All') data = data.filter(d => d.category === filter);
+
+            document.getElementById('contentList').innerHTML = data.map(item => `
+                <div class="glass-card p-6 rounded-[28px] border-white/5 bg-white/[0.03]">
+                    <div class="flex justify-between items-start gap-4">
+                        <div class="flex-1">
+                            <span class="text-[9px] font-black uppercase text-copper tracking-[0.2em] mb-2 block">${item.category}</span>
+                            <h4 class="text-xl font-bold mb-4">${item.title}</h4>
+                            <div class="bg-black/40 p-5 rounded-2xl text-sm leading-relaxed opacity-80 border border-white/5 font-light">
+                                ${item.content}
+                            </div>
+                        </div>
+                        <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="copy-button w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-copper hover:text-black transition-all">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function copyContent(e, text) {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const t = document.getElementById('toast');
+            t.style.opacity = '1';
+            t.style.transform = 'translate(-50%, -10px)';
+            setTimeout(() => {
+                t.style.opacity = '0';
+                t.style.transform = 'translate(-50%, 0)';
+            }, 2000);
+        }
+
+        function handleSearch() {
+            const q = document.getElementById('globalSearch').value.toLowerCase();
+            const filtered = allData.filter(d => 
+                d.title.toLowerCase().includes(q) || 
+                d.content.toLowerCase().includes(q) || 
+                d.category.toLowerCase().includes(q)
+            );
+            // If searching, show result view
+            if(q.length > 0) {
+                document.getElementById('productGrid').classList.add('hidden');
+                // Could render a special search result list here
+            } else {
+                document.getElementById('productGrid').classList.remove('hidden');
+            }
+        }
+
+        document.getElementById('logoContainer').onclick = () => {
+            logoClicks++;
+            if(logoClicks >= 5) {
+                document.getElementById('adminAuth').classList.remove('hidden');
+                logoClicks = 0;
+            }
+        };
+
+        function closeAdmin() {
+            document.getElementById('adminAuth').classList.add('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+        }
+
+        async function verifyAccess() {
+            const pass = document.getElementById('adminPass').value;
+            const res = await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'VERIFY', password: pass })
+            });
+            const data = await res.json();
+            if(data.status === 'success') {
+                adminPassword = pass;
+                document.getElementById('adminAuth').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+                renderAdminList();
+            } else {
+                alert('Invalid Key');
+            }
+        }
+
+        async function saveAsset(e) {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            btn.innerText = "PUBLISHING...";
+            
+            const payload = {
+                action: document.getElementById('editId').value ? 'UPDATE' : 'ADD',
+                password: adminPassword,
+                id: document.getElementById('editId').value,
+                product: document.getElementById('fProduct').value,
+                category: document.getElementById('fCategory').value,
+                title: document.getElementById('fTitle').value,
+                content: document.getElementById('fContent').value
+            };
+
+            const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
+            const data = await res.json();
+            
+            if(data.status === 'success') {
+                document.getElementById('adminForm').reset();
+                document.getElementById('editId').value = '';
+                btn.innerText = "PUBLISH ASSET";
+                await loadData();
+                renderAdminList();
+            }
+        }
+
+        async function deleteItem(id) {
+            if(!confirm('Delete this asset?')) return;
+            await fetch(API_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'DELETE', password: adminPassword, id: id })
+            });
+            await loadData();
+            renderAdminList();
+        }
+
+        function editItem(id) {
+            const item = allData.find(d => d.id == id);
+            document.getElementById('editId').value = item.id;
+            document.getElementById('fProduct').value = item.product;
+            document.getElementById('fCategory').value = item.category;
+            document.getElementById('fTitle').value = item.title;
+            document.getElementById('fContent').value = item.content;
+            document.getElementById('submitBtn').innerText = "UPDATE ASSET";
+        }
+
+        function renderAdminList() {
+            document.getElementById('adminList').innerHTML = allData.map(item => `
+                <div class="glass-card p-4 rounded-2xl flex justify-between items-center bg-white/[0.02]">
+                    <div>
+                        <p class="text-[9px] opacity-40 font-bold uppercase">${item.product} / ${item.category}</p>
+                        <p class="font-bold text-sm">${item.title}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editItem('${item.id}')" class="w-10 h-10 rounded-xl hover:bg-blue-500/20 text-blue-400 transition-all"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteItem('${item.id}')" class="w-10 h-10 rounded-xl hover:bg-red-500/20 text-red-400 transition-all"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            document.body.classList.toggle('dark');
+            const icon = document.getElementById('themeIcon');
+            icon.classList.toggle('fa-moon');
+            icon.classList.toggle('fa-sun');
+        }
+
+        window.onload = loadData;
+    </script>
+</body>
+</html>
