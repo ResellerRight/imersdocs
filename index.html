@@ -510,8 +510,7 @@
         }
 
         document.getElementById('logoBtn').onclick = () => {
-    // Ambil angka rahasia dari database (Settings), default ke 5 jika kosong
-    const secretTarget = parseInt(cleanSetting(db.settings.admin_click_count)) || 5;
+        const secretTarget = parseInt(cleanSetting(db.settings.admin_click_count)) || 5;
     
     if(++clicks >= secretTarget) {
         document.getElementById('adminAuth').classList.remove('hidden');
