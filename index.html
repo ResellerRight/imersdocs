@@ -509,13 +509,15 @@
             if(active) active.classList.add('active');
         }
 
-        document.getElementById('logoBtn').onclick = () => { 
-            if(++clicks >= 5) { 
-                document.getElementById('adminAuth').classList.remove('hidden'); 
-                clicks=0; 
-            } 
-        };
-
+        document.getElementById('logoBtn').onclick = () => {
+    // Ambil angka rahasia dari database (Settings), default ke 5 jika kosong
+    const secretTarget = parseInt(cleanSetting(db.settings.admin_click_count)) || 5;
+    
+    if(++clicks >= secretTarget) {
+        document.getElementById('adminAuth').classList.remove('hidden');
+        clicks = 0;
+    }
+};
         function closeAuth() { document.getElementById('adminAuth').classList.add('hidden'); }
 
         async function loginAdmin() {
