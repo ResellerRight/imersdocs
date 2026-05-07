@@ -1,612 +1,630 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iMersDocs | Creative Asset OS</title>
+    <title>iMersDocs | Asset OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <style>
-        :root {
-            --p-mint: #10b981;
-            --p-blue: #3b82f6;
-            --p-purple: #8b5cf6;
-            --p-pink: #ec4899;
-            --p-orange: #f59e0b;
-        }
-
         body { 
             font-family: 'Poppins', sans-serif; 
-            margin: 0;
-            min-height: 100vh;
-            background: #f8fafc;
-            color: #1e293b;
-            transition: all 0.5s ease;
+            background-color: #FFFFFF; 
+            color: #111827;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Animated Mesh Background - Vibrant & Cheerful */
-        .mesh-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
-            background-color: #f0f4f8;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.25) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.2) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+        /* Sidebar permanen di kiri */
+        .sidebar { width: 280px; border-right: 1px solid #F3F4F6; }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            margin: 2px 12px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4B5563;
+            transition: all 0.2s;
+            cursor: pointer;
         }
+        .sidebar-link:hover { background-color: #F9FAFB; color: #111827; }
+        .sidebar-link.active { background-color: #EEF2FF; color: #4F46E5; }
 
-        .dark .mesh-bg {
-            background-color: #0f172a;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.3) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.3) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
-        }
-
-        .frosted-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.08);
-            border-radius: 28px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .dark .frosted-card {
-            background: rgba(30, 41, 59, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #f1f5f9;
-        }
-
-        /* Admin Input Styles - Super High Contrast */
-        .admin-field {
-            background: #ffffff !important;
-            border: 2px solid #e2e8f0 !important;
-            color: #0f172a !important;
-            border-radius: 16px;
-            padding: 1rem 1.25rem;
-            width: 100%;
-            outline: none;
-            font-weight: 600;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-        }
-        .dark .admin-field {
-            background: #1e293b !important;
-            border: 2px solid #334155 !important;
-            color: #f8fafc !important;
-        }
-        .admin-field:focus { border-color: var(--p-blue) !important; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-
-        select.admin-field option { background: white; color: black; padding: 10px; }
-        .dark select.admin-field option { background: #1e293b; color: white; }
-
-        .category-header {
-            font-size: 0.75rem;
-            font-weight: 900;
+        .alphabet-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #9CA3AF;
+            padding: 20px 28px 8px;
             text-transform: uppercase;
-            letter-spacing: 0.15em;
-            padding: 6px 16px;
-            border-radius: 99px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            letter-spacing: 0.05em;
         }
 
-        .btn-action {
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        /* Area konten utama */
+        .content-area { flex: 1; height: 100vh; overflow-y: auto; background-color: #FBFCFD; }
+
+        /* Card bergaya SaaS */
+        .asset-card {
+            background: #FFFFFF;
+            border: 1px solid #F3F4F6;
+            border-radius: 12px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .btn-action:hover { transform: translateY(-3px) scale(1.03); }
+        .asset-card:hover { 
+            border-color: #E5E7EB; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04); 
+            transform: translateY(-2px);
+        }
+
+        .saas-input {
+            width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.875rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .saas-input:focus { border-color: #4F46E5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Box Art Patterns */
-        .box-pattern {
-            position: absolute;
-            inset: 0;
-            opacity: 0.2;
-            background-image: radial-gradient(#fff 1px, transparent 1px);
-            background-size: 15px 15px;
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.4s ease-out forwards; }
+
+        .btn-saas {
+            background-color: #111827;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .btn-saas:hover { background-color: #1F2937; transform: translateY(-1px); }
+        
+        .admin-badge {
+            background: #FEF2F2;
+            color: #991B1B;
+            font-size: 9px;
+            padding: 2px 8px;
+            border-radius: 99px;
+            font-weight: 800;
         }
     </style>
 </head>
-<body class="light">
-    <div class="mesh-bg"></div>
+<body class="flex h-screen overflow-hidden">
 
-    <!-- Header Navigation -->
-    <nav class="fixed top-0 w-full z-50 px-6 py-5 flex justify-between items-center backdrop-blur-2xl border-b border-black/5">
-        <div class="flex items-center gap-4 cursor-pointer group" id="logoContainer">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl group-hover:rotate-12 transition-all duration-500">
-                <i class="fas fa-rocket text-white text-xl"></i>
+    <!-- SIDEBAR (Navigasi Fokus Produk) -->
+    <aside class="sidebar flex flex-col h-full bg-white">
+        <!-- Logo Section -->
+        <div class="p-8 flex items-center gap-3 cursor-pointer group" id="logoBtn">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-indigo-100 shadow-xl group-active:scale-90 transition-all">
+                <i class="fas fa-box-open text-white text-xs"></i>
             </div>
-            <div>
-                <h1 class="text-2xl font-black tracking-tighter leading-none">iMers<span class="text-blue-600">Docs</span></h1>
-                <p class="text-[9px] font-extrabold opacity-40 uppercase tracking-[0.4em] mt-1">Creative Asset OS</p>
-            </div>
+            <h1 class="text-xl font-bold tracking-tight text-gray-900">iMers<span class="text-indigo-600">Docs</span></h1>
         </div>
 
-        <div class="flex items-center gap-3">
-            <div id="navContext" class="hidden md:flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 px-5 py-2.5 rounded-full border border-black/5 shadow-sm">
-                <button onclick="showHome()" class="text-[10px] font-black uppercase opacity-40 hover:opacity-100 transition-opacity">Library</button>
-                <i class="fas fa-chevron-right text-[8px] opacity-20"></i>
-                <span id="activeVaultName" class="text-[10px] font-black uppercase text-blue-600">Explore Vault</span>
+        <!-- Sidebar Navigation -->
+        <div class="flex-1 overflow-y-auto no-scrollbar pb-10">
+            <div class="px-6 mb-2">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Workspace</p>
             </div>
-            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl frosted-card flex items-center justify-center hover:bg-white transition-all shadow-lg">
-                <i class="fas fa-sun text-orange-400 text-lg" id="themeIcon"></i>
-            </button>
-        </div>
-    </nav>
+            <div onclick="showHome()" class="sidebar-link active" id="navHome">
+                <i class="fas fa-home mr-3 w-4"></i> Overview
+            </div>
 
-    <!-- Home View -->
-    <main id="homeView" class="pt-40 pb-20 px-6 max-w-7xl mx-auto">
-        <div class="max-w-4xl mb-20">
-            <h2 class="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.95]">
-                Content <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500">Distribution.</span>
-            </h2>
-            <p class="opacity-60 max-w-xl text-lg font-medium leading-relaxed mb-12">Pilih produk di bawah untuk mengakses ribuan copywriting, aset visual, dan script konversi premium.</p>
-            
-            <div class="relative group max-w-2xl">
-                <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-20 group-focus-within:opacity-40 transition duration-1000"></div>
-                <div class="relative frosted-card rounded-2xl overflow-hidden bg-white/80 flex items-center">
-                    <i class="fas fa-search ml-8 text-blue-500/40 text-xl"></i>
-                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari copywriting, banner, atau script..." 
-                        class="w-full bg-transparent py-7 px-8 text-lg outline-none font-medium">
+            <!-- List produk per abjad diinjeksi di sini -->
+            <div id="sidebarProductList"></div>
+
+            <!-- Menu Admin Tersembunyi (Stealth Mode) -->
+            <div id="adminMenu" class="hidden mt-8 border-t border-gray-100 pt-6">
+                <div class="px-6 mb-2 flex justify-between items-center">
+                    <p class="text-[10px] font-bold text-red-400 uppercase tracking-widest px-2">Console</p>
+                    <span class="admin-badge">Admin</span>
+                </div>
+                <div onclick="checkAdmin('asset')" class="sidebar-link" id="navAsset">
+                    <i class="fas fa-file-invoice mr-3 w-4 text-emerald-500"></i> Manage Assets
+                </div>
+                <div onclick="checkAdmin('product')" class="sidebar-link" id="navProduct">
+                    <i class="fas fa-folder-plus mr-3 w-4 text-pink-500"></i> Manage Products
                 </div>
             </div>
         </div>
+    </aside>
 
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Cards will be rendered here -->
+    <!-- AREA KONTEN -->
+    <main class="content-area flex flex-col no-scrollbar">
+        
+        <!-- Header SaaS -->
+        <header class="bg-white border-b border-gray-100 px-10 py-5 flex justify-between items-center sticky top-0 z-40">
+            <div class="flex items-center gap-4">
+                <h2 class="text-lg font-bold text-gray-900" id="headerTitle">Asset Library</h2>
+                <div id="breadcrumb" class="hidden flex items-center gap-2">
+                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                    <span id="breadcrumbActive" class="text-xs text-indigo-600 font-semibold px-2 py-1 bg-indigo-50 rounded-md">Vault</span>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="relative w-64 group">
+                    <input type="text" id="globalSearch" oninput="doSearch()" placeholder="Cari aset..." class="saas-input pl-10 text-xs bg-gray-50 border-transparent focus:bg-white focus:border-gray-200">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-indigo-500 transition-colors"></i>
+                </div>
+                <button onclick="logoutAdmin()" id="logoutBtn" class="hidden w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all">
+                    <i class="fas fa-power-off text-xs"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- View Dinamis -->
+        <div id="viewArea" class="p-10 animate-in">
+            <!-- Konten diinjeksi secara JS -->
         </div>
+
     </main>
 
-    <!-- Vault View -->
-    <section id="vaultView" class="hidden pt-40 pb-20 px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
-            <div class="max-w-2xl">
-                <div id="vaultBadge" class="inline-block px-4 py-1.5 rounded-xl bg-blue-600/10 border border-blue-600/20 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6">Verified Ecosystem</div>
-                <h3 id="vaultTitle" class="text-6xl font-black mb-3 tracking-tighter uppercase leading-none">Vault</h3>
-                <p id="vaultSummary" class="opacity-50 text-base font-medium">Semua aset pemasaran terorganisir per kategori dan sub-kategori.</p>
+    <!-- MODAL OTENTIKASI -->
+    <div id="adminAuth" class="hidden fixed inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6">
+        <div class="bg-white p-10 w-full max-w-sm rounded-2xl shadow-2xl border border-gray-100">
+            <div class="w-14 h-14 bg-indigo-50 rounded-xl mx-auto mb-6 flex items-center justify-center">
+                <i class="fas fa-shield-halved text-indigo-600 text-xl"></i>
             </div>
-            <div id="filterTabs" class="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-                <!-- Tabs -->
-            </div>
-        </div>
-        
-        <div id="contentGroups" class="space-y-24">
-            <!-- Grouped content -->
-        </div>
-    </section>
-
-    <!-- Admin Master Key -->
-    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-3xl bg-white/40 dark:bg-black/40 flex items-center justify-center p-6">
-        <div class="frosted-card p-12 w-full max-w-md text-center shadow-[0_32px_64px_rgba(0,0,0,0.15)] border-white">
-            <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-2xl rotate-3">
-                <i class="fas fa-fingerprint text-white text-3xl"></i>
-            </div>
-            <h3 class="text-3xl font-black mb-2 tracking-tighter">Vault Master</h3>
-            <p class="text-[10px] font-black opacity-30 uppercase tracking-[0.4em] mb-10">Verification Required</p>
-            <input type="password" id="adminPass" placeholder="PASSKEY" class="admin-field text-center tracking-[1em] mb-8 font-black text-xl">
+            <h3 class="text-xl font-bold mb-2 text-center">Verify Access</h3>
+            <p class="text-xs text-gray-400 mb-8 text-center text-balance">Masukkan Master Key untuk membuka akses administratif.</p>
+            <input type="password" id="adminPass" placeholder="••••••••" class="saas-input text-center tracking-[1em] mb-8 font-black text-lg py-3">
             <div class="flex gap-4">
-                <button onclick="closeAdmin()" class="flex-1 py-5 text-[10px] font-black opacity-40 uppercase tracking-widest hover:opacity-100">Cancel</button>
-                <button onclick="verifyAccess()" class="flex-[2] bg-blue-600 text-white py-5 rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all text-xs tracking-widest">ACCESS CONSOLE</button>
+                <button onclick="closeAuth()" class="flex-1 py-3 text-xs font-bold text-gray-400 uppercase tracking-widest">Batal</button>
+                <button onclick="loginAdmin()" class="flex-1 btn-saas shadow-indigo-100 shadow-xl">Unlock</button>
             </div>
         </div>
     </div>
 
-    <!-- Admin Console -->
-    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-slate-50 dark:bg-slate-950 overflow-y-auto">
-        <div class="max-w-7xl mx-auto p-6 md:p-16">
-            <div class="flex justify-between items-center mb-16">
-                <div>
-                    <h2 class="text-4xl font-black tracking-tighter">Backstage <span class="text-blue-600">Console</span></h2>
-                    <p class="opacity-40 text-[10px] font-black uppercase tracking-[0.5em] mt-2">Manage your creative silos</p>
-                </div>
-                <button onclick="closeAdmin()" class="w-16 h-16 rounded-2xl frosted-card flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors shadow-lg"><i class="fas fa-times text-xl"></i></button>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
-                <div class="lg:col-span-5">
-                    <form id="adminForm" onsubmit="saveAsset(event)" class="frosted-card p-10 space-y-7 sticky top-12 border-white shadow-2xl">
-                        <input type="hidden" id="editId">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Target Silo</label>
-                                <select id="fProduct" class="admin-field">
-                                    <option value="iMersWAMEL">iMersWAMEL</option>
-                                    <option value="iMersGate">iMersGate</option>
-                                    <option value="iMersAiBox">iMersAiBox</option>
-                                    <option value="ResellerVault">ResellerVault</option>
-                                </select>
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Main Category</label>
-                                <input type="text" id="fCategory" placeholder="e.g. Copywriting" class="admin-field">
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Sub-Category (Grouping)</label>
-                            <input type="text" id="fSubCategory" placeholder="e.g. WA Soft Selling" class="admin-field">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Headline Title</label>
-                            <input type="text" id="fTitle" placeholder="Nama konten atau aset..." class="admin-field">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Media Source (Image URL)</label>
-                            <input type="text" id="fImage" placeholder="https://..." class="admin-field">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Core Content / Code</label>
-                            <textarea id="fContent" rows="7" placeholder="Paste copy or HTML code here..." class="admin-field resize-none leading-relaxed font-medium"></textarea>
-                        </div>
-                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white py-6 rounded-2xl font-black shadow-2xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
-                            Publish to Vault
-                        </button>
-                    </form>
-                </div>
-                <div class="lg:col-span-7">
-                    <div class="flex items-center gap-4 mb-10">
-                        <h4 class="text-xs font-black uppercase tracking-[0.3em] opacity-40">Live Database Overview</h4>
-                        <div class="h-[2px] flex-1 bg-blue-600/10"></div>
-                    </div>
-                    <div id="adminList" class="space-y-4"></div>
-                </div>
-            </div>
+    <!-- FEEDBACK TOAST -->
+    <div id="toast" class="fixed bottom-10 right-10 z-[200] opacity-0 pointer-events-none transition-all duration-500">
+        <div class="bg-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-3 shadow-2xl">
+            <i class="fas fa-check-circle text-white"></i>
+            <span class="text-xs font-semibold">Asset copied to clipboard!</span>
         </div>
     </div>
 
-    <!-- Feedback Toast -->
-    <div id="toast" class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all duration-500">
-        <div class="bg-blue-600 text-white px-10 py-5 rounded-3xl shadow-[0_20px_50px_rgba(37,99,235,0.3)] flex items-center gap-4 border border-white/20">
-            <i class="fas fa-check-circle text-lg"></i>
-            <span class="text-xs font-black tracking-widest uppercase">Asset Copied to Clipboard!</span>
+    <!-- MODAL PREVIEW -->
+    <div id="htmlPreview" class="hidden fixed inset-0 z-[150] bg-gray-900/50 backdrop-blur-md flex items-center justify-center p-12">
+        <div class="bg-white w-full max-w-6xl h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl">
+            <div class="flex justify-between items-center p-6 border-b border-gray-100">
+                <h4 class="font-bold text-xs tracking-widest text-indigo-600 uppercase">Interactive Asset Preview</h4>
+                <button onclick="closePreview()" class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900"><i class="fas fa-times"></i></button>
+            </div>
+            <iframe id="previewFrame" class="flex-1 w-full border-none"></iframe>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxxi-CuUu-jaXm5XN8pVl9xqQIHsBTHzPCu72clX210iTxaaFXc7yfh5R2uKXXTzFa3/exec';
-        
-        // DUMMY DATA SUPER LENGKAP UNTUK 2 PRODUK
-        let allData = [
-            // PRODUCT 1: iMersWAMEL (WA Marketing)
-            { id: 1, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Soft Selling (WA)', title: 'Edukasi Produk Automasi', content: 'Bayangkan Anda bisa jualan sambil tidur...\n\nSeringkali kita lelah menjawab chat yang sama berulang-ulang. Nah, di iMersWAMEL, semua sudah diatur otomatis oleh sistem.\n\nMau tahu rahasianya? Klik link di bawah ya.', image_url: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=600' },
-            { id: 2, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Soft Selling (WA)', title: 'Kisah Sukses Reseller', content: 'Dulu saya ragu, tapi setelah pakai iMersWAMEL, omzet naik 300% dalam sebulan!\n\nTidak perlu pusing mikir caption, semua sudah disediakan.', image_url: '' },
-            { id: 3, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Hard Selling (WA)', title: 'Promo Flash Sale 24 Jam', content: '🔥 FLASH SALE 24 JAM SAJA! 🔥\n\nDapatkan lisensi iMersWAMEL dengan diskon 50%. Hanya untuk 10 orang pertama.\n\nAmankan slot Anda sekarang!', image_url: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=600' },
-            { id: 4, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Hard Selling (WA)', title: 'Bonus Eksklusif Hari Ini', content: 'Daftar iMersWAMEL hari ini dan dapatkan:\n1. Ebook Closing Kilat\n2. Database 1000 Group WA\n\nTotal bonus senilai Rp 1.5 Juta!', image_url: '' },
-            { id: 5, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Follow Up', title: 'Reminder Pembayaran', content: 'Halo kak, kami melihat kakak sudah checkout iMersWAMEL semalam.\n\nSayang banget kalau promonya hangus hari ini. Yuk segera selesaikan pembayarannya!', image_url: '' },
-            
-            // PRODUCT 2: ResellerVault (Visual Assets)
-            { id: 6, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Feed (Square)', title: 'Banner Promo Merdeka', content: 'Desain elegan untuk promo kemerdekaan. Cocok untuk feed Instagram dengan tema merah putih.', image_url: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=600' },
-            { id: 7, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Feed (Square)', title: 'Testimoni User Template', content: 'Template untuk menampilkan testimoni pelanggan agar terlihat lebih profesional.', image_url: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=600' },
-            { id: 8, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Stories', title: 'Story Urgency Timer', content: 'Gunakan video singkat ini untuk menciptakan rasa urgensi pada calon pembeli.', image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600' },
-            { id: 9, product: 'ResellerVault', category: 'Video', sub_category: 'Reels Content', title: 'Unboxing Software iMers', content: 'Video reels unboxing fitur utama software iMers docs. Durasi 30 detik.', image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600' },
-            { id: 10, product: 'ResellerVault', category: 'Video', sub_category: 'Reels Content', title: 'Short Tutorial Setup', content: 'Tutorial singkat cara install produk dalam 1 menit.', image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600' }
-        ];
+        let db = { assets: [], products: [] };
+        let adminPass = '';
+        let clicks = 0;
+        let activeView = 'home';
+        let adminAuthRequestView = '';
 
-        let logoClicks = 0;
-        let adminPassword = '';
+        // --- CORE UI & AUTH ---
 
-        function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('themeIcon');
-            if (body.classList.contains('dark')) {
-                body.classList.replace('dark', 'light');
-                icon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.classList.replace('light', 'dark');
-                icon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
+        document.getElementById('logoBtn').onclick = () => { 
+            if(++clicks >= 5) { 
+                document.getElementById('adminAuth').classList.remove('hidden'); 
+                adminAuthRequestView = 'admin_unlock';
+                clicks=0; 
+            } 
+        };
 
-        if (localStorage.getItem('theme') === 'dark') {
-            document.body.classList.replace('light', 'dark');
-            document.getElementById('themeIcon').classList.replace('fa-sun', 'fa-moon');
-        }
+        function closeAuth() { document.getElementById('adminAuth').classList.add('hidden'); }
 
-        async function loadData() {
+        async function fetchDB() {
             try {
                 const res = await fetch(API_URL);
                 const json = await res.json();
-                if(json.status === 'success' && json.data.length > 0) {
-                    allData = json.data;
+                if(json.status === 'success') {
+                    db = json.data;
+                    renderSidebar();
+                    renderByView();
                 }
-                renderGrid();
             } catch (e) { 
-                console.error('API Error, using dummy data.');
-                renderGrid();
+                console.error('Database connection lost.'); 
+                renderHome(); 
             }
         }
 
-        function renderGrid() {
-            const products = [
-                { id: 'iMersWAMEL', name: 'iMersWAMEL', icon: 'fa-whatsapp', color: 'from-emerald-500 to-teal-600', desc: 'Copywriting & Scripts' },
-                { id: 'iMersGate', name: 'iMersGate', icon: 'fa-rocket', color: 'from-blue-600 to-indigo-700', desc: 'Conversion Tech' },
-                { id: 'iMersAiBox', name: 'iMersAiBox', icon: 'fa-brain', color: 'from-purple-600 to-fuchsia-700', desc: 'Premium Prompts' },
-                { id: 'ResellerVault', name: 'ResellerVault', icon: 'fa-gem', color: 'from-orange-500 to-pink-600', desc: 'Visual Marketing' }
-            ];
-
-            document.getElementById('productGrid').innerHTML = products.map(p => {
-                const count = allData.filter(d => d.product === p.id).length;
-                return `
-                    <div onclick="openVault('${p.id}')" class="frosted-card group p-10 cursor-pointer btn-action relative overflow-hidden border-b-8 border-b-transparent hover:border-b-blue-600">
-                        <div class="box-pattern"></div>
-                        <div class="w-16 h-16 bg-gradient-to-br ${p.color} rounded-2xl flex items-center justify-center shadow-xl mb-10 group-hover:scale-110 transition-all duration-500">
-                            <i class="fas ${p.icon} text-white text-2xl"></i>
-                        </div>
-                        <h4 class="text-3xl font-black mb-1 tracking-tighter uppercase">${p.name}</h4>
-                        <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mb-10 font-black">${p.desc}</p>
-                        <div class="flex justify-between items-center pt-8 border-t border-black/5 dark:border-white/5">
-                            <span class="text-[10px] font-black text-blue-600 tracking-widest">${count} ASSETS READY</span>
-                            <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
-                                <i class="fas fa-arrow-right text-[10px]"></i>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function openVault(id) {
-            document.getElementById('homeView').classList.add('hidden');
-            document.getElementById('vaultView').classList.remove('hidden');
-            document.getElementById('navContext').classList.remove('hidden');
-            document.getElementById('vaultTitle').innerText = id;
-            document.getElementById('activeVaultName').innerText = id;
-            renderFilters(id);
-            renderContent(id);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showHome() {
-            document.getElementById('homeView').classList.remove('hidden');
-            document.getElementById('vaultView').classList.add('hidden');
-            document.getElementById('navContext').classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function renderFilters(id) {
-            const data = allData.filter(d => d.product === id);
-            const cats = ['All', ...new Set(data.map(d => d.category))];
-            document.getElementById('filterTabs').innerHTML = cats.map(c => `
-                <button onclick="renderContent('${id}', '${c}')" class="px-7 py-3 whitespace-nowrap rounded-2xl frosted-card text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-md">
-                    ${c}
-                </button>
-            `).join('');
-        }
-
-        function renderContent(id, filter = 'All') {
-            let data = allData.filter(d => d.product === id);
-            if(filter !== 'All') data = data.filter(d => d.category === filter);
-
-            const categories = [...new Set(data.map(d => d.category))];
-            const container = document.getElementById('contentGroups');
-            
-            if (data.length === 0) {
-                container.innerHTML = `<div class="text-center opacity-10 py-32 font-black text-4xl uppercase tracking-tighter">EMPTY VAULT</div>`;
-                return;
-            }
-
-            container.innerHTML = categories.map(cat => {
-                const subCats = [...new Set(data.filter(i => i.category === cat).map(i => i.sub_category || 'General Content'))];
-                return `
-                    <div class="animate-vault">
-                        <div class="flex items-center gap-6 mb-12">
-                            <span class="category-header bg-blue-600 text-white shadow-lg shadow-blue-500/20">${cat}</span>
-                            <div class="h-[2px] flex-1 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
-                            <span class="text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">${data.filter(i => i.category === cat).length} Aset</span>
-                        </div>
-                        <div class="space-y-16">
-                            ${subCats.map(sub => {
-                                const items = data.filter(i => i.category === cat && (i.sub_category || 'General Content') === sub);
-                                return `
-                                    <div class="space-y-8">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-1.5 h-6 bg-pink-500 rounded-full"></div>
-                                            <h5 class="text-sm font-black uppercase text-pink-500 tracking-[0.2em]">${sub}</h5>
-                                        </div>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                            ${items.map(item => {
-                                                const isHtml = item.content.trim().startsWith('<');
-                                                return `
-                                                    <div class="frosted-card group p-8 flex flex-col hover:scale-[1.02] transition-all border-white/40">
-                                                        ${item.image_url ? `
-                                                            <div class="relative overflow-hidden rounded-2xl mb-6 shadow-md">
-                                                                <img src="${item.image_url}" class="w-full aspect-video object-cover" onerror="this.parentElement.style.display='none'">
-                                                                <div class="absolute inset-0 bg-black/10"></div>
-                                                            </div>
-                                                        ` : ''}
-                                                        <div class="flex justify-between items-start mb-4">
-                                                            <h6 class="font-black text-xl leading-tight uppercase tracking-tighter">${item.title}</h6>
-                                                            ${isHtml ? `<span class="bg-blue-600/10 text-blue-600 text-[8px] font-black px-2 py-1 rounded-lg uppercase border border-blue-600/20">HTML</span>` : ''}
-                                                        </div>
-                                                        <div class="bg-black/5 dark:bg-white/5 rounded-2xl p-5 text-xs leading-relaxed opacity-60 mb-8 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[250px] no-scrollbar">
-                                                            ${item.content}
-                                                        </div>
-                                                        <div class="flex gap-2">
-                                                            <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
-                                                                class="flex-1 py-4 rounded-xl bg-blue-600 text-white font-black text-[10px] tracking-widest shadow-lg shadow-blue-600/20 active:scale-95 transition-all uppercase">
-                                                                Salin Teks
-                                                            </button>
-                                                            ${item.image_url ? `
-                                                                <a href="${item.image_url}" target="_blank" download class="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center opacity-40 hover:opacity-100 transition-all hover:bg-blue-100">
-                                                                    <i class="fas fa-download"></i>
-                                                                </a>
-                                                            ` : ''}
-                                                        </div>
-                                                    </div>
-                                                `;
-                                            }).join('')}
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function copyContent(e, text) {
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
-            document.execCommand('copy');
-            document.body.removeChild(el);
-
-            const t = document.getElementById('toast');
-            t.style.opacity = '1';
-            t.style.transform = 'translate(-50%, -10px)';
-            setTimeout(() => {
-                t.style.opacity = '0';
-                t.style.transform = 'translate(-50%, 0)';
-            }, 2000);
-        }
-
-        function handleSearch() {
-            const q = document.getElementById('globalSearch').value.toLowerCase();
-            if(q.length > 0) {
-                const filtered = allData.filter(d => 
-                    d.title.toLowerCase().includes(q) || 
-                    d.content.toLowerCase().includes(q) || 
-                    d.category.toLowerCase().includes(q) ||
-                    d.product.toLowerCase().includes(q)
-                );
-                renderSearchResults(filtered);
-            } else { renderGrid(); }
-        }
-
-        function renderSearchResults(data) {
-            const grid = document.getElementById('productGrid');
-            if(data.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-black text-4xl uppercase tracking-tighter">DATA TIDAK DITEMUKAN</div>`;
-                return;
-            }
-            grid.innerHTML = data.map(item => `
-                <div class="frosted-card p-8 border-white/50">
-                    <span class="text-[9px] font-black uppercase text-blue-600 mb-2 block tracking-widest">${item.product} • ${item.category}</span>
-                    <h5 class="text-xl font-black mb-6 uppercase tracking-tighter leading-tight">${item.title}</h5>
-                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-4 rounded-xl bg-blue-600 text-white font-black text-[10px] uppercase tracking-widest shadow-xl">
-                        Copy Asset
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        document.getElementById('logoContainer').onclick = () => {
-            logoClicks++;
-            if(logoClicks >= 5) {
-                document.getElementById('adminAuth').classList.remove('hidden');
-                logoClicks = 0;
-            }
-        };
-
-        function closeAdmin() {
-            document.getElementById('adminAuth').classList.add('hidden');
-            document.getElementById('adminPanel').classList.add('hidden');
-        }
-
-        async function verifyAccess() {
+        async function loginAdmin() {
             const pass = document.getElementById('adminPass').value;
-            try {
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'VERIFY', password: pass })
-                });
-                const data = await res.json();
-                if(data.status === 'success') {
-                    adminPassword = pass;
-                    document.getElementById('adminAuth').classList.add('hidden');
-                    document.getElementById('adminPanel').classList.remove('hidden');
-                    renderAdminList();
-                } else { alert('Master Key Incorrect'); }
-            } catch (e) { alert('Server Connection Error'); }
+            const res = await fetch(API_URL, { method:'POST', body: JSON.stringify({action:'VERIFY', password:pass}) });
+            const json = await res.json();
+            if(json.status === 'success') {
+                adminPass = pass;
+                closeAuth();
+                document.getElementById('adminMenu').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+                if(adminAuthRequestView === 'asset') renderAdminAssets();
+                else if(adminAuthRequestView === 'product') renderAdminProducts();
+            } else { alert('Master Key Invalid!'); }
         }
 
-        async function saveAsset(event) {
-            event.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "UPLOADING...";
-            btn.disabled = true;
+        function logoutAdmin() {
+            adminPass = '';
+            document.getElementById('adminMenu').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            showHome();
+        }
+
+        function checkAdmin(view) {
+            adminAuthRequestView = view;
+            if(!adminPass) {
+                document.getElementById('adminAuth').classList.remove('hidden');
+            } else {
+                if(view === 'asset') renderAdminAssets();
+                else if(view === 'product') renderAdminProducts();
+            }
+        }
+
+        function updateNav(activeId) {
+            document.querySelectorAll('.sidebar-link').forEach(n => n.classList.remove('active'));
+            const active = document.getElementById(activeId);
+            if(active) active.classList.add('active');
+        }
+
+        function renderByView() {
+            if(activeView === 'home') renderHome();
+            else if(activeView === 'asset') renderAdminAssets();
+            else if(activeView === 'product') renderAdminProducts();
+        }
+
+        // --- Logika Sidebar Abjad ---
+
+        function renderSidebar() {
+            if (!db.products || db.products.length === 0) return;
             
-            const payload = {
-                action: document.getElementById('editId').value ? 'UPDATE' : 'ADD',
-                password: adminPassword,
-                id: document.getElementById('editId').value,
-                product: document.getElementById('fProduct').value,
-                category: document.getElementById('fCategory').value,
-                sub_category: document.getElementById('fSubCategory').value,
-                title: document.getElementById('fTitle').value,
-                content: document.getElementById('fContent').value,
-                image_url: document.getElementById('fImage').value
-            };
+            const sorted = [...db.products].sort((a,b) => a.name.localeCompare(b.name));
+            const grouped = sorted.reduce((acc, p) => {
+                const letter = p.name[0].toUpperCase();
+                if(!acc[letter]) acc[letter] = [];
+                acc[letter].push(p);
+                return acc;
+            }, {});
 
-            try {
-                const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
-                const data = await res.json();
-                if(data.status === 'success') {
-                    document.getElementById('adminForm').reset();
-                    document.getElementById('editId').value = '';
-                    await loadData();
-                    renderAdminList();
-                    btn.innerText = "DONE!";
-                    setTimeout(() => { btn.innerText = originalText; btn.disabled = false; }, 2000);
-                } else { alert('Error: ' + data.message); btn.innerText = "ERROR"; btn.disabled = false; }
-            } catch (e) { alert('Network Error'); btn.innerText = originalText; btn.disabled = false; }
-        }
-
-        async function deleteItem(id) {
-            if(!confirm('Permanently remove this asset?')) return;
-            await fetch(API_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'DELETE', password: adminPassword, id: id })
+            let html = '';
+            Object.keys(grouped).sort().forEach(letter => {
+                html += `<div class="alphabet-label">${letter}</div>`;
+                grouped[letter].forEach(p => {
+                    html += `
+                        <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
+                            <i class="fas ${p.icon || 'fa-folder'} mr-3 w-4 opacity-40"></i> ${p.name}
+                        </div>
+                    `;
+                });
             });
-            await loadData();
-            renderAdminList();
+            document.getElementById('sidebarProductList').innerHTML = html;
         }
 
-        function editItem(id) {
-            const item = allData.find(d => d.id == id);
-            document.getElementById('editId').value = item.id;
-            document.getElementById('fProduct').value = item.product;
-            document.getElementById('fCategory').value = item.category;
-            document.getElementById('fSubCategory').value = item.sub_category || '';
-            document.getElementById('fTitle').value = item.title;
-            document.getElementById('fContent').value = item.content;
-            document.getElementById('fImage').value = item.image_url || '';
-            document.getElementById('submitBtn').innerText = "Update Info";
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        // --- VIEWS ---
 
-        function renderAdminList() {
-            const sorted = [...allData].sort((a,b) => a.product.localeCompare(b.product));
-            document.getElementById('adminList').innerHTML = sorted.map(item => `
-                <div class="frosted-card p-6 flex justify-between items-center bg-white/40">
-                    <div class="flex items-center gap-5 text-left">
-                        ${item.image_url ? `<img src="${item.image_url}" class="w-14 h-14 rounded-2xl object-cover border border-white shadow-lg">` : `<div class="w-14 h-14 bg-slate-200 dark:bg-slate-700 rounded-2xl flex items-center justify-center opacity-30 border border-white/20"><i class="fas fa-file-alt"></i></div>`}
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="text-[8px] font-black uppercase text-blue-600 tracking-widest">${item.product}</span>
-                                <span class="text-[8px] opacity-30 font-black uppercase tracking-widest">• ${item.category}</span>
-                                <span class="text-[8px] opacity-30 font-black uppercase tracking-widest">• ${item.sub_category || 'General'}</span>
+        function renderHome() {
+            activeView = 'home';
+            updateNav('navHome');
+            document.getElementById('headerTitle').innerText = "Overview Dashboard";
+            document.getElementById('breadcrumb').classList.add('hidden');
+
+            if (!db.products || db.products.length === 0) {
+                document.getElementById('viewArea').innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-40 opacity-30">
+                        <i class="fas fa-cloud-upload-alt text-4xl mb-4"></i>
+                        <p class="font-bold uppercase tracking-widest text-sm text-center">Belum ada silo produk terdaftar.<br>Silakan tambah via Admin (Klik logo 5x).</p>
+                    </div>`;
+                return;
+            }
+
+            const html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    ${db.products.map(p => {
+                        const count = db.assets.filter(a => a.product === p.name).length;
+                        return `
+                            <div onclick="openVault('${p.name}')" class="asset-card p-10 flex flex-col cursor-pointer group h-full">
+                                <div class="w-14 h-14 ${p.color ? p.color.replace('from-','bg-').split(' ')[0] : 'bg-indigo-600'} rounded-2xl flex items-center justify-center text-white mb-8 shadow-md group-hover:scale-110 transition-transform">
+                                    <i class="fas ${p.icon || 'fa-folder'} text-xl"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-2 uppercase tracking-tight">${p.name}</h4>
+                                <p class="text-xs text-gray-400 mb-10 leading-relaxed">${p.desc || 'Deskripsi tidak tersedia'}</p>
+                                <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
+                                    <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">${count} Assets Ready</span>
+                                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                                </div>
                             </div>
-                            <p class="font-black text-base tracking-tighter uppercase leading-none">${item.title}</p>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+            document.getElementById('viewArea').innerHTML = html;
+        }
+
+        function openVault(name) {
+            activeView = 'vault';
+            updateNav(`side-${name}`);
+            document.getElementById('headerTitle').innerText = name;
+            document.getElementById('breadcrumb').classList.remove('hidden');
+            document.getElementById('breadcrumbActive').innerText = name;
+
+            const assets = db.assets.filter(a => a.product === name);
+            const groups = [...new Set(assets.map(a => a.category))];
+
+            if(assets.length === 0) {
+                document.getElementById('viewArea').innerHTML = `<div class="py-40 text-center text-gray-300 font-bold uppercase tracking-widest animate-in">Silo ini masih kosong.</div>`;
+                return;
+            }
+
+            let html = groups.map(g => {
+                const subs = [...new Set(assets.filter(a=>a.category===g).map(a=>a.sub_category || 'General'))];
+                return `
+                    <div class="mb-20 animate-in">
+                        <div class="flex items-center gap-4 mb-8">
+                            <h3 class="text-xs font-bold uppercase tracking-[0.2em] text-gray-900 px-5 py-2 bg-white border border-gray-100 rounded-xl shadow-sm">${g}</h3>
+                            <div class="h-[1px] flex-1 bg-gray-100"></div>
+                        </div>
+                        <div class="space-y-12">
+                            ${subs.map(s => `
+                                <div class="space-y-6">
+                                    <h5 class="text-[10px] font-bold uppercase text-indigo-500 tracking-[0.3em] flex items-center gap-2">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div> ${s}
+                                    </h5>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                        ${assets.filter(a=>a.category===g && (a.sub_category||'General')===s).map(item => {
+                                            const isHtml = item.content.trim().startsWith('<');
+                                            return `
+                                                <div class="asset-card p-6 flex flex-col group">
+                                                    ${item.image_url ? `<img src="${item.image_url}" class="w-full aspect-video object-cover rounded-xl mb-4 border border-gray-50 shadow-sm" onerror="this.style.display='none'">` : ''}
+                                                    <div class="flex justify-between items-start mb-4">
+                                                        <h6 class="font-bold text-gray-900 text-sm leading-tight">${item.title}</h6>
+                                                        ${isHtml ? `<span class="bg-indigo-50 text-indigo-600 text-[8px] font-bold px-2 py-1 rounded uppercase tracking-widest">HTML</span>` : ''}
+                                                    </div>
+                                                    <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line overflow-y-auto max-h-32 no-scrollbar font-medium">${item.content}</div>
+                                                    <div class="flex gap-2">
+                                                        <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-saas text-[10px] uppercase tracking-widest">Salin Teks</button>
+                                                        ${isHtml ? `<button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"><i class="fas fa-eye text-xs"></i></button>` : ''}
+                                                        ${item.image_url ? `<a href="${item.image_url}" target="_blank" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-emerald-500 transition-all"><i class="fas fa-download text-xs"></i></a>` : ''}
+                                                    </div>
+                                                </div>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="editItem('${item.id}')" class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-md"><i class="fas fa-edit text-xs"></i></button>
-                        <button onclick="deleteItem('${item.id}')" class="w-12 h-12 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-md"><i class="fas fa-trash text-xs"></i></button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+            document.getElementById('viewArea').innerHTML = html;
         }
 
-        window.onload = loadData;
+        // --- ADMIN MANAGEMENT ---
+
+        function renderAdminAssets() {
+            activeView = 'asset';
+            updateNav('navAsset');
+            document.getElementById('headerTitle').innerText = "Manajemen Aset";
+            document.getElementById('breadcrumb').classList.add('hidden');
+
+            const html = `
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 animate-in">
+                    <div class="xl:col-span-4">
+                        <div class="bg-white border border-gray-100 p-8 rounded-2xl shadow-sm sticky top-5">
+                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Editor Konten</h4>
+                            <form id="assetForm" onsubmit="handleAssetSubmit(event)" class="space-y-5">
+                                <input type="hidden" id="assetId">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Silo Tujuan</label>
+                                    <select id="fAssetProduct" class="saas-input font-bold">${db.products.map(p=>`<option value="${p.name}">${p.name}</option>`).join('')}</select>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Kategori</label>
+                                        <input type="text" id="fAssetCat" placeholder="e.g. Copywriting" class="saas-input">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sub-Kategori</label>
+                                        <input type="text" id="fAssetSub" placeholder="e.g. Soft Sell" class="saas-input">
+                                    </div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nama / Judul</label>
+                                    <input type="text" id="fAssetTitle" placeholder="Headline..." class="saas-input">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Media URL</label>
+                                    <input type="text" id="fAssetImg" placeholder="https://..." class="saas-input">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Core Content</label>
+                                    <textarea id="fAssetContent" rows="6" placeholder="Paste konten di sini..." class="saas-input resize-none leading-relaxed text-xs"></textarea>
+                                </div>
+                                <button type="submit" id="assetBtn" class="w-full btn-saas py-3 text-xs uppercase tracking-widest shadow-xl">Publish to Database</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="xl:col-span-8 space-y-3">
+                        <div class="flex items-center gap-4 mb-6 px-2">
+                            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Active Database (${db.assets.length})</p>
+                            <div class="h-[1px] flex-1 bg-gray-100"></div>
+                        </div>
+                        ${db.assets.map(a => `
+                            <div class="bg-white border border-gray-100 p-6 rounded-xl flex justify-between items-center transition-all hover:border-gray-200 group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-gray-300 group-hover:text-indigo-600 transition-colors"><i class="fas fa-file-code"></i></div>
+                                    <div>
+                                        <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-1">${a.product} • ${a.category}</p>
+                                        <h6 class="font-bold text-gray-900 text-sm">${a.title}</h6>
+                                    </div>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-indigo-600 transition-all"><i class="fas fa-pen"></i></button>
+                                    <button onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('viewArea').innerHTML = html;
+        }
+
+        function renderAdminProducts() {
+            activeView = 'product';
+            updateNav('navProduct');
+            document.getElementById('headerTitle').innerText = "Product Silo Management";
+            document.getElementById('breadcrumb').classList.add('hidden');
+
+            const html = `
+                <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 animate-in">
+                    <div class="xl:col-span-4">
+                        <div class="bg-white border border-gray-100 p-10 rounded-2xl shadow-sm sticky top-5">
+                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Register New Silo</h4>
+                            <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-6">
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Silo Name</label>
+                                    <input type="text" id="fProdName" placeholder="e.g. iMersGate" class="saas-input">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Icon (FA)</label>
+                                        <input type="text" id="fProdIcon" placeholder="fa-rocket" class="saas-input">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Brand Color</label>
+                                        <select id="fProdColor" class="saas-input font-bold">
+                                            <option value="from-indigo-600 to-blue-700">Indigo Blue</option>
+                                            <option value="from-emerald-500 to-teal-600">Emerald Green</option>
+                                            <option value="from-pink-500 to-rose-600">Hot Pink</option>
+                                            <option value="from-orange-500 to-amber-600">Sunset Orange</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Short Tagline</label>
+                                    <input type="text" id="fProdDesc" placeholder="Penjelasan singkat..." class="saas-input">
+                                </div>
+                                <button type="submit" id="prodBtn" class="w-full btn-saas py-3 text-xs uppercase tracking-widest shadow-xl">Create Silo</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="xl:col-span-8 space-y-4">
+                        <div class="flex items-center gap-4 mb-6 px-2">
+                            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Active Silos (${db.products.length})</p>
+                            <div class="h-[1px] flex-1 bg-gray-100"></div>
+                        </div>
+                        ${db.products.map(p => `
+                            <div class="bg-white border border-gray-100 p-8 rounded-2xl flex justify-between items-center transition-all hover:bg-gray-50">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-14 h-14 ${p.color ? p.color.replace('from-','bg-').split(' ')[0] : 'bg-indigo-600'} rounded-2xl flex items-center justify-center text-white shadow-md"><i class="fas ${p.icon || 'fa-folder'} text-xl"></i></div>
+                                    <div>
+                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest px-3 py-1 bg-gray-100 rounded-lg inline-block mb-1">Authenticated Silo</p>
+                                        <h6 class="font-bold text-gray-900 text-lg uppercase tracking-tight">${p.name}</h6>
+                                    </div>
+                                </div>
+                                <button onclick="deleteProduct('${p.id}')" class="w-11 h-11 bg-white border border-gray-100 text-gray-400 rounded-xl hover:bg-red-600 hover:text-white transition-all"><i class="fas fa-trash"></i></button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            document.getElementById('viewArea').innerHTML = html;
+        }
+
+        // --- SUBMIT HANDLERS ---
+
+        async function handleAssetSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('assetBtn');
+            btn.innerText = 'Publishing...';
+            const payload = {
+                action: document.getElementById('assetId').value ? 'UPDATE_ASSET' : 'ADD_ASSET',
+                password: adminPass,
+                id: document.getElementById('assetId').value,
+                product: document.getElementById('fAssetProduct').value,
+                category: document.getElementById('fAssetCat').value,
+                sub_category: document.getElementById('fAssetSub').value,
+                title: document.getElementById('fAssetTitle').value,
+                image_url: document.getElementById('fAssetImg').value,
+                content: document.getElementById('fAssetContent').value
+            };
+            await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
+            await fetchDB();
+        }
+
+        async function handleProductSubmit(e) {
+            e.preventDefault();
+            const btn = document.getElementById('prodBtn');
+            btn.innerText = 'Registering...';
+            const payload = {
+                action: 'ADD_PRODUCT',
+                password: adminPass,
+                name: document.getElementById('fProdName').value,
+                icon: document.getElementById('fProdIcon').value,
+                color: document.getElementById('fProdColor').value,
+                desc: document.getElementById('fProdDesc').value
+            };
+            await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
+            await fetchDB();
+        }
+
+        async function deleteAsset(id) { if(confirm('Erase this asset?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); } }
+        async function deleteProduct(id) { if(confirm('Delete Silo? Contents are safe, but Silo will vanish.')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); } }
+
+        function editAsset(id) {
+            const a = db.assets.find(item => item.id == id);
+            document.getElementById('assetId').value = a.id;
+            document.getElementById('fAssetProduct').value = a.product;
+            document.getElementById('fAssetCat').value = a.category;
+            document.getElementById('fAssetSub').value = a.sub_category || '';
+            document.getElementById('fAssetTitle').value = a.title;
+            document.getElementById('fAssetImg').value = a.image_url;
+            document.getElementById('fAssetContent').value = a.content;
+            document.getElementById('assetBtn').innerText = 'Update Asset';
+        }
+
+        // --- UTILS ---
+
+        function copyToClip(text) {
+            const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+            const t = document.getElementById('toast'); t.style.opacity = '1'; 
+            setTimeout(() => { t.style.opacity = '0'; }, 2000);
+        }
+
+        function previewHtml(code) {
+            document.getElementById('previewFrame').srcdoc = code;
+            document.getElementById('htmlPreview').classList.remove('hidden');
+        }
+        function closePreview() { document.getElementById('htmlPreview').classList.add('hidden'); }
+
+        function showHome() { activeView = 'home'; renderHome(); }
+        function doSearch() {
+            const q = document.getElementById('globalSearch').value.toLowerCase();
+            if(!q) return renderHome();
+            const filtered = db.assets.filter(a => a.title.toLowerCase().includes(q) || a.content.toLowerCase().includes(q) || a.category.toLowerCase().includes(q) || a.product.toLowerCase().includes(q));
+            document.getElementById('headerTitle').innerText = "Search Result";
+            document.getElementById('breadcrumb').classList.add('hidden');
+            const html = `
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
+                    ${filtered.map(item => `
+                        <div class="asset-card p-6 flex flex-col border-indigo-100">
+                            <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-2">${item.product} • ${item.category}</p>
+                            <h6 class="font-bold text-gray-900 text-sm mb-6">${item.title}</h6>
+                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`')}\`)" class="w-full btn-saas py-2 text-[10px] uppercase">Salin Aset</button>
+                        </div>
+                    `).join('')}
+                </div>`;
+            document.getElementById('viewArea').innerHTML = html;
+        }
+
+        window.onload = fetchDB;
     </script>
 </body>
 </html>
