@@ -15,7 +15,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Sidebar permanen di kiri */
+        /* Sidebar permanent left - SaaS Style */
         .sidebar { width: 280px; border-right: 1px solid #F3F4F6; }
         
         .sidebar-link {
@@ -42,10 +42,10 @@
             letter-spacing: 0.05em;
         }
 
-        /* Area konten utama */
+        /* Main Content area */
         .content-area { flex: 1; height: 100vh; overflow-y: auto; background-color: #FBFCFD; }
 
-        /* Card bergaya SaaS */
+        /* SaaS Card */
         .asset-card {
             background: #FFFFFF;
             border: 1px solid #F3F4F6;
@@ -69,6 +69,12 @@
             transition: border-color 0.2s;
         }
         .saas-input:focus { border-color: #4F46E5; box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1); }
+
+        .color-picker-input {
+            height: 42px;
+            padding: 2px;
+            cursor: pointer;
+        }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
@@ -120,7 +126,7 @@
             <!-- List produk per abjad diinjeksi di sini -->
             <div id="sidebarProductList"></div>
 
-            <!-- Menu Admin Tersembunyi (Stealth Mode) -->
+            <!-- Menu Admin Tersembunyi (Klik Logo 5x) -->
             <div id="adminMenu" class="hidden mt-8 border-t border-gray-100 pt-6">
                 <div class="px-6 mb-2 flex justify-between items-center">
                     <p class="text-[10px] font-bold text-red-400 uppercase tracking-widest px-2">Console</p>
@@ -185,18 +191,18 @@
 
     <!-- FEEDBACK TOAST -->
     <div id="toast" class="fixed bottom-10 right-10 z-[200] opacity-0 pointer-events-none transition-all duration-500">
-        <div class="bg-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-3 shadow-2xl">
+        <div class="bg-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-3 shadow-2xl border border-white/10">
             <i class="fas fa-check-circle text-white"></i>
-            <span class="text-xs font-semibold">Asset copied to clipboard!</span>
+            <span class="text-xs font-semibold">Teks berhasil disalin!</span>
         </div>
     </div>
 
     <!-- MODAL PREVIEW -->
     <div id="htmlPreview" class="hidden fixed inset-0 z-[150] bg-gray-900/50 backdrop-blur-md flex items-center justify-center p-12">
-        <div class="bg-white w-full max-w-6xl h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl">
+        <div class="bg-white w-full max-w-6xl h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl border border-gray-100">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
                 <h4 class="font-bold text-xs tracking-widest text-indigo-600 uppercase">Interactive Asset Preview</h4>
-                <button onclick="closePreview()" class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900"><i class="fas fa-times"></i></button>
+                <button onclick="closePreview()" class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"><i class="fas fa-times"></i></button>
             </div>
             <iframe id="previewFrame" class="flex-1 w-full border-none"></iframe>
         </div>
@@ -248,6 +254,7 @@
                 document.getElementById('logoutBtn').classList.remove('hidden');
                 if(adminAuthRequestView === 'asset') renderAdminAssets();
                 else if(adminAuthRequestView === 'product') renderAdminProducts();
+                else if(adminAuthRequestView === 'admin_unlock') renderHome();
             } else { alert('Master Key Invalid!'); }
         }
 
@@ -280,7 +287,7 @@
             else if(activeView === 'product') renderAdminProducts();
         }
 
-        // --- Logika Sidebar Abjad ---
+        // --- Sidebar Alphabet Grouping ---
 
         function renderSidebar() {
             if (!db.products || db.products.length === 0) return;
@@ -297,9 +304,10 @@
             Object.keys(grouped).sort().forEach(letter => {
                 html += `<div class="alphabet-label">${letter}</div>`;
                 grouped[letter].forEach(p => {
+                    const color = p.color || '#4F46E5';
                     html += `
                         <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
-                            <i class="fas ${p.icon || 'fa-folder'} mr-3 w-4 opacity-40"></i> ${p.name}
+                            <i class="fas ${p.icon || 'fa-folder'} mr-3 w-4 opacity-50" style="color: ${color}"></i> ${p.name}
                         </div>
                     `;
                 });
@@ -318,8 +326,8 @@
             if (!db.products || db.products.length === 0) {
                 document.getElementById('viewArea').innerHTML = `
                     <div class="flex flex-col items-center justify-center py-40 opacity-30">
-                        <i class="fas fa-cloud-upload-alt text-4xl mb-4"></i>
-                        <p class="font-bold uppercase tracking-widest text-sm text-center">Belum ada silo produk terdaftar.<br>Silakan tambah via Admin (Klik logo 5x).</p>
+                        <i class="fas fa-cloud-upload-alt text-4xl mb-4 text-gray-200"></i>
+                        <p class="font-bold uppercase tracking-widest text-sm text-center text-gray-400">Belum ada silo produk terdaftar.<br>Silakan tambah via Manage Products (Klik logo 5x).</p>
                     </div>`;
                 return;
             }
@@ -328,15 +336,16 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     ${db.products.map(p => {
                         const count = db.assets.filter(a => a.product === p.name).length;
+                        const color = p.color || '#4F46E5';
                         return `
                             <div onclick="openVault('${p.name}')" class="asset-card p-10 flex flex-col cursor-pointer group h-full">
-                                <div class="w-14 h-14 ${p.color ? p.color.replace('from-','bg-').split(' ')[0] : 'bg-indigo-600'} rounded-2xl flex items-center justify-center text-white mb-8 shadow-md group-hover:scale-110 transition-transform">
+                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-8 shadow-md group-hover:scale-110 transition-transform" style="background: ${color}">
                                     <i class="fas ${p.icon || 'fa-folder'} text-xl"></i>
                                 </div>
                                 <h4 class="text-xl font-bold text-gray-900 mb-2 uppercase tracking-tight">${p.name}</h4>
                                 <p class="text-xs text-gray-400 mb-10 leading-relaxed">${p.desc || 'Deskripsi tidak tersedia'}</p>
                                 <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
-                                    <span class="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">${count} Assets Ready</span>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest" style="color: ${color}">${count} Assets Ready</span>
                                     <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
                                 </div>
                             </div>
@@ -422,11 +431,11 @@
                                 <input type="hidden" id="assetId">
                                 <div class="space-y-1.5">
                                     <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Silo Tujuan</label>
-                                    <select id="fAssetProduct" class="saas-input font-bold">${db.products.map(p=>`<option value="${p.name}">${p.name}</option>`).join('')}</select>
+                                    <select id="fAssetProduct" class="saas-input font-bold text-gray-700">${db.products.map(p=>`<option value="${p.name}">${p.name}</option>`).join('')}</select>
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Kategori</label>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Kategori Utama</label>
                                         <input type="text" id="fAssetCat" placeholder="e.g. Copywriting" class="saas-input">
                                     </div>
                                     <div class="space-y-1.5">
@@ -439,14 +448,14 @@
                                     <input type="text" id="fAssetTitle" placeholder="Headline..." class="saas-input">
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Media URL</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Media URL (Gambar)</label>
                                     <input type="text" id="fAssetImg" placeholder="https://..." class="saas-input">
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Core Content</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Isi Konten</label>
                                     <textarea id="fAssetContent" rows="6" placeholder="Paste konten di sini..." class="saas-input resize-none leading-relaxed text-xs"></textarea>
                                 </div>
-                                <button type="submit" id="assetBtn" class="w-full btn-saas py-3 text-xs uppercase tracking-widest shadow-xl">Publish to Database</button>
+                                <button type="submit" id="assetBtn" class="w-full btn-saas py-3 text-xs uppercase tracking-widest shadow-xl">Publish Asset</button>
                             </form>
                         </div>
                     </div>
@@ -479,37 +488,33 @@
         function renderAdminProducts() {
             activeView = 'product';
             updateNav('navProduct');
-            document.getElementById('headerTitle').innerText = "Product Silo Management";
+            document.getElementById('headerTitle').innerText = "Manajemen Silo Produk";
             document.getElementById('breadcrumb').classList.add('hidden');
 
             const html = `
                 <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 animate-in">
                     <div class="xl:col-span-4">
                         <div class="bg-white border border-gray-100 p-10 rounded-2xl shadow-sm sticky top-5">
-                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Register New Silo</h4>
+                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Registrasi Produk Baru</h4>
                             <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-6">
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Silo Name</label>
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nama Produk</label>
                                     <input type="text" id="fProdName" placeholder="e.g. iMersGate" class="saas-input">
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Icon (FA)</label>
-                                        <input type="text" id="fProdIcon" placeholder="fa-rocket" class="saas-input">
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ikon (FA)</label>
+                                        <input type="text" id="fProdIcon" placeholder="e.g. fa-rocket" class="saas-input">
+                                        <a href="https://fontawesome.com/v6/search?o=r&m=free" target="_blank" class="text-[9px] text-indigo-500 font-bold hover:underline">Cari Ikon di FontAwesome →</a>
                                     </div>
                                     <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Brand Color</label>
-                                        <select id="fProdColor" class="saas-input font-bold">
-                                            <option value="from-indigo-600 to-blue-700">Indigo Blue</option>
-                                            <option value="from-emerald-500 to-teal-600">Emerald Green</option>
-                                            <option value="from-pink-500 to-rose-600">Hot Pink</option>
-                                            <option value="from-orange-500 to-amber-600">Sunset Orange</option>
-                                        </select>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Warna Brand</label>
+                                        <input type="color" id="fProdColor" value="#4F46E5" class="saas-input color-picker-input">
                                     </div>
                                 </div>
                                 <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Short Tagline</label>
-                                    <input type="text" id="fProdDesc" placeholder="Penjelasan singkat..." class="saas-input">
+                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Tagline / Deskripsi Singkat</label>
+                                    <input type="text" id="fProdDesc" placeholder="Penjelasan singkat silo..." class="saas-input">
                                 </div>
                                 <button type="submit" id="prodBtn" class="w-full btn-saas py-3 text-xs uppercase tracking-widest shadow-xl">Create Silo</button>
                             </form>
@@ -517,16 +522,17 @@
                     </div>
                     <div class="xl:col-span-8 space-y-4">
                         <div class="flex items-center gap-4 mb-6 px-2">
-                            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Active Silos (${db.products.length})</p>
+                            <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Silo Aktif (${db.products.length})</p>
                             <div class="h-[1px] flex-1 bg-gray-100"></div>
                         </div>
                         ${db.products.map(p => `
                             <div class="bg-white border border-gray-100 p-8 rounded-2xl flex justify-between items-center transition-all hover:bg-gray-50">
                                 <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 ${p.color ? p.color.replace('from-','bg-').split(' ')[0] : 'bg-indigo-600'} rounded-2xl flex items-center justify-center text-white shadow-md"><i class="fas ${p.icon || 'fa-folder'} text-xl"></i></div>
+                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md" style="background: ${p.color || '#4F46E5'}"><i class="fas ${p.icon || 'fa-folder'} text-xl"></i></div>
                                     <div>
                                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest px-3 py-1 bg-gray-100 rounded-lg inline-block mb-1">Authenticated Silo</p>
                                         <h6 class="font-bold text-gray-900 text-lg uppercase tracking-tight">${p.name}</h6>
+                                        <p class="text-xs text-gray-400">${p.desc}</p>
                                     </div>
                                 </div>
                                 <button onclick="deleteProduct('${p.id}')" class="w-11 h-11 bg-white border border-gray-100 text-gray-400 rounded-xl hover:bg-red-600 hover:text-white transition-all"><i class="fas fa-trash"></i></button>
@@ -544,6 +550,7 @@
             e.preventDefault();
             const btn = document.getElementById('assetBtn');
             btn.innerText = 'Publishing...';
+            btn.disabled = true;
             const payload = {
                 action: document.getElementById('assetId').value ? 'UPDATE_ASSET' : 'ADD_ASSET',
                 password: adminPass,
@@ -555,14 +562,21 @@
                 image_url: document.getElementById('fAssetImg').value,
                 content: document.getElementById('fAssetContent').value
             };
-            await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
-            await fetchDB();
+            try {
+                await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
+                await fetchDB();
+                document.getElementById('assetForm').reset();
+                document.getElementById('assetId').value = '';
+                btn.innerText = 'Publish Asset';
+                btn.disabled = false;
+            } catch(e) { alert('Gagal menyimpan.'); btn.disabled = false; }
         }
 
         async function handleProductSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('prodBtn');
             btn.innerText = 'Registering...';
+            btn.disabled = true;
             const payload = {
                 action: 'ADD_PRODUCT',
                 password: adminPass,
@@ -571,12 +585,17 @@
                 color: document.getElementById('fProdColor').value,
                 desc: document.getElementById('fProdDesc').value
             };
-            await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
-            await fetchDB();
+            try {
+                await fetch(API_URL, {method:'POST', body: JSON.stringify(payload)});
+                await fetchDB();
+                document.getElementById('productForm').reset();
+                btn.innerText = 'Create Silo';
+                btn.disabled = false;
+            } catch(e) { alert('Gagal menyimpan.'); btn.disabled = false; }
         }
 
-        async function deleteAsset(id) { if(confirm('Erase this asset?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); } }
-        async function deleteProduct(id) { if(confirm('Delete Silo? Contents are safe, but Silo will vanish.')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); } }
+        async function deleteAsset(id) { if(confirm('Hapus aset ini secara permanen?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); } }
+        async function deleteProduct(id) { if(confirm('Hapus Silo ini? Semua data aset di dalamnya akan tetap tersimpan di database.')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); } }
 
         function editAsset(id) {
             const a = db.assets.find(item => item.id == id);
@@ -605,19 +624,21 @@
         function closePreview() { document.getElementById('htmlPreview').classList.add('hidden'); }
 
         function showHome() { activeView = 'home'; renderHome(); }
+        function closeAuth() { document.getElementById('adminAuth').classList.add('hidden'); }
+
         function doSearch() {
             const q = document.getElementById('globalSearch').value.toLowerCase();
             if(!q) return renderHome();
             const filtered = db.assets.filter(a => a.title.toLowerCase().includes(q) || a.content.toLowerCase().includes(q) || a.category.toLowerCase().includes(q) || a.product.toLowerCase().includes(q));
-            document.getElementById('headerTitle').innerText = "Search Result";
+            document.getElementById('headerTitle').innerText = "Search Results";
             document.getElementById('breadcrumb').classList.add('hidden');
             const html = `
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
                     ${filtered.map(item => `
-                        <div class="asset-card p-6 flex flex-col border-indigo-100">
+                        <div class="asset-card p-6 flex flex-col">
                             <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-2">${item.product} • ${item.category}</p>
                             <h6 class="font-bold text-gray-900 text-sm mb-6">${item.title}</h6>
-                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`')}\`)" class="w-full btn-saas py-2 text-[10px] uppercase">Salin Aset</button>
+                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-full btn-saas py-2 text-[10px] uppercase tracking-widest">Salin Aset</button>
                         </div>
                     `).join('')}
                 </div>`;
