@@ -3,231 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iMersDocs | Digital Asset Vault</title>
+    <title>iMersDocs | Creative Asset OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
     <style>
         :root {
-            --accent-copper: #C68642;
-            --bg-dark: #0A0A0B;
-            --bg-light: #FDFCFB; 
-            --ivory: #F5F5F0;
-            --card-dark: rgba(255, 255, 255, 0.02);
-            --card-light: rgba(0, 0, 0, 0.02);
+            --p-mint: #10b981;
+            --p-blue: #3b82f6;
+            --p-purple: #8b5cf6;
+            --p-pink: #ec4899;
+            --p-orange: #f59e0b;
         }
 
         body { 
             font-family: 'Poppins', sans-serif; 
-            transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease; 
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            margin: 0;
+            min-height: 100vh;
+            background: #f8fafc;
+            color: #1e293b;
+            transition: all 0.5s ease;
         }
-        
-        .dark { background-color: var(--bg-dark); color: var(--ivory); }
-        .light { background-color: var(--bg-light); color: #1A1A1A; }
 
-        .glass-card {
+        /* Animated Mesh Background */
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+        }
+
+        .dark .mesh-bg {
+            background-color: #0f172a;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.2) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+        }
+
+        .frosted-card {
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-        }
-        .light .glass-card {
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            background: var(--card-light);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
+            border-radius: 24px;
         }
 
-        /* Admin Field Styling */
+        .dark .frosted-card {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #f1f5f9;
+        }
+
+        /* Admin Input Styles - High Contrast */
         .admin-field {
-            background: rgba(255, 255, 255, 0.03) !important;
-            border: 1px solid rgba(255, 255, 255, 0.08) !important;
-            color: var(--ivory) !important;
+            background: white !important;
+            border: 2px solid #e2e8f0 !important;
+            color: #1e293b !important;
             border-radius: 12px;
-            padding: 0.85rem 1.2rem;
+            padding: 0.75rem 1rem;
             width: 100%;
             outline: none;
-            font-size: 14px;
-            transition: all 0.3s;
+            font-weight: 500;
         }
-        .admin-field:focus { border-color: var(--accent-copper) !important; }
-        
-        /* Product Box Art */
-        .box-art {
-            height: 100px;
-            width: 100%;
-            border-radius: 20px 20px 0 0;
-            position: relative;
-            overflow: hidden;
-            opacity: 0.9;
+        .dark .admin-field {
+            background: #334155 !important;
+            border: 2px solid #475569 !important;
+            color: white !important;
         }
-        .box-wamel { background: linear-gradient(135deg, #064e3b, #059669); }
-        .box-gate { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
-        .box-aibox { background: linear-gradient(135deg, #4c1d95, #7c3aed); }
-        .box-vault { background: linear-gradient(135deg, #78350f, #d97706); }
+        .admin-field:focus { border-color: var(--p-blue) !important; }
 
-        .text-gradient {
-            background: linear-gradient(135deg, #FFF 0%, var(--accent-copper) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        select.admin-field option {
+            background-color: white;
+            color: black;
         }
-        .light .text-gradient {
-            background: linear-gradient(135deg, #1A1A1A 0%, var(--accent-copper) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .dark select.admin-field option {
+            background-color: #1e293b;
+            color: white;
         }
+
+        .category-header {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 12px;
+            border-radius: 99px;
+        }
+
+        .btn-action {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-action:hover { transform: translateY(-2px) scale(1.02); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        
-        @keyframes subtleFade {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-vault { animation: subtleFade 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
-
-        .asset-card {
-            border-radius: 20px;
-            background: var(--card-dark);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            overflow: hidden;
-            transition: all 0.4s ease;
-        }
-        .light .asset-card {
-            background: #FFF;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        }
-        .asset-card:hover { transform: translateY(-5px); border-color: var(--accent-copper); }
-        
-        .code-font { font-family: 'JetBrains Mono', monospace; font-size: 11px; }
-
-        .preview-overlay {
-            position: fixed;
-            inset: 0;
-            z-index: 200;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(15px);
-            display: none;
-            padding: 2rem;
-        }
     </style>
 </head>
-<body class="dark">
+<body class="light">
+    <div class="mesh-bg"></div>
 
-    <!-- Navbar -->
-    <nav class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/5">
-        <div class="flex items-center gap-4 cursor-pointer group" id="logoContainer">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-copper rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-3 transition-transform duration-500">
-                <i class="fas fa-layer-group text-black text-lg"></i>
+    <!-- Header -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-xl border-b border-black/5">
+        <div class="flex items-center gap-3 cursor-pointer group" id="logoContainer">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-all">
+                <i class="fas fa-sparkles text-white text-lg"></i>
             </div>
-            <div>
-                <h1 class="text-lg font-bold tracking-tight leading-none">iMers<span class="text-copper">Docs</span></h1>
-                <p class="text-[7px] font-bold opacity-30 uppercase tracking-[0.3em] mt-0.5">Asset Ecosystem</p>
-            </div>
+            <h1 class="text-xl font-extrabold tracking-tight">iMers<span class="text-blue-600">Docs</span></h1>
         </div>
 
-        <div class="flex items-center gap-4">
-            <div id="navContext" class="hidden md:flex items-center gap-3 bg-white/5 px-4 py-2 rounded-full border border-white/10">
-                <button onclick="showHome()" class="text-[9px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100 transition-opacity">Library</button>
-                <i class="fas fa-chevron-right text-[7px] opacity-20"></i>
-                <span id="activeVaultName" class="text-[9px] font-bold uppercase tracking-widest text-copper">Select</span>
+        <div class="flex items-center gap-3">
+            <div id="navContext" class="hidden md:flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full border border-black/5">
+                <button onclick="showHome()" class="text-[10px] font-bold uppercase opacity-50 hover:opacity-100 transition-opacity">Library</button>
+                <i class="fas fa-chevron-right text-[8px] opacity-20"></i>
+                <span id="activeVaultName" class="text-[10px] font-bold uppercase text-blue-600">Vault</span>
             </div>
-            <!-- THEME TOGGLE BUTTON -->
-            <button onclick="toggleTheme()" id="themeToggle" class="w-10 h-10 rounded-xl glass-card flex items-center justify-center hover:bg-white/10 transition-all">
-                <i class="fas fa-moon text-xs" id="themeIcon"></i>
+            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full frosted-card flex items-center justify-center hover:bg-white transition-all">
+                <i class="fas fa-sun text-orange-400" id="themeIcon"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Home View -->
-    <main id="homeView" class="pt-40 pb-20 px-8 max-w-6xl mx-auto animate-vault">
-        <header class="max-w-2xl mb-20">
-            <h2 class="text-3xl md:text-5xl font-bold mb-5 text-gradient tracking-tight leading-tight">
-                Library Aset <br><span class="opacity-70">Terorganisir & Efisien.</span>
+    <!-- Home: Product Grid -->
+    <main id="homeView" class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-none">
+                Semua Aset <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Dalam Satu Klik.</span>
             </h2>
-            <p class="opacity-40 max-w-md text-base font-normal leading-relaxed mb-10">
-                Akses cepat ke copywriting, visual, dan kode HTML premium untuk kebutuhan marketing Anda.
-            </p>
-            <div class="relative group max-w-lg">
-                <div class="absolute -inset-0.5 bg-copper/10 rounded-xl blur opacity-20 group-focus-within:opacity-100 transition duration-500"></div>
-                <div class="relative glass-card rounded-xl overflow-hidden bg-white/5 flex items-center">
-                    <i class="fas fa-search ml-5 text-copper/30 text-sm"></i>
-                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari aset..." 
-                        class="w-full bg-transparent py-4 px-5 text-sm outline-none placeholder:opacity-20">
-                </div>
-            </div>
-        </header>
+            <p class="opacity-60 max-w-xl mx-auto text-sm font-medium">Platform distribusi konten terpusat untuk reseller dan affiliate marketing berkelas.</p>
+        </div>
 
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="max-w-2xl mx-auto mb-16 relative">
+            <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari copywriting, banner, atau script..." 
+                class="w-full frosted-card py-5 px-14 text-md outline-none focus:ring-4 focus:ring-blue-500/10 transition-all">
+            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-blue-500/40"></i>
+        </div>
+
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <!-- Product Cards dynamic -->
         </div>
     </main>
 
-    <!-- Vault View -->
-    <section id="vaultView" class="hidden pt-40 pb-20 px-8 max-w-6xl mx-auto animate-vault">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-16">
-            <div class="max-w-md">
-                <div id="vaultBadge" class="inline-block px-2.5 py-1 rounded-md bg-copper/10 border border-copper/15 text-copper text-[8px] font-bold uppercase tracking-widest mb-3">Verified Vault</div>
-                <h3 id="vaultTitle" class="text-3xl md:text-4xl font-bold mb-2 uppercase tracking-tight">Product Name</h3>
-                <p id="vaultSummary" class="opacity-30 text-xs font-medium">Katalog aset pemasaran yang siap digunakan secara instan.</p>
+    <!-- Vault: Flexible Hierarchy -->
+    <section id="vaultView" class="hidden pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+                <h3 id="vaultTitle" class="text-5xl font-black mb-2 tracking-tighter">Product</h3>
+                <p id="vaultSummary" class="opacity-50 text-xs font-bold uppercase tracking-widest">Digital Asset Collection</p>
             </div>
             <div id="filterTabs" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                <!-- Filters dynamic -->
+                <!-- Filters -->
             </div>
         </div>
         
-        <div id="contentGroups" class="space-y-24">
-            <!-- Items grouped by category -->
+        <div id="contentGroups" class="space-y-16">
+            <!-- Grouped items -->
         </div>
     </section>
 
-    <!-- HTML Preview -->
-    <div id="htmlPreview" class="preview-overlay">
-        <div class="w-full h-full flex flex-col max-w-5xl mx-auto">
-            <div class="flex justify-between items-center mb-5">
-                <h3 class="text-sm font-bold uppercase tracking-widest">Live <span class="text-copper">Preview</span></h3>
-                <button onclick="closeHtmlPreview()" class="w-10 h-10 glass-card rounded-xl flex items-center justify-center">
-                    <i class="fas fa-times text-xs"></i>
-                </button>
+    <!-- Admin Master Key -->
+    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-2xl bg-white/20 dark:bg-black/20 flex items-center justify-center p-6">
+        <div class="frosted-card p-10 w-full max-w-sm text-center">
+            <div class="w-16 h-16 bg-blue-500 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
+                <i class="fas fa-key text-white text-2xl"></i>
             </div>
-            <div class="flex-1 bg-white rounded-2xl overflow-hidden shadow-2xl">
-                <iframe id="previewFrame" class="w-full h-full border-none"></iframe>
-            </div>
-        </div>
-    </div>
-
-    <!-- Admin Security -->
-    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-xl bg-black/80 flex items-center justify-center p-6">
-        <div class="glass-card p-10 w-full max-w-xs text-center rounded-[32px] border-white/10 shadow-2xl">
-            <div class="w-16 h-16 bg-white/5 rounded-2xl mx-auto mb-6 flex items-center justify-center border border-white/10">
-                <i class="fas fa-shield-alt text-copper text-2xl"></i>
-            </div>
-            <h3 class="text-lg font-bold mb-8 uppercase tracking-widest">Verify Access</h3>
-            <input type="password" id="adminPass" placeholder="••••" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-center tracking-[0.5em] mb-6 outline-none focus:border-copper text-white font-bold">
+            <h3 class="text-xl font-bold mb-8">Admin Verification</h3>
+            <input type="password" id="adminPass" placeholder="Master Key" class="admin-field text-center tracking-[0.5em] mb-6">
             <div class="flex gap-3">
-                <button onclick="closeAdmin()" class="flex-1 py-3 text-[9px] font-bold opacity-40 uppercase tracking-widest">Cancel</button>
-                <button onclick="verifyAccess()" class="flex-[2] bg-copper text-black py-3 rounded-xl font-bold uppercase text-[9px] tracking-widest hover:brightness-110">Enter</button>
+                <button onclick="closeAdmin()" class="flex-1 py-3 text-[10px] font-bold uppercase opacity-50">Cancel</button>
+                <button onclick="verifyAccess()" class="flex-[2] bg-blue-600 text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg">Enter Console</button>
             </div>
         </div>
     </div>
 
-    <!-- Admin Dashboard -->
-    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-[#080809] overflow-y-auto">
-        <div class="max-w-6xl mx-auto p-8 md:p-20">
+    <!-- Admin Console -->
+    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-slate-50 dark:bg-slate-900 overflow-y-auto">
+        <div class="max-w-7xl mx-auto p-6 md:p-16">
             <div class="flex justify-between items-center mb-16">
                 <div>
-                    <h2 class="text-2xl font-bold text-white uppercase tracking-tight">Backstage <span class="text-copper">Management</span></h2>
-                    <p class="text-white/20 text-[9px] font-bold uppercase tracking-[0.3em] mt-1.5">Control center for digital assets</p>
+                    <h2 class="text-3xl font-black">Backstage <span class="text-blue-600">Control</span></h2>
+                    <p class="opacity-40 text-[10px] font-bold uppercase mt-1">Setup your silos and assets</p>
                 </div>
-                <button onclick="closeAdmin()" class="w-12 h-12 rounded-xl glass-card flex items-center justify-center text-white"><i class="fas fa-times"></i></button>
+                <button onclick="closeAdmin()" class="w-12 h-12 rounded-xl frosted-card flex items-center justify-center"><i class="fas fa-times"></i></button>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div class="lg:col-span-5">
-                    <form id="adminForm" onsubmit="saveAsset(event)" class="glass-card p-8 space-y-6 rounded-[30px] sticky top-12 bg-white/[0.02]">
+                    <form id="adminForm" onsubmit="saveAsset(event)" class="frosted-card p-8 space-y-6 sticky top-12">
                         <input type="hidden" id="editId">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-white">
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest">Product</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Product Silo</label>
                                 <select id="fProduct" class="admin-field">
                                     <option value="iMersWAMEL">iMersWAMEL</option>
                                     <option value="iMersGate">iMersGate</option>
@@ -235,54 +205,54 @@
                                     <option value="ResellerVault">ResellerVault</option>
                                 </select>
                             </div>
-                            <div class="space-y-2">
-                                <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest">Category</label>
-                                <input type="text" id="fCategory" placeholder="e.g. WA Script" class="admin-field">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Main Category</label>
+                                <input type="text" id="fCategory" placeholder="e.g. Copywriting" class="admin-field">
                             </div>
                         </div>
-                        <div class="space-y-2 text-white">
-                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest">Asset Title</label>
-                            <input type="text" id="fTitle" placeholder="Headline..." class="admin-field">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Sub-Category (Optional)</label>
+                            <input type="text" id="fSubCategory" placeholder="e.g. WA Soft Sell" class="admin-field">
                         </div>
-                        <div class="space-y-2 text-white">
-                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest">Image URL</label>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Asset Headline</label>
+                            <input type="text" id="fTitle" placeholder="Judul aset ini..." class="admin-field">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Media Link (Image/Banner)</label>
                             <input type="text" id="fImage" placeholder="https://..." class="admin-field">
                         </div>
-                        <div class="space-y-2 text-white">
-                            <label class="text-[9px] font-bold opacity-40 uppercase ml-1 tracking-widest">Content / HTML</label>
-                            <textarea id="fContent" rows="6" placeholder="Paste content here..." class="admin-field resize-none leading-relaxed code-font"></textarea>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Asset Content</label>
+                            <textarea id="fContent" rows="6" placeholder="Paste copy or HTML code here..." class="admin-field resize-none leading-relaxed"></textarea>
                         </div>
-                        <button type="submit" id="submitBtn" class="w-full bg-copper py-4 rounded-xl font-bold text-black text-[10px] uppercase tracking-widest hover:brightness-110 shadow-lg shadow-copper/10">
-                            Push to Database
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold shadow-xl hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
+                            Publish to Vault
                         </button>
                     </form>
                 </div>
                 <div class="lg:col-span-7">
-                    <h4 class="text-[10px] font-bold uppercase tracking-[0.2em] opacity-30 mb-6 text-white">Database Snapshot</h4>
-                    <div id="adminList" class="space-y-3">
-                        <!-- List -->
-                    </div>
+                    <h4 class="text-[10px] font-bold uppercase opacity-30 mb-6">Database Snapshot</h4>
+                    <div id="adminList" class="space-y-3"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Feedback Toast -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all duration-500">
-        <div class="glass-card bg-black/90 px-8 py-3 rounded-2xl border border-copper/20 flex items-center gap-3">
-            <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-            <span class="text-[9px] font-bold tracking-widest uppercase text-white">Aset Disalin</span>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all">
+        <div class="bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
+            <i class="fas fa-check-circle"></i>
+            <span class="text-xs font-bold uppercase tracking-widest">Aset Berhasil Disalin</span>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxxi-CuUu-jaXm5XN8pVl9xqQIHsBTHzPCu72clX210iTxaaFXc7yfh5R2uKXXTzFa3/exec';
         let allData = [];
-        let currentProduct = '';
         let logoClicks = 0;
         let adminPassword = '';
 
-        // THEME TOGGLE LOGIC
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('themeIcon');
@@ -297,10 +267,9 @@
             }
         }
 
-        // Initialize Theme from Storage
-        if (localStorage.getItem('theme') === 'light') {
-            document.body.classList.replace('dark', 'light');
-            document.getElementById('themeIcon').classList.replace('fa-moon', 'fa-sun');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.replace('light', 'dark');
+            document.getElementById('themeIcon').classList.replace('fa-sun', 'fa-moon');
         }
 
         async function loadData() {
@@ -314,33 +283,24 @@
 
         function renderGrid() {
             const products = [
-                { id: 'iMersWAMEL', name: 'iMersWAMEL', class: 'box-wamel', icon: 'fa-whatsapp', desc: 'Scripts' },
-                { id: 'iMersGate', name: 'iMersGate', class: 'box-gate', icon: 'fa-bolt', desc: 'Tech' },
-                { id: 'iMersAiBox', name: 'iMersAiBox', class: 'box-aibox', icon: 'fa-microchip', desc: 'Prompts' },
-                { id: 'ResellerVault', name: 'ResellerVault', class: 'box-vault', icon: 'fa-box-open', desc: 'Assets' }
+                { id: 'iMersWAMEL', name: 'iMersWAMEL', icon: 'fa-whatsapp', color: 'bg-emerald-500', desc: 'Scripts' },
+                { id: 'iMersGate', name: 'iMersGate', icon: 'fa-rocket', color: 'bg-blue-500', desc: 'Conversion' },
+                { id: 'iMersAiBox', name: 'iMersAiBox', icon: 'fa-brain', color: 'bg-purple-500', desc: 'Prompts' },
+                { id: 'ResellerVault', name: 'ResellerVault', icon: 'fa-gem', color: 'bg-orange-500', desc: 'Marketing' }
             ];
 
-            const grid = document.getElementById('productGrid');
-            grid.innerHTML = products.map(p => {
+            document.getElementById('productGrid').innerHTML = products.map(p => {
                 const count = allData.filter(d => d.product === p.id).length;
                 return `
-                    <div onclick="openVault('${p.id}')" class="asset-card group flex flex-col cursor-pointer">
-                        <div class="box-art ${p.class}">
-                            <div class="absolute inset-0 flex items-center justify-center">
-                                <div class="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-105 transition-all duration-500">
-                                    <i class="fas ${p.icon} text-lg text-white"></i>
-                                </div>
-                            </div>
+                    <div onclick="openVault('${p.id}')" class="frosted-card group p-8 cursor-pointer btn-action border-b-4 border-b-transparent hover:border-b-blue-500">
+                        <div class="w-16 h-16 ${p.color} rounded-2xl flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-all">
+                            <i class="fas ${p.icon} text-white text-2xl"></i>
                         </div>
-                        <div class="p-8">
-                            <h4 class="text-xl font-bold mb-1 tracking-tight">${p.name}</h4>
-                            <p class="text-[8px] opacity-30 uppercase tracking-[0.2em] mb-6 font-bold">${p.desc}</p>
-                            <div class="flex justify-between items-center pt-4 border-t border-white/5">
-                                <span class="text-[9px] font-bold opacity-40 uppercase tracking-widest text-copper">
-                                    ${count} Aset
-                                </span>
-                                <i class="fas fa-arrow-right text-[10px] opacity-20 group-hover:opacity-100 group-hover:translate-x-1 transition-all"></i>
-                            </div>
+                        <h4 class="text-2xl font-black mb-1">${p.name}</h4>
+                        <p class="text-[10px] opacity-40 uppercase tracking-widest mb-6 font-bold">${p.desc}</p>
+                        <div class="flex justify-between items-center pt-6 border-t border-black/5 dark:border-white/5">
+                            <span class="text-[10px] font-black text-blue-600">${count} ASSETS</span>
+                            <i class="fas fa-arrow-right text-xs opacity-20"></i>
                         </div>
                     </div>
                 `;
@@ -348,7 +308,6 @@
         }
 
         function openVault(id) {
-            currentProduct = id;
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('vaultView').classList.remove('hidden');
             document.getElementById('navContext').classList.remove('hidden');
@@ -363,75 +322,61 @@
             document.getElementById('homeView').classList.remove('hidden');
             document.getElementById('vaultView').classList.add('hidden');
             document.getElementById('navContext').classList.add('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderFilters(id) {
             const data = allData.filter(d => d.product === id);
-            const cats = ['All Assets', ...new Set(data.map(d => d.category))];
+            const cats = ['All', ...new Set(data.map(d => d.category))];
             document.getElementById('filterTabs').innerHTML = cats.map(c => `
-                <button onclick="renderContent('${id}', '${c}')" class="px-5 py-2 whitespace-nowrap rounded-lg glass-card text-[9px] font-bold uppercase tracking-widest transition-all">
+                <button onclick="renderContent('${id}', '${c}')" class="px-6 py-2 whitespace-nowrap rounded-full frosted-card text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
                     ${c}
                 </button>
             `).join('');
         }
 
-        function renderContent(id, filter = 'All Assets') {
+        function renderContent(id, filter = 'All') {
             let data = allData.filter(d => d.product === id);
-            if(filter !== 'All Assets') data = data.filter(d => d.category === filter);
+            if(filter !== 'All') data = data.filter(d => d.category === filter);
 
             const categories = [...new Set(data.map(d => d.category))];
             const container = document.getElementById('contentGroups');
             
             if (data.length === 0) {
-                container.innerHTML = `<div class="text-center opacity-10 py-32 font-bold text-2xl uppercase tracking-widest">Empty Vault</div>`;
+                container.innerHTML = `<div class="text-center opacity-10 py-32 font-bold text-2xl uppercase">Empty Vault</div>`;
                 return;
             }
 
             container.innerHTML = categories.map(cat => {
-                const items = data.filter(i => i.category === cat);
+                const subCats = [...new Set(data.filter(i => i.category === cat).map(i => i.sub_category || 'General'))];
                 return `
-                    <div class="animate-vault">
+                    <div>
                         <div class="flex items-center gap-6 mb-8">
-                            <h4 class="text-xl font-bold text-copper uppercase tracking-tight">${cat}</h4>
-                            <div class="h-[1px] flex-1 bg-white/5"></div>
-                            <span class="text-[8px] font-bold opacity-30 uppercase tracking-widest">${items.length} Items</span>
+                            <span class="category-header bg-blue-100 text-blue-600 dark:bg-blue-900/30">${cat}</span>
+                            <div class="h-[1px] flex-1 bg-black/5 dark:bg-white/5"></div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            ${items.map(item => {
-                                const isHtml = item.content.trim().startsWith('<');
+                        <div class="space-y-12">
+                            ${subCats.map(sub => {
+                                const items = data.filter(i => i.category === cat && (i.sub_category || 'General') === sub);
                                 return `
-                                    <div class="asset-card group">
-                                        ${item.image_url ? `
-                                            <div class="relative overflow-hidden">
-                                                <img src="${item.image_url}" class="w-full aspect-video object-cover group-hover:scale-105 transition-transform duration-1000" onerror="this.parentElement.style.display='none'">
-                                                <div class="absolute top-3 right-3 flex gap-2">
-                                                    <a href="${item.image_url}" target="_blank" download class="w-8 h-8 bg-black/50 backdrop-blur-lg rounded-lg flex items-center justify-center text-white hover:bg-copper hover:text-black transition-all">
-                                                        <i class="fas fa-download text-[10px]"></i>
-                                                    </a>
+                                    <div class="space-y-6">
+                                        <h5 class="text-xs font-black uppercase text-pink-500 opacity-80 tracking-widest pl-4"># ${sub}</h5>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                            ${items.map(item => `
+                                                <div class="frosted-card group p-6 flex flex-col hover:border-blue-500/30 transition-all">
+                                                    ${item.image_url ? `<img src="${item.image_url}" class="w-full aspect-video object-cover rounded-xl mb-4" onerror="this.style.display='none'">` : ''}
+                                                    <h6 class="font-bold text-lg mb-3 leading-tight">${item.title}</h6>
+                                                    <div class="bg-black/5 dark:bg-white/5 rounded-xl p-4 text-[11px] leading-relaxed opacity-60 mb-6 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[200px] no-scrollbar">
+                                                        ${item.content}
+                                                    </div>
+                                                    <div class="flex gap-2">
+                                                        <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
+                                                            class="flex-1 py-3 rounded-xl bg-blue-600 text-white font-bold text-[10px] tracking-widest btn-action uppercase">
+                                                            Salin Teks
+                                                        </button>
+                                                        ${item.image_url ? `<a href="${item.image_url}" target="_blank" download class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center opacity-40 hover:opacity-100 transition-all"><i class="fas fa-download"></i></a>` : ''}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ` : ''}
-                                        <div class="p-6 flex flex-col h-full">
-                                            <div class="flex justify-between items-start mb-3">
-                                                <h5 class="font-bold text-base leading-snug opacity-90">${item.title}</h5>
-                                                ${isHtml ? `<span class="bg-blue-500/10 text-blue-400 text-[7px] font-bold px-1.5 py-0.5 rounded uppercase tracking-widest border border-blue-500/20">HTML</span>` : ''}
-                                            </div>
-                                            <div class="bg-black/5 rounded-xl p-4 text-[11px] leading-relaxed opacity-60 border border-black/5 mb-6 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[220px] no-scrollbar ${isHtml ? 'code-font' : ''}">
-                                                ${item.content}
-                                            </div>
-                                            <div class="flex gap-2">
-                                                <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
-                                                    class="flex-1 py-3 rounded-xl bg-black/5 hover:bg-copper hover:text-black font-bold text-[9px] tracking-widest transition-all uppercase border border-black/5">
-                                                    Salin Aset
-                                                </button>
-                                                ${isHtml ? `
-                                                    <button onclick="openHtmlPreview(\`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
-                                                        class="w-12 h-12 rounded-xl bg-black/5 hover:bg-blue-500/20 hover:text-blue-500 flex items-center justify-center border border-black/5 transition-all">
-                                                        <i class="fas fa-eye text-xs"></i>
-                                                    </button>
-                                                ` : ''}
-                                            </div>
+                                            `).join('')}
                                         </div>
                                     </div>
                                 `;
@@ -440,17 +385,6 @@
                     </div>
                 `;
             }).join('');
-        }
-
-        function openHtmlPreview(content) {
-            const overlay = document.getElementById('htmlPreview');
-            const frame = document.getElementById('previewFrame');
-            overlay.style.display = 'block';
-            frame.srcdoc = content;
-        }
-
-        function closeHtmlPreview() {
-            document.getElementById('htmlPreview').style.display = 'none';
         }
 
         function copyContent(e, text) {
@@ -485,17 +419,14 @@
         function renderSearchResults(data) {
             const grid = document.getElementById('productGrid');
             if(data.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-bold text-xl uppercase tracking-widest">No matches found</div>`;
+                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-bold text-xl uppercase">No matches found</div>`;
                 return;
             }
             grid.innerHTML = data.map(item => `
-                <div class="glass-card p-6 rounded-2xl border-white/5">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="text-[7px] font-bold uppercase text-copper border border-copper/20 px-2 py-0.5 rounded-full">${item.product}</span>
-                        <span class="opacity-20 text-[7px] font-bold uppercase tracking-widest">${item.category}</span>
-                    </div>
-                    <h5 class="text-sm font-bold mb-5 opacity-90">${item.title}</h5>
-                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-3 rounded-xl bg-copper text-black font-bold text-[9px] tracking-widest uppercase">
+                <div class="frosted-card p-6">
+                    <span class="text-[7px] font-bold uppercase text-blue-600 mb-2 block">${item.product} • ${item.category}</span>
+                    <h5 class="text-sm font-bold mb-4">${item.title}</h5>
+                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-[9px] uppercase tracking-widest">
                         Copy Asset
                     </button>
                 </div>
@@ -528,7 +459,7 @@
                     document.getElementById('adminAuth').classList.add('hidden');
                     document.getElementById('adminPanel').classList.remove('hidden');
                     renderAdminList();
-                } else { alert('Access Denied'); }
+                } else { alert('Master Key Incorrect'); }
             } catch (e) { alert('Server Error'); }
         }
 
@@ -545,6 +476,7 @@
                 id: document.getElementById('editId').value,
                 product: document.getElementById('fProduct').value,
                 category: document.getElementById('fCategory').value,
+                sub_category: document.getElementById('fSubCategory').value,
                 title: document.getElementById('fTitle').value,
                 content: document.getElementById('fContent').value,
                 image_url: document.getElementById('fImage').value
@@ -558,8 +490,8 @@
                     document.getElementById('editId').value = '';
                     await loadData();
                     renderAdminList();
-                    btn.innerText = "Done!";
-                    setTimeout(() => { btn.innerText = "Push to Database"; btn.disabled = false; }, 2000);
+                    btn.innerText = "Asset Published!";
+                    setTimeout(() => { btn.innerText = "Publish to Vault"; btn.disabled = false; }, 2000);
                 } else { alert('Error: ' + data.message); btn.innerText = "Error"; btn.disabled = false; }
             } catch (e) { alert('Network error'); btn.innerText = "Error"; btn.disabled = false; }
         }
@@ -579,30 +511,32 @@
             document.getElementById('editId').value = item.id;
             document.getElementById('fProduct').value = item.product;
             document.getElementById('fCategory').value = item.category;
+            document.getElementById('fSubCategory').value = item.sub_category || '';
             document.getElementById('fTitle').value = item.title;
             document.getElementById('fContent').value = item.content;
             document.getElementById('fImage').value = item.image_url || '';
-            document.getElementById('submitBtn').innerText = "Update Info";
+            document.getElementById('submitBtn').innerText = "Update Asset";
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderAdminList() {
             const sorted = [...allData].sort((a,b) => a.product.localeCompare(b.product));
             document.getElementById('adminList').innerHTML = sorted.map(item => `
-                <div class="glass-card p-4 rounded-xl flex justify-between items-center text-white">
+                <div class="frosted-card p-4 flex justify-between items-center">
                     <div class="flex items-center gap-4 text-left">
-                        ${item.image_url ? `<img src="${item.image_url}" class="w-10 h-10 rounded-lg object-cover border border-white/10 shadow-lg">` : `<div class="w-10 h-10 bg-white/5 rounded-lg flex items-center justify-center opacity-10 border border-white/10"><i class="fas fa-file text-[10px]"></i></div>`}
+                        ${item.image_url ? `<img src="${item.image_url}" class="w-10 h-10 rounded-lg object-cover shadow-lg">` : `<div class="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center opacity-50"><i class="fas fa-file text-[10px]"></i></div>`}
                         <div>
                             <div class="flex items-center gap-2 mb-0.5">
-                                <span class="text-[7px] font-bold uppercase text-copper tracking-[0.1em]">${item.product}</span>
-                                <span class="text-[7px] opacity-20 font-bold uppercase tracking-[0.1em]">• ${item.category}</span>
+                                <span class="text-[7px] font-bold uppercase text-blue-600">${item.product}</span>
+                                <span class="text-[7px] opacity-40 font-bold uppercase">• ${item.category}</span>
+                                <span class="text-[7px] opacity-40 font-bold uppercase">• ${item.sub_category || 'General'}</span>
                             </div>
                             <p class="font-bold text-[13px] tracking-tight">${item.title}</p>
                         </div>
                     </div>
                     <div class="flex gap-1.5">
-                        <button onclick="editItem('${item.id}')" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-copper/10 text-copper transition-all border border-white/5"><i class="fas fa-edit text-[10px]"></i></button>
-                        <button onclick="deleteItem('${item.id}')" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-red-500/10 text-red-500 transition-all border border-white/5"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                        <button onclick="editItem('${item.id}')" class="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-600 hover:text-white transition-all"><i class="fas fa-edit text-[10px]"></i></button>
+                        <button onclick="deleteItem('${item.id}')" class="w-9 h-9 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white transition-all"><i class="fas fa-trash-alt text-[10px]"></i></button>
                     </div>
                 </div>
             `).join('');
