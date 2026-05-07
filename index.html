@@ -6,7 +6,8 @@
     <title>iMersDocs | Asset OS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
+    <!-- FontAwesome v6 (Sesuai gambar sumber user) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body { 
             font-family: 'Poppins', sans-serif; 
@@ -104,12 +105,12 @@
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- SIDEBAR (Navigasi Fokus Produk) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar flex flex-col h-full bg-white">
         <!-- Logo Section -->
         <div class="p-8 flex items-center gap-3 cursor-pointer group" id="logoBtn">
             <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-indigo-100 shadow-xl group-active:scale-90 transition-all">
-                <i class="fas fa-box-open text-white text-xs"></i>
+                <i class="fa-solid fa-box-open text-white text-xs"></i>
             </div>
             <h1 class="text-xl font-bold tracking-tight text-gray-900">iMers<span class="text-indigo-600">Docs</span></h1>
         </div>
@@ -120,7 +121,7 @@
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Workspace</p>
             </div>
             <div onclick="showHome()" class="sidebar-link active" id="navHome">
-                <i class="fas fa-home mr-3 w-4"></i> Overview
+                <i class="fa-solid fa-house mr-3 w-4"></i> Overview
             </div>
 
             <!-- List produk per abjad diinjeksi di sini -->
@@ -133,10 +134,10 @@
                     <span class="admin-badge">Admin</span>
                 </div>
                 <div onclick="checkAdmin('asset')" class="sidebar-link" id="navAsset">
-                    <i class="fas fa-file-invoice mr-3 w-4 text-emerald-500"></i> Manage Assets
+                    <i class="fa-solid fa-file-invoice mr-3 w-4 text-emerald-500"></i> Manage Assets
                 </div>
                 <div onclick="checkAdmin('product')" class="sidebar-link" id="navProduct">
-                    <i class="fas fa-folder-plus mr-3 w-4 text-pink-500"></i> Manage Products
+                    <i class="fa-solid fa-folder-plus mr-3 w-4 text-pink-500"></i> Manage Products
                 </div>
             </div>
         </div>
@@ -150,7 +151,7 @@
             <div class="flex items-center gap-4">
                 <h2 class="text-lg font-bold text-gray-900" id="headerTitle">Asset Library</h2>
                 <div id="breadcrumb" class="hidden flex items-center gap-2">
-                    <i class="fas fa-chevron-right text-[8px] text-gray-300"></i>
+                    <i class="fa-solid fa-chevron-right text-[8px] text-gray-300"></i>
                     <span id="breadcrumbActive" class="text-xs text-indigo-600 font-semibold px-2 py-1 bg-indigo-50 rounded-md">Vault</span>
                 </div>
             </div>
@@ -158,10 +159,10 @@
             <div class="flex items-center gap-6">
                 <div class="relative w-64 group">
                     <input type="text" id="globalSearch" oninput="doSearch()" placeholder="Cari aset..." class="saas-input pl-10 text-xs bg-gray-50 border-transparent focus:bg-white focus:border-gray-200">
-                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-indigo-500 transition-colors"></i>
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs group-focus-within:text-indigo-500 transition-colors"></i>
                 </div>
                 <button onclick="logoutAdmin()" id="logoutBtn" class="hidden w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all">
-                    <i class="fas fa-power-off text-xs"></i>
+                    <i class="fa-solid fa-power-off text-xs"></i>
                 </button>
             </div>
         </header>
@@ -177,7 +178,7 @@
     <div id="adminAuth" class="hidden fixed inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6">
         <div class="bg-white p-10 w-full max-w-sm rounded-2xl shadow-2xl border border-gray-100">
             <div class="w-14 h-14 bg-indigo-50 rounded-xl mx-auto mb-6 flex items-center justify-center">
-                <i class="fas fa-shield-halved text-indigo-600 text-xl"></i>
+                <i class="fa-solid fa-shield-halved text-indigo-600 text-xl"></i>
             </div>
             <h3 class="text-xl font-bold mb-2 text-center">Verify Access</h3>
             <p class="text-xs text-gray-400 mb-8 text-center text-balance">Masukkan Master Key untuk membuka akses administratif.</p>
@@ -192,7 +193,7 @@
     <!-- FEEDBACK TOAST -->
     <div id="toast" class="fixed bottom-10 right-10 z-[200] opacity-0 pointer-events-none transition-all duration-500">
         <div class="bg-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-3 shadow-2xl border border-white/10">
-            <i class="fas fa-check-circle text-white"></i>
+            <i class="fa-solid fa-check-circle text-white"></i>
             <span class="text-xs font-semibold">Teks berhasil disalin!</span>
         </div>
     </div>
@@ -202,7 +203,7 @@
         <div class="bg-white w-full max-w-6xl h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl border border-gray-100">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
                 <h4 class="font-bold text-xs tracking-widest text-indigo-600 uppercase">Interactive Asset Preview</h4>
-                <button onclick="closePreview()" class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"><i class="fas fa-times"></i></button>
+                <button onclick="closePreview()" class="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center text-gray-400 hover:text-gray-900 transition-colors"><i class="fa-solid fa-times"></i></button>
             </div>
             <iframe id="previewFrame" class="flex-1 w-full border-none"></iframe>
         </div>
@@ -307,7 +308,7 @@
                     const color = p.color || '#4F46E5';
                     html += `
                         <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
-                            <i class="fas ${p.icon || 'fa-folder'} mr-3 w-4 opacity-50" style="color: ${color}"></i> ${p.name}
+                            <i class="${p.icon || 'fa-solid fa-folder'} mr-3 w-4 opacity-50" style="color: ${color}"></i> ${p.name}
                         </div>
                     `;
                 });
@@ -326,7 +327,7 @@
             if (!db.products || db.products.length === 0) {
                 document.getElementById('viewArea').innerHTML = `
                     <div class="flex flex-col items-center justify-center py-40 opacity-30">
-                        <i class="fas fa-cloud-upload-alt text-4xl mb-4 text-gray-200"></i>
+                        <i class="fa-solid fa-cloud-arrow-up text-4xl mb-4 text-gray-200"></i>
                         <p class="font-bold uppercase tracking-widest text-sm text-center text-gray-400">Belum ada silo produk terdaftar.<br>Silakan tambah via Manage Products (Klik logo 5x).</p>
                     </div>`;
                 return;
@@ -340,13 +341,13 @@
                         return `
                             <div onclick="openVault('${p.name}')" class="asset-card p-10 flex flex-col cursor-pointer group h-full">
                                 <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-8 shadow-md group-hover:scale-110 transition-transform" style="background: ${color}">
-                                    <i class="fas ${p.icon || 'fa-folder'} text-xl"></i>
+                                    <i class="${p.icon || 'fa-solid fa-folder'} text-xl"></i>
                                 </div>
                                 <h4 class="text-xl font-bold text-gray-900 mb-2 uppercase tracking-tight">${p.name}</h4>
                                 <p class="text-xs text-gray-400 mb-10 leading-relaxed">${p.desc || 'Deskripsi tidak tersedia'}</p>
                                 <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
                                     <span class="text-[10px] font-bold uppercase tracking-widest" style="color: ${color}">${count} Assets Ready</span>
-                                    <i class="fas fa-chevron-right text-[10px] text-gray-300"></i>
+                                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-300"></i>
                                 </div>
                             </div>
                         `;
@@ -398,8 +399,8 @@
                                                     <div class="bg-gray-50 border border-gray-100 rounded-xl p-4 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line overflow-y-auto max-h-32 no-scrollbar font-medium">${item.content}</div>
                                                     <div class="flex gap-2">
                                                         <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-saas text-[10px] uppercase tracking-widest">Salin Teks</button>
-                                                        ${isHtml ? `<button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"><i class="fas fa-eye text-xs"></i></button>` : ''}
-                                                        ${item.image_url ? `<a href="${item.image_url}" target="_blank" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-emerald-500 transition-all"><i class="fas fa-download text-xs"></i></a>` : ''}
+                                                        ${isHtml ? `<button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"><i class="fa-solid fa-eye text-xs"></i></button>` : ''}
+                                                        ${item.image_url ? `<a href="${item.image_url}" target="_blank" class="w-10 h-10 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-emerald-500 transition-all"><i class="fa-solid fa-download text-xs"></i></a>` : ''}
                                                     </div>
                                                 </div>
                                             `;
@@ -467,15 +468,15 @@
                         ${db.assets.map(a => `
                             <div class="bg-white border border-gray-100 p-6 rounded-xl flex justify-between items-center transition-all hover:border-gray-200 group">
                                 <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-gray-300 group-hover:text-indigo-600 transition-colors"><i class="fas fa-file-code"></i></div>
+                                    <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-gray-300 group-hover:text-indigo-600 transition-colors"><i class="fa-solid fa-file-code"></i></div>
                                     <div>
                                         <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-1">${a.product} • ${a.category}</p>
                                         <h6 class="font-bold text-gray-900 text-sm">${a.title}</h6>
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-indigo-600 transition-all"><i class="fas fa-pen"></i></button>
-                                    <button onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fas fa-trash"></i></button>
+                                    <button onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-indigo-600 transition-all"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                             </div>
                         `).join('')}
@@ -503,9 +504,9 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ikon (FA)</label>
-                                        <input type="text" id="fProdIcon" placeholder="e.g. fa-rocket" class="saas-input">
-                                        <a href="https://fontawesome.com/v6/search?o=r&m=free" target="_blank" class="text-[9px] text-indigo-500 font-bold hover:underline">Cari Ikon di FontAwesome →</a>
+                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ikon (FontAwesome)</label>
+                                        <input type="text" id="fProdIcon" placeholder="e.g. fa-solid fa-rocket" class="saas-input">
+                                        <a href="https://fontawesome.com/v6/search?o=r&m=free" target="_blank" class="text-[9px] text-indigo-500 font-bold hover:underline">Copy class dari situs FA →</a>
                                     </div>
                                     <div class="space-y-1.5">
                                         <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Warna Brand</label>
@@ -528,14 +529,14 @@
                         ${db.products.map(p => `
                             <div class="bg-white border border-gray-100 p-8 rounded-2xl flex justify-between items-center transition-all hover:bg-gray-50">
                                 <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md" style="background: ${p.color || '#4F46E5'}"><i class="fas ${p.icon || 'fa-folder'} text-xl"></i></div>
+                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-md" style="background: ${p.color || '#4F46E5'}"><i class="${p.icon || 'fa-solid fa-folder'} text-xl"></i></div>
                                     <div>
                                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest px-3 py-1 bg-gray-100 rounded-lg inline-block mb-1">Authenticated Silo</p>
                                         <h6 class="font-bold text-gray-900 text-lg uppercase tracking-tight">${p.name}</h6>
                                         <p class="text-xs text-gray-400">${p.desc}</p>
                                     </div>
                                 </div>
-                                <button onclick="deleteProduct('${p.id}')" class="w-11 h-11 bg-white border border-gray-100 text-gray-400 rounded-xl hover:bg-red-600 hover:text-white transition-all"><i class="fas fa-trash"></i></button>
+                                <button onclick="deleteProduct('${p.id}')" class="w-11 h-11 bg-white border border-gray-100 text-gray-400 rounded-xl hover:bg-red-600 hover:text-white transition-all"><i class="fa-solid fa-trash"></i></button>
                             </div>
                         `).join('')}
                     </div>
