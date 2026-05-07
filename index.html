@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iMersDocs | Asset OS</title>
+    <title>iMersDocs | Asset OS v3.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome v6 -->
@@ -16,8 +16,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Sidebar Styling */
-        .sidebar { width: 280px; border-right: 1px solid #F3F4F6; background: white; }
+        /* Sidebar SaaS Layout */
+        .sidebar { width: 280px; border-right: 1px solid #F3F4F6; background: white; z-index: 50; }
         
         .sidebar-link {
             display: flex;
@@ -43,9 +43,9 @@
             letter-spacing: 0.05em;
         }
 
-        .content-area { flex: 1; height: 100vh; overflow-y: auto; }
+        .content-area { flex: 1; height: 100vh; overflow-y: auto; background-color: #FBFCFD; }
 
-        /* SaaS Card Styles */
+        /* Card Styles */
         .saas-card {
             background: #FFFFFF;
             border: 1px solid #E5E7EB;
@@ -108,10 +108,24 @@
             color: #4F46E5;
             text-transform: uppercase;
             letter-spacing: 0.02em;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        #loading-overlay {
+            position: fixed; inset: 0; background: white; z-index: 100;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
+
+    <!-- Animasi Loading -->
+    <div id="loading-overlay">
+        <div class="flex flex-col items-center gap-4">
+            <div class="w-10 h-10 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin"></div>
+            <p class="text-[10px] font-bold uppercase tracking-widest text-gray-400">Mensinkronkan Aset...</p>
+        </div>
+    </div>
 
     <!-- SIDEBAR -->
     <aside class="sidebar flex flex-col h-full">
@@ -124,17 +138,18 @@
 
         <div class="flex-1 overflow-y-auto no-scrollbar pb-10">
             <div class="px-6 mb-2">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Workspace</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Main</p>
             </div>
             <div onclick="showHome()" class="sidebar-link active" id="navHome">
                 <i class="fa-solid fa-house mr-3 w-4"></i> Overview
             </div>
 
+            <!-- List produk per abjad -->
             <div id="sidebarProductList"></div>
 
-            <!-- Stealth Admin Menu -->
+            <!-- Area Admin Tersembunyi (Klik Logo 5x) -->
             <div id="adminMenu" class="hidden mt-8 border-t border-gray-100 pt-6">
-                <div class="px-6 mb-2 flex justify-between items-center">
+                <div class="px-6 mb-2">
                     <p class="text-[10px] font-bold text-red-500 uppercase tracking-widest px-2">Console</p>
                 </div>
                 <div onclick="checkAdmin('asset')" class="sidebar-link" id="navAsset">
@@ -147,12 +162,12 @@
         </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTENT -->
     <main class="content-area flex flex-col">
         
         <header class="bg-white/80 backdrop-blur-md border-b border-gray-100 px-10 py-5 flex justify-between items-center sticky top-0 z-40">
             <div class="flex items-center gap-4">
-                <h2 class="text-lg font-bold text-gray-900 cursor-pointer" id="headerTitle" onclick="showHome()">Asset Library</h2>
+                <h2 class="text-lg font-bold text-gray-900 cursor-pointer" id="headerTitle" onclick="showHome()">Library</h2>
                 <div id="breadcrumb" class="hidden flex items-center gap-2">
                     <i class="fa-solid fa-chevron-right text-[8px] text-gray-300"></i>
                     <span id="breadcrumbProduct" class="text-xs text-gray-500 font-medium px-2 py-1 bg-gray-50 rounded-md cursor-pointer hover:bg-gray-100 transition-colors">Product</span>
@@ -175,12 +190,12 @@
         </header>
 
         <div id="viewArea" class="p-10 animate-in">
-            <!-- Dynamic Content -->
+            <!-- Konten diinjeksi via JS -->
         </div>
 
     </main>
 
-    <!-- AUTH MODAL -->
+    <!-- MODAL AUTH -->
     <div id="adminAuth" class="hidden fixed inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6">
         <div class="bg-white p-10 w-full max-w-sm rounded-2xl shadow-2xl">
             <h3 class="text-xl font-bold mb-2 text-center text-gray-900">Admin Console</h3>
@@ -200,7 +215,7 @@
         </div>
     </div>
 
-    <!-- MODAL PREVIEW -->
+    <!-- PREVIEW -->
     <div id="htmlPreview" class="hidden fixed inset-0 z-[150] bg-gray-900/50 backdrop-blur-md flex items-center justify-center p-12">
         <div class="bg-white w-full max-w-6xl h-full rounded-3xl overflow-hidden flex flex-col shadow-2xl">
             <div class="flex justify-between items-center p-6 border-b border-gray-100">
@@ -220,7 +235,7 @@
         let currentSilo = '';
         let currentCategory = '';
 
-        // --- CORE & AUTH ---
+        // --- CORE ---
         document.getElementById('logoBtn').onclick = () => { if(++clicks >= 5) { document.getElementById('adminAuth').classList.remove('hidden'); clicks=0; } };
         function closeAuth() { document.getElementById('adminAuth').classList.add('hidden'); }
 
@@ -233,7 +248,8 @@
                     renderSidebar();
                     renderByView();
                 }
-            } catch (e) { console.error('Connection lost.'); renderHome(); }
+                document.getElementById('loading-overlay').style.display = 'none';
+            } catch (e) { console.error('API Error.'); renderHome(); }
         }
 
         async function loginAdmin() {
@@ -270,7 +286,6 @@
             else if(activeView === 'product') renderAdminProducts();
         }
 
-        // --- NAVIGATION ---
         function updateNav(activeId) {
             document.querySelectorAll('.sidebar-link').forEach(n => n.classList.remove('active'));
             const active = document.getElementById(activeId);
@@ -299,10 +314,9 @@
             Object.keys(grouped).sort().forEach(letter => {
                 html += `<div class="alphabet-label">${letter}</div>`;
                 grouped[letter].forEach(p => {
-                    const color = p.color || '#4F46E5';
                     html += `
                         <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
-                            <i class="${p.icon || 'fa-solid fa-folder'} mr-3 w-4 opacity-50" style="color: ${color}"></i> ${p.name}
+                            <i class="${p.icon || 'fa-solid fa-folder'} mr-3 w-4 opacity-50" style="color: ${p.color || '#4F46E5'}"></i> ${p.name}
                         </div>
                     `;
                 });
@@ -312,27 +326,26 @@
 
         // --- VIEWS ---
 
-        // STEP 1: Overview Products
+        // STEP 1: Overview
         function renderHome() {
             updateNav('navHome');
-            document.getElementById('headerTitle').innerText = "Dashboard Overview";
+            document.getElementById('headerTitle').innerText = "Dashboard";
             document.getElementById('breadcrumb').classList.add('hidden');
 
             const html = `
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                     ${db.products.map(p => {
                         const count = db.assets.filter(a => a.product === p.name).length;
-                        const color = p.color || '#4F46E5';
                         return `
                             <div onclick="openVault('${p.name}')" class="saas-card p-10 flex flex-col h-full group">
-                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-8 shadow-sm group-hover:scale-110 transition-transform" style="background: ${color}">
+                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white mb-8 shadow-sm group-hover:scale-110 transition-transform" style="background: ${p.color || '#4F46E5'}">
                                     <i class="${p.icon || 'fa-solid fa-folder'} text-lg"></i>
                                 </div>
                                 <h4 class="text-lg font-bold text-gray-900 mb-2 uppercase tracking-tight">${p.name}</h4>
                                 <p class="text-xs text-gray-400 mb-10 leading-relaxed">${p.desc || 'No description'}</p>
                                 <div class="flex justify-between items-center mt-auto pt-6 border-t border-gray-50">
                                     <span class="text-[10px] font-bold uppercase text-indigo-600 tracking-widest">${count} Aset</span>
-                                    <i class="fa-solid fa-arrow-right text-[10px] text-gray-300 transition-transform group-hover:translate-x-1"></i>
+                                    <i class="fa-solid fa-arrow-right text-[10px] text-gray-300"></i>
                                 </div>
                             </div>
                         `;
@@ -342,7 +355,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // STEP 2: Show Categories of a Product
+        // STEP 2: Categories
         function openVault(name) {
             activeView = 'categories';
             currentSilo = name;
@@ -358,20 +371,20 @@
             const categories = [...new Set(prodAssets.map(a => a.category))];
 
             if(categories.length === 0) {
-                document.getElementById('viewArea').innerHTML = `<div class="py-40 text-center text-gray-300 font-bold uppercase tracking-widest animate-in">Silo ini belum punya kategori aset.</div>`;
+                document.getElementById('viewArea').innerHTML = `<div class="py-40 text-center text-gray-300 font-bold uppercase tracking-widest animate-in">Silo ini kosong.</div>`;
                 return;
             }
 
             const html = `
                 <div class="mb-8">
-                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Pilih Kategori Aset</p>
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Pilih Kategori</p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
                         ${categories.map(cat => {
                             const count = prodAssets.filter(a => a.category === cat).length;
                             return `
                                 <div onclick="openCategory('${name}', '${cat}')" class="saas-card p-8 flex items-center justify-between group">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-all">
+                                        <div class="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-gray-400 group-hover:text-indigo-600 transition-all">
                                             <i class="fa-solid fa-folder-open text-lg"></i>
                                         </div>
                                         <div>
@@ -379,7 +392,7 @@
                                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">${count} Items</p>
                                         </div>
                                     </div>
-                                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-200 group-hover:text-indigo-300 transition-all"></i>
+                                    <i class="fa-solid fa-chevron-right text-[10px] text-gray-200 group-hover:text-indigo-300"></i>
                                 </div>
                             `;
                         }).join('')}
@@ -389,7 +402,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // STEP 3: Show Assets inside a specific Category
+        // STEP 3: Assets
         function openCategory(productName, categoryName) {
             activeView = 'assets';
             currentSilo = productName;
@@ -416,8 +429,8 @@
                                         <h6 class="font-bold text-gray-900 text-base leading-tight mb-4 uppercase tracking-tight">${item.title}</h6>
                                         <div class="bg-gray-50 border border-gray-100 rounded-xl p-5 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line font-medium max-h-48 overflow-y-auto no-scrollbar">${item.content}</div>
                                         <div class="flex gap-2">
-                                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95">Salin Teks</button>
-                                            ${item.content.includes('<') ? `<button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:border-indigo-100 transition-all"><i class="fa-solid fa-eye text-xs"></i></button>` : ''}
+                                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-black text-[10px] uppercase tracking-widest active:scale-95">Salin Teks</button>
+                                            ${item.content.includes('<') ? `<button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-indigo-600 transition-all"><i class="fa-solid fa-eye text-xs"></i></button>` : ''}
                                         </div>
                                     </div>
                                 `).join('')}
@@ -429,126 +442,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- ADMIN MANAGEMENT (ASSETS) ---
-        function renderAdminAssets() {
-            updateNav('navAsset');
-            document.getElementById('headerTitle').innerText = "Editor Konten";
-            document.getElementById('breadcrumb').classList.add('hidden');
-
-            const html = `
-                <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 animate-in">
-                    <div class="xl:col-span-4">
-                        <div class="bg-white border border-gray-100 p-8 rounded-2xl shadow-sm sticky top-5">
-                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Input Konten Baru</h4>
-                            <form id="assetForm" onsubmit="handleAssetSubmit(event)" class="space-y-5">
-                                <input type="hidden" id="assetId">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Produk</label>
-                                    <select id="fAssetProduct" class="saas-input font-bold">${db.products.map(p=>`<option value="${p.name}">${p.name}</option>`).join('')}</select>
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Kategori</label>
-                                        <input type="text" id="fAssetCat" placeholder="e.g. Email" class="saas-input">
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Sub-Kategori</label>
-                                        <input type="text" id="fAssetSub" placeholder="e.g. Sequence 1" class="saas-input">
-                                    </div>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nama / Judul</label>
-                                    <input type="text" id="fAssetTitle" placeholder="Misal: Promo Akhir Bulan" class="saas-input">
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Media URL</label>
-                                    <input type="text" id="fAssetImg" placeholder="https://..." class="saas-input">
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Isi Konten</label>
-                                    <textarea id="fAssetContent" rows="8" placeholder="Paste copywriting atau kode di sini..." class="saas-input resize-none leading-relaxed text-xs"></textarea>
-                                </div>
-                                <button type="submit" id="assetBtn" class="w-full btn-black py-4 shadow-xl shadow-gray-200">Publish to Vault</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="xl:col-span-8 space-y-3">
-                        <p class="text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-4">Database Overview (${db.assets.length} items)</p>
-                        ${db.assets.map(a => `
-                            <div class="bg-white border border-gray-100 p-6 rounded-xl flex justify-between items-center group transition-colors hover:border-gray-300">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center text-gray-300 group-hover:text-indigo-600"><i class="fa-solid fa-file-code"></i></div>
-                                    <div>
-                                        <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest">${a.product} • ${a.category}</p>
-                                        <h6 class="font-bold text-gray-900 text-sm tracking-tight">${a.title}</h6>
-                                    </div>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-indigo-600 hover:bg-indigo-50 transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
-                                    <button onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 hover:bg-red-50 transition-all"><i class="fa-solid fa-trash text-xs"></i></button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.getElementById('viewArea').innerHTML = html;
-        }
-
-        // --- ADMIN MANAGEMENT (PRODUCTS) ---
-        function renderAdminProducts() {
-            updateNav('navProduct');
-            document.getElementById('headerTitle').innerText = "Manajemen Produk";
-            document.getElementById('breadcrumb').classList.add('hidden');
-
-            const html = `
-                <div class="grid grid-cols-1 xl:grid-cols-12 gap-12 animate-in">
-                    <div class="xl:col-span-4">
-                        <div class="bg-white border border-gray-100 p-10 rounded-2xl shadow-sm sticky top-5">
-                            <h4 class="font-bold text-gray-900 mb-8 uppercase text-[10px] tracking-widest border-b border-gray-50 pb-4">Registrasi Silo</h4>
-                            <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-6">
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Nama Produk</label>
-                                    <input type="text" id="fProdName" placeholder="e.g. iMersGate" class="saas-input font-bold">
-                                </div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Ikon (FA Class)</label>
-                                        <input type="text" id="fProdIcon" placeholder="fa-solid fa-rocket" class="saas-input">
-                                    </div>
-                                    <div class="space-y-1.5">
-                                        <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Aksen Warna</label>
-                                        <input type="color" id="fProdColor" value="#4F46E5" class="saas-input" style="height:44px; padding:2px;">
-                                    </div>
-                                </div>
-                                <div class="space-y-1.5">
-                                    <label class="text-[10px] font-bold text-gray-400 uppercase ml-1">Deskripsi Singkat</label>
-                                    <input type="text" id="fProdDesc" placeholder="Tagline..." class="saas-input">
-                                </div>
-                                <button type="submit" id="prodBtn" class="w-full btn-black py-4">Create Silo</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="xl:col-span-8 space-y-4">
-                        ${db.products.map(p => `
-                            <div class="bg-white border border-gray-100 p-8 rounded-2xl flex justify-between items-center group shadow-sm">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-sm" style="background: ${p.color || '#4F46E5'}"><i class="${p.icon || 'fa-solid fa-folder'} text-xl"></i></div>
-                                    <div>
-                                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest px-3 py-1 bg-gray-100 rounded-lg inline-block mb-1">Authenticated Silo</p>
-                                        <h6 class="font-bold text-gray-900 text-lg uppercase tracking-tight">${p.name}</h6>
-                                    </div>
-                                </div>
-                                <button onclick="deleteProduct('${p.id}')" class="w-11 h-11 bg-gray-50 text-gray-400 rounded-xl hover:text-red-500 hover:bg-red-50 transition-all"><i class="fa-solid fa-trash"></i></button>
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            `;
-            document.getElementById('viewArea').innerHTML = html;
-        }
-
-        // --- SUBMIT HANDLERS ---
+        // --- ADMIN ---
         async function handleAssetSubmit(e) {
             e.preventDefault();
             const btn = document.getElementById('assetBtn');
@@ -572,7 +466,7 @@
                 document.getElementById('assetId').value = '';
                 btn.innerText = 'Publish to Vault';
                 btn.disabled = false;
-            } catch(e) { alert('Gagal menyimpan.'); btn.disabled = false; }
+            } catch(e) { alert('Gagal.'); btn.disabled = false; }
         }
 
         async function handleProductSubmit(e) {
@@ -595,8 +489,8 @@
             } catch(e) { alert('Gagal.'); }
         }
 
-        async function deleteAsset(id) { if(confirm('Hapus aset ini?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); } }
-        async function deleteProduct(id) { if(confirm('Hapus produk? Konten aset tetap aman di database.')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); } }
+        async function deleteAsset(id) { if(confirm('Hapus?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); } }
+        async function deleteProduct(id) { if(confirm('Hapus?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); } }
 
         function editAsset(id) {
             const a = db.assets.find(item => item.id == id);
@@ -610,35 +504,25 @@
             document.getElementById('assetBtn').innerText = 'Update Asset';
         }
 
-        // --- UTILS ---
         function copyToClip(text) {
             const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             const t = document.getElementById('toast'); t.style.opacity = '1'; 
             setTimeout(() => { t.style.opacity = '0'; }, 2000);
         }
 
-        function previewHtml(code) {
-            document.getElementById('previewFrame').srcdoc = code;
-            document.getElementById('htmlPreview').classList.remove('hidden');
-        }
+        function previewHtml(code) { document.getElementById('previewFrame').srcdoc = code; document.getElementById('htmlPreview').classList.remove('hidden'); }
         function closePreview() { document.getElementById('htmlPreview').classList.add('hidden'); }
         function doSearch() {
             const q = document.getElementById('globalSearch').value.toLowerCase();
             if(!q) return renderHome();
             const filtered = db.assets.filter(a => a.title.toLowerCase().includes(q) || a.content.toLowerCase().includes(q) || a.category.toLowerCase().includes(q) || a.product.toLowerCase().includes(q));
-            document.getElementById('headerTitle').innerText = "Search Result";
-            document.getElementById('breadcrumb').classList.add('hidden');
-            const html = `
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
-                    ${filtered.map(item => `
-                        <div class="asset-card p-6 flex flex-col border-indigo-100">
-                            <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-2">${item.product} • ${item.category}</p>
-                            <h6 class="font-bold text-gray-900 text-sm mb-6 uppercase tracking-tight">${item.title}</h6>
-                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-full btn-black py-2 text-[10px] uppercase">Salin Aset</button>
-                        </div>
-                    `).join('')}
-                </div>`;
-            document.getElementById('viewArea').innerHTML = html;
+            document.getElementById('viewArea').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
+                ${filtered.map(item => `<div class="asset-card p-6 flex flex-col">
+                    <p class="text-[9px] font-bold text-indigo-500 uppercase tracking-widest mb-2">${item.product} • ${item.category}</p>
+                    <h6 class="font-bold text-gray-900 text-sm mb-6">${item.title}</h6>
+                    <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-full btn-black py-2 text-[10px] uppercase">Salin Aset</button>
+                </div>`).join('')}
+            </div>`;
         }
 
         window.onload = fetchDB;
