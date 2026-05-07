@@ -25,179 +25,194 @@
             transition: all 0.5s ease;
         }
 
-        /* Animated Mesh Background */
+        /* Animated Mesh Background - Vibrant & Cheerful */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background-color: #f8fafc;
+            background-color: #f0f4f8;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.15) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.2) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.2) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
         }
 
         .dark .mesh-bg {
             background-color: #0f172a;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.2) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.2) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.1) 0px, transparent 50%);
+                radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.3) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(139, 92, 246, 0.3) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(236, 72, 153, 0.15) 0px, transparent 50%);
         }
 
         .frosted-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.07);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.08);
+            border-radius: 28px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .dark .frosted-card {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: #f1f5f9;
         }
 
-        /* Admin Input Styles - High Contrast */
+        /* Admin Input Styles - Super High Contrast */
         .admin-field {
-            background: white !important;
+            background: #ffffff !important;
             border: 2px solid #e2e8f0 !important;
-            color: #1e293b !important;
-            border-radius: 12px;
-            padding: 0.75rem 1rem;
+            color: #0f172a !important;
+            border-radius: 16px;
+            padding: 1rem 1.25rem;
             width: 100%;
             outline: none;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
         .dark .admin-field {
-            background: #334155 !important;
-            border: 2px solid #475569 !important;
-            color: white !important;
+            background: #1e293b !important;
+            border: 2px solid #334155 !important;
+            color: #f8fafc !important;
         }
-        .admin-field:focus { border-color: var(--p-blue) !important; }
+        .admin-field:focus { border-color: var(--p-blue) !important; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
 
-        select.admin-field option {
-            background-color: white;
-            color: black;
-        }
-        .dark select.admin-field option {
-            background-color: #1e293b;
-            color: white;
-        }
+        select.admin-field option { background: white; color: black; padding: 10px; }
+        .dark select.admin-field option { background: #1e293b; color: white; }
 
         .category-header {
-            font-size: 0.7rem;
-            font-weight: 800;
+            font-size: 0.75rem;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            padding: 4px 12px;
+            letter-spacing: 0.15em;
+            padding: 6px 16px;
             border-radius: 99px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
         .btn-action {
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .btn-action:hover { transform: translateY(-2px) scale(1.02); }
+        .btn-action:hover { transform: translateY(-3px) scale(1.03); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Box Art Patterns */
+        .box-pattern {
+            position: absolute;
+            inset: 0;
+            opacity: 0.2;
+            background-image: radial-gradient(#fff 1px, transparent 1px);
+            background-size: 15px 15px;
+        }
     </style>
 </head>
 <body class="light">
     <div class="mesh-bg"></div>
 
-    <!-- Header -->
-    <nav class="fixed top-0 w-full z-50 px-6 py-4 flex justify-between items-center backdrop-blur-xl border-b border-black/5">
-        <div class="flex items-center gap-3 cursor-pointer group" id="logoContainer">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-emerald-400 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-all">
-                <i class="fas fa-sparkles text-white text-lg"></i>
+    <!-- Header Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-5 flex justify-between items-center backdrop-blur-2xl border-b border-black/5">
+        <div class="flex items-center gap-4 cursor-pointer group" id="logoContainer">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-600 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-xl group-hover:rotate-12 transition-all duration-500">
+                <i class="fas fa-rocket text-white text-xl"></i>
             </div>
-            <h1 class="text-xl font-extrabold tracking-tight">iMers<span class="text-blue-600">Docs</span></h1>
+            <div>
+                <h1 class="text-2xl font-black tracking-tighter leading-none">iMers<span class="text-blue-600">Docs</span></h1>
+                <p class="text-[9px] font-extrabold opacity-40 uppercase tracking-[0.4em] mt-1">Creative Asset OS</p>
+            </div>
         </div>
 
         <div class="flex items-center gap-3">
-            <div id="navContext" class="hidden md:flex items-center gap-2 bg-white/50 dark:bg-slate-800/50 px-4 py-2 rounded-full border border-black/5">
-                <button onclick="showHome()" class="text-[10px] font-bold uppercase opacity-50 hover:opacity-100 transition-opacity">Library</button>
+            <div id="navContext" class="hidden md:flex items-center gap-3 bg-white/60 dark:bg-slate-800/60 px-5 py-2.5 rounded-full border border-black/5 shadow-sm">
+                <button onclick="showHome()" class="text-[10px] font-black uppercase opacity-40 hover:opacity-100 transition-opacity">Library</button>
                 <i class="fas fa-chevron-right text-[8px] opacity-20"></i>
-                <span id="activeVaultName" class="text-[10px] font-bold uppercase text-blue-600">Vault</span>
+                <span id="activeVaultName" class="text-[10px] font-black uppercase text-blue-600">Explore Vault</span>
             </div>
-            <button onclick="toggleTheme()" class="w-10 h-10 rounded-full frosted-card flex items-center justify-center hover:bg-white transition-all">
-                <i class="fas fa-sun text-orange-400" id="themeIcon"></i>
+            <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl frosted-card flex items-center justify-center hover:bg-white transition-all shadow-lg">
+                <i class="fas fa-sun text-orange-400 text-lg" id="themeIcon"></i>
             </button>
         </div>
     </nav>
 
-    <!-- Home: Product Grid -->
-    <main id="homeView" class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight leading-none">
-                Semua Aset <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Dalam Satu Klik.</span>
+    <!-- Home View -->
+    <main id="homeView" class="pt-40 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="max-w-4xl mb-20">
+            <h2 class="text-5xl md:text-8xl font-black mb-8 tracking-tighter leading-[0.95]">
+                Content <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-500 to-pink-500">Distribution.</span>
             </h2>
-            <p class="opacity-60 max-w-xl mx-auto text-sm font-medium">Platform distribusi konten terpusat untuk reseller dan affiliate marketing berkelas.</p>
-        </div>
-
-        <div class="max-w-2xl mx-auto mb-16 relative">
-            <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari copywriting, banner, atau script..." 
-                class="w-full frosted-card py-5 px-14 text-md outline-none focus:ring-4 focus:ring-blue-500/10 transition-all">
-            <i class="fas fa-search absolute left-6 top-1/2 -translate-y-1/2 text-blue-500/40"></i>
+            <p class="opacity-60 max-w-xl text-lg font-medium leading-relaxed mb-12">Pilih produk di bawah untuk mengakses ribuan copywriting, aset visual, dan script konversi premium.</p>
+            
+            <div class="relative group max-w-2xl">
+                <div class="absolute -inset-2 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-3xl blur opacity-20 group-focus-within:opacity-40 transition duration-1000"></div>
+                <div class="relative frosted-card rounded-2xl overflow-hidden bg-white/80 flex items-center">
+                    <i class="fas fa-search ml-8 text-blue-500/40 text-xl"></i>
+                    <input type="text" id="globalSearch" oninput="handleSearch()" placeholder="Cari copywriting, banner, atau script..." 
+                        class="w-full bg-transparent py-7 px-8 text-lg outline-none font-medium">
+                </div>
+            </div>
         </div>
 
         <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <!-- Product Cards dynamic -->
+            <!-- Cards will be rendered here -->
         </div>
     </main>
 
-    <!-- Vault: Flexible Hierarchy -->
-    <section id="vaultView" class="hidden pt-32 pb-20 px-6 max-w-7xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-            <div>
-                <h3 id="vaultTitle" class="text-5xl font-black mb-2 tracking-tighter">Product</h3>
-                <p id="vaultSummary" class="opacity-50 text-xs font-bold uppercase tracking-widest">Digital Asset Collection</p>
+    <!-- Vault View -->
+    <section id="vaultView" class="hidden pt-40 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-10 mb-20">
+            <div class="max-w-2xl">
+                <div id="vaultBadge" class="inline-block px-4 py-1.5 rounded-xl bg-blue-600/10 border border-blue-600/20 text-blue-600 text-[10px] font-black uppercase tracking-widest mb-6">Verified Ecosystem</div>
+                <h3 id="vaultTitle" class="text-6xl font-black mb-3 tracking-tighter uppercase leading-none">Vault</h3>
+                <p id="vaultSummary" class="opacity-50 text-base font-medium">Semua aset pemasaran terorganisir per kategori dan sub-kategori.</p>
             </div>
-            <div id="filterTabs" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-                <!-- Filters -->
+            <div id="filterTabs" class="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+                <!-- Tabs -->
             </div>
         </div>
         
-        <div id="contentGroups" class="space-y-16">
-            <!-- Grouped items -->
+        <div id="contentGroups" class="space-y-24">
+            <!-- Grouped content -->
         </div>
     </section>
 
     <!-- Admin Master Key -->
-    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-2xl bg-white/20 dark:bg-black/20 flex items-center justify-center p-6">
-        <div class="frosted-card p-10 w-full max-w-sm text-center">
-            <div class="w-16 h-16 bg-blue-500 rounded-2xl mx-auto mb-6 flex items-center justify-center shadow-xl">
-                <i class="fas fa-key text-white text-2xl"></i>
+    <div id="adminAuth" class="hidden fixed inset-0 z-[100] backdrop-blur-3xl bg-white/40 dark:bg-black/40 flex items-center justify-center p-6">
+        <div class="frosted-card p-12 w-full max-w-md text-center shadow-[0_32px_64px_rgba(0,0,0,0.15)] border-white">
+            <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl mx-auto mb-8 flex items-center justify-center shadow-2xl rotate-3">
+                <i class="fas fa-fingerprint text-white text-3xl"></i>
             </div>
-            <h3 class="text-xl font-bold mb-8">Admin Verification</h3>
-            <input type="password" id="adminPass" placeholder="Master Key" class="admin-field text-center tracking-[0.5em] mb-6">
-            <div class="flex gap-3">
-                <button onclick="closeAdmin()" class="flex-1 py-3 text-[10px] font-bold uppercase opacity-50">Cancel</button>
-                <button onclick="verifyAccess()" class="flex-[2] bg-blue-600 text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest shadow-lg">Enter Console</button>
+            <h3 class="text-3xl font-black mb-2 tracking-tighter">Vault Master</h3>
+            <p class="text-[10px] font-black opacity-30 uppercase tracking-[0.4em] mb-10">Verification Required</p>
+            <input type="password" id="adminPass" placeholder="PASSKEY" class="admin-field text-center tracking-[1em] mb-8 font-black text-xl">
+            <div class="flex gap-4">
+                <button onclick="closeAdmin()" class="flex-1 py-5 text-[10px] font-black opacity-40 uppercase tracking-widest hover:opacity-100">Cancel</button>
+                <button onclick="verifyAccess()" class="flex-[2] bg-blue-600 text-white py-5 rounded-2xl font-black shadow-xl hover:scale-105 active:scale-95 transition-all text-xs tracking-widest">ACCESS CONSOLE</button>
             </div>
         </div>
     </div>
 
     <!-- Admin Console -->
-    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-slate-50 dark:bg-slate-900 overflow-y-auto">
+    <div id="adminPanel" class="hidden fixed inset-0 z-[110] bg-slate-50 dark:bg-slate-950 overflow-y-auto">
         <div class="max-w-7xl mx-auto p-6 md:p-16">
             <div class="flex justify-between items-center mb-16">
                 <div>
-                    <h2 class="text-3xl font-black">Backstage <span class="text-blue-600">Control</span></h2>
-                    <p class="opacity-40 text-[10px] font-bold uppercase mt-1">Setup your silos and assets</p>
+                    <h2 class="text-4xl font-black tracking-tighter">Backstage <span class="text-blue-600">Console</span></h2>
+                    <p class="opacity-40 text-[10px] font-black uppercase tracking-[0.5em] mt-2">Manage your creative silos</p>
                 </div>
-                <button onclick="closeAdmin()" class="w-12 h-12 rounded-xl frosted-card flex items-center justify-center"><i class="fas fa-times"></i></button>
+                <button onclick="closeAdmin()" class="w-16 h-16 rounded-2xl frosted-card flex items-center justify-center hover:bg-red-50 hover:text-red-500 transition-colors shadow-lg"><i class="fas fa-times text-xl"></i></button>
             </div>
             
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-16">
                 <div class="lg:col-span-5">
-                    <form id="adminForm" onsubmit="saveAsset(event)" class="frosted-card p-8 space-y-6 sticky top-12">
+                    <form id="adminForm" onsubmit="saveAsset(event)" class="frosted-card p-10 space-y-7 sticky top-12 border-white shadow-2xl">
                         <input type="hidden" id="editId">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Product Silo</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Target Silo</label>
                                 <select id="fProduct" class="admin-field">
                                     <option value="iMersWAMEL">iMersWAMEL</option>
                                     <option value="iMersGate">iMersGate</option>
@@ -205,51 +220,71 @@
                                     <option value="ResellerVault">ResellerVault</option>
                                 </select>
                             </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Main Category</label>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Main Category</label>
                                 <input type="text" id="fCategory" placeholder="e.g. Copywriting" class="admin-field">
                             </div>
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Sub-Category (Optional)</label>
-                            <input type="text" id="fSubCategory" placeholder="e.g. WA Soft Sell" class="admin-field">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Sub-Category (Grouping)</label>
+                            <input type="text" id="fSubCategory" placeholder="e.g. WA Soft Selling" class="admin-field">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Asset Headline</label>
-                            <input type="text" id="fTitle" placeholder="Judul aset ini..." class="admin-field">
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Headline Title</label>
+                            <input type="text" id="fTitle" placeholder="Nama konten atau aset..." class="admin-field">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Media Link (Image/Banner)</label>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Media Source (Image URL)</label>
                             <input type="text" id="fImage" placeholder="https://..." class="admin-field">
                         </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold opacity-40 uppercase ml-1">Asset Content</label>
-                            <textarea id="fContent" rows="6" placeholder="Paste copy or HTML code here..." class="admin-field resize-none leading-relaxed"></textarea>
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black opacity-40 uppercase ml-2 tracking-widest">Core Content / Code</label>
+                            <textarea id="fContent" rows="7" placeholder="Paste copy or HTML code here..." class="admin-field resize-none leading-relaxed font-medium"></textarea>
                         </div>
-                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white py-5 rounded-2xl font-bold shadow-xl hover:bg-blue-700 transition-all uppercase tracking-widest text-xs">
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 text-white py-6 rounded-2xl font-black shadow-2xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-[0.2em] text-sm">
                             Publish to Vault
                         </button>
                     </form>
                 </div>
                 <div class="lg:col-span-7">
-                    <h4 class="text-[10px] font-bold uppercase opacity-30 mb-6">Database Snapshot</h4>
-                    <div id="adminList" class="space-y-3"></div>
+                    <div class="flex items-center gap-4 mb-10">
+                        <h4 class="text-xs font-black uppercase tracking-[0.3em] opacity-40">Live Database Overview</h4>
+                        <div class="h-[2px] flex-1 bg-blue-600/10"></div>
+                    </div>
+                    <div id="adminList" class="space-y-4"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all">
-        <div class="bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl flex items-center gap-3">
-            <i class="fas fa-check-circle"></i>
-            <span class="text-xs font-bold uppercase tracking-widest">Aset Berhasil Disalin</span>
+    <!-- Feedback Toast -->
+    <div id="toast" class="fixed bottom-12 left-1/2 -translate-x-1/2 z-[200] opacity-0 pointer-events-none transition-all duration-500">
+        <div class="bg-blue-600 text-white px-10 py-5 rounded-3xl shadow-[0_20px_50px_rgba(37,99,235,0.3)] flex items-center gap-4 border border-white/20">
+            <i class="fas fa-check-circle text-lg"></i>
+            <span class="text-xs font-black tracking-widest uppercase">Asset Copied to Clipboard!</span>
         </div>
     </div>
 
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbxxi-CuUu-jaXm5XN8pVl9xqQIHsBTHzPCu72clX210iTxaaFXc7yfh5R2uKXXTzFa3/exec';
-        let allData = [];
+        
+        // DUMMY DATA SUPER LENGKAP UNTUK 2 PRODUK
+        let allData = [
+            // PRODUCT 1: iMersWAMEL (WA Marketing)
+            { id: 1, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Soft Selling (WA)', title: 'Edukasi Produk Automasi', content: 'Bayangkan Anda bisa jualan sambil tidur...\n\nSeringkali kita lelah menjawab chat yang sama berulang-ulang. Nah, di iMersWAMEL, semua sudah diatur otomatis oleh sistem.\n\nMau tahu rahasianya? Klik link di bawah ya.', image_url: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&q=80&w=600' },
+            { id: 2, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Soft Selling (WA)', title: 'Kisah Sukses Reseller', content: 'Dulu saya ragu, tapi setelah pakai iMersWAMEL, omzet naik 300% dalam sebulan!\n\nTidak perlu pusing mikir caption, semua sudah disediakan.', image_url: '' },
+            { id: 3, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Hard Selling (WA)', title: 'Promo Flash Sale 24 Jam', content: '🔥 FLASH SALE 24 JAM SAJA! 🔥\n\nDapatkan lisensi iMersWAMEL dengan diskon 50%. Hanya untuk 10 orang pertama.\n\nAmankan slot Anda sekarang!', image_url: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?auto=format&fit=crop&q=80&w=600' },
+            { id: 4, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Hard Selling (WA)', title: 'Bonus Eksklusif Hari Ini', content: 'Daftar iMersWAMEL hari ini dan dapatkan:\n1. Ebook Closing Kilat\n2. Database 1000 Group WA\n\nTotal bonus senilai Rp 1.5 Juta!', image_url: '' },
+            { id: 5, product: 'iMersWAMEL', category: 'Copywriting', sub_category: 'Follow Up', title: 'Reminder Pembayaran', content: 'Halo kak, kami melihat kakak sudah checkout iMersWAMEL semalam.\n\nSayang banget kalau promonya hangus hari ini. Yuk segera selesaikan pembayarannya!', image_url: '' },
+            
+            // PRODUCT 2: ResellerVault (Visual Assets)
+            { id: 6, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Feed (Square)', title: 'Banner Promo Merdeka', content: 'Desain elegan untuk promo kemerdekaan. Cocok untuk feed Instagram dengan tema merah putih.', image_url: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&q=80&w=600' },
+            { id: 7, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Feed (Square)', title: 'Testimoni User Template', content: 'Template untuk menampilkan testimoni pelanggan agar terlihat lebih profesional.', image_url: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=600' },
+            { id: 8, product: 'ResellerVault', category: 'Visual', sub_category: 'Instagram Stories', title: 'Story Urgency Timer', content: 'Gunakan video singkat ini untuk menciptakan rasa urgensi pada calon pembeli.', image_url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=600' },
+            { id: 9, product: 'ResellerVault', category: 'Video', sub_category: 'Reels Content', title: 'Unboxing Software iMers', content: 'Video reels unboxing fitur utama software iMers docs. Durasi 30 detik.', image_url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=600' },
+            { id: 10, product: 'ResellerVault', category: 'Video', sub_category: 'Reels Content', title: 'Short Tutorial Setup', content: 'Tutorial singkat cara install produk dalam 1 menit.', image_url: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=600' }
+        ];
+
         let logoClicks = 0;
         let adminPassword = '';
 
@@ -276,31 +311,39 @@
             try {
                 const res = await fetch(API_URL);
                 const json = await res.json();
-                allData = json.status === 'success' ? json.data : [];
+                if(json.status === 'success' && json.data.length > 0) {
+                    allData = json.data;
+                }
                 renderGrid();
-            } catch (e) { console.error('Connection failed'); }
+            } catch (e) { 
+                console.error('API Error, using dummy data.');
+                renderGrid();
+            }
         }
 
         function renderGrid() {
             const products = [
-                { id: 'iMersWAMEL', name: 'iMersWAMEL', icon: 'fa-whatsapp', color: 'bg-emerald-500', desc: 'Scripts' },
-                { id: 'iMersGate', name: 'iMersGate', icon: 'fa-rocket', color: 'bg-blue-500', desc: 'Conversion' },
-                { id: 'iMersAiBox', name: 'iMersAiBox', icon: 'fa-brain', color: 'bg-purple-500', desc: 'Prompts' },
-                { id: 'ResellerVault', name: 'ResellerVault', icon: 'fa-gem', color: 'bg-orange-500', desc: 'Marketing' }
+                { id: 'iMersWAMEL', name: 'iMersWAMEL', icon: 'fa-whatsapp', color: 'from-emerald-500 to-teal-600', desc: 'Copywriting & Scripts' },
+                { id: 'iMersGate', name: 'iMersGate', icon: 'fa-rocket', color: 'from-blue-600 to-indigo-700', desc: 'Conversion Tech' },
+                { id: 'iMersAiBox', name: 'iMersAiBox', icon: 'fa-brain', color: 'from-purple-600 to-fuchsia-700', desc: 'Premium Prompts' },
+                { id: 'ResellerVault', name: 'ResellerVault', icon: 'fa-gem', color: 'from-orange-500 to-pink-600', desc: 'Visual Marketing' }
             ];
 
             document.getElementById('productGrid').innerHTML = products.map(p => {
                 const count = allData.filter(d => d.product === p.id).length;
                 return `
-                    <div onclick="openVault('${p.id}')" class="frosted-card group p-8 cursor-pointer btn-action border-b-4 border-b-transparent hover:border-b-blue-500">
-                        <div class="w-16 h-16 ${p.color} rounded-2xl flex items-center justify-center shadow-xl mb-8 group-hover:scale-110 transition-all">
+                    <div onclick="openVault('${p.id}')" class="frosted-card group p-10 cursor-pointer btn-action relative overflow-hidden border-b-8 border-b-transparent hover:border-b-blue-600">
+                        <div class="box-pattern"></div>
+                        <div class="w-16 h-16 bg-gradient-to-br ${p.color} rounded-2xl flex items-center justify-center shadow-xl mb-10 group-hover:scale-110 transition-all duration-500">
                             <i class="fas ${p.icon} text-white text-2xl"></i>
                         </div>
-                        <h4 class="text-2xl font-black mb-1">${p.name}</h4>
-                        <p class="text-[10px] opacity-40 uppercase tracking-widest mb-6 font-bold">${p.desc}</p>
-                        <div class="flex justify-between items-center pt-6 border-t border-black/5 dark:border-white/5">
-                            <span class="text-[10px] font-black text-blue-600">${count} ASSETS</span>
-                            <i class="fas fa-arrow-right text-xs opacity-20"></i>
+                        <h4 class="text-3xl font-black mb-1 tracking-tighter uppercase">${p.name}</h4>
+                        <p class="text-[10px] opacity-40 uppercase tracking-[0.3em] mb-10 font-black">${p.desc}</p>
+                        <div class="flex justify-between items-center pt-8 border-t border-black/5 dark:border-white/5">
+                            <span class="text-[10px] font-black text-blue-600 tracking-widest">${count} ASSETS READY</span>
+                            <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all">
+                                <i class="fas fa-arrow-right text-[10px]"></i>
+                            </div>
                         </div>
                     </div>
                 `;
@@ -322,13 +365,14 @@
             document.getElementById('homeView').classList.remove('hidden');
             document.getElementById('vaultView').classList.add('hidden');
             document.getElementById('navContext').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderFilters(id) {
             const data = allData.filter(d => d.product === id);
             const cats = ['All', ...new Set(data.map(d => d.category))];
             document.getElementById('filterTabs').innerHTML = cats.map(c => `
-                <button onclick="renderContent('${id}', '${c}')" class="px-6 py-2 whitespace-nowrap rounded-full frosted-card text-[10px] font-bold uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">
+                <button onclick="renderContent('${id}', '${c}')" class="px-7 py-3 whitespace-nowrap rounded-2xl frosted-card text-[10px] font-black uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-md">
                     ${c}
                 </button>
             `).join('');
@@ -342,41 +386,60 @@
             const container = document.getElementById('contentGroups');
             
             if (data.length === 0) {
-                container.innerHTML = `<div class="text-center opacity-10 py-32 font-bold text-2xl uppercase">Empty Vault</div>`;
+                container.innerHTML = `<div class="text-center opacity-10 py-32 font-black text-4xl uppercase tracking-tighter">EMPTY VAULT</div>`;
                 return;
             }
 
             container.innerHTML = categories.map(cat => {
-                const subCats = [...new Set(data.filter(i => i.category === cat).map(i => i.sub_category || 'General'))];
+                const subCats = [...new Set(data.filter(i => i.category === cat).map(i => i.sub_category || 'General Content'))];
                 return `
-                    <div>
-                        <div class="flex items-center gap-6 mb-8">
-                            <span class="category-header bg-blue-100 text-blue-600 dark:bg-blue-900/30">${cat}</span>
-                            <div class="h-[1px] flex-1 bg-black/5 dark:bg-white/5"></div>
+                    <div class="animate-vault">
+                        <div class="flex items-center gap-6 mb-12">
+                            <span class="category-header bg-blue-600 text-white shadow-lg shadow-blue-500/20">${cat}</span>
+                            <div class="h-[2px] flex-1 bg-gradient-to-r from-blue-600/20 to-transparent"></div>
+                            <span class="text-[10px] font-black opacity-30 uppercase tracking-[0.3em]">${data.filter(i => i.category === cat).length} Aset</span>
                         </div>
-                        <div class="space-y-12">
+                        <div class="space-y-16">
                             ${subCats.map(sub => {
-                                const items = data.filter(i => i.category === cat && (i.sub_category || 'General') === sub);
+                                const items = data.filter(i => i.category === cat && (i.sub_category || 'General Content') === sub);
                                 return `
-                                    <div class="space-y-6">
-                                        <h5 class="text-xs font-black uppercase text-pink-500 opacity-80 tracking-widest pl-4"># ${sub}</h5>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                            ${items.map(item => `
-                                                <div class="frosted-card group p-6 flex flex-col hover:border-blue-500/30 transition-all">
-                                                    ${item.image_url ? `<img src="${item.image_url}" class="w-full aspect-video object-cover rounded-xl mb-4" onerror="this.style.display='none'">` : ''}
-                                                    <h6 class="font-bold text-lg mb-3 leading-tight">${item.title}</h6>
-                                                    <div class="bg-black/5 dark:bg-white/5 rounded-xl p-4 text-[11px] leading-relaxed opacity-60 mb-6 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[200px] no-scrollbar">
-                                                        ${item.content}
+                                    <div class="space-y-8">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-1.5 h-6 bg-pink-500 rounded-full"></div>
+                                            <h5 class="text-sm font-black uppercase text-pink-500 tracking-[0.2em]">${sub}</h5>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                            ${items.map(item => {
+                                                const isHtml = item.content.trim().startsWith('<');
+                                                return `
+                                                    <div class="frosted-card group p-8 flex flex-col hover:scale-[1.02] transition-all border-white/40">
+                                                        ${item.image_url ? `
+                                                            <div class="relative overflow-hidden rounded-2xl mb-6 shadow-md">
+                                                                <img src="${item.image_url}" class="w-full aspect-video object-cover" onerror="this.parentElement.style.display='none'">
+                                                                <div class="absolute inset-0 bg-black/10"></div>
+                                                            </div>
+                                                        ` : ''}
+                                                        <div class="flex justify-between items-start mb-4">
+                                                            <h6 class="font-black text-xl leading-tight uppercase tracking-tighter">${item.title}</h6>
+                                                            ${isHtml ? `<span class="bg-blue-600/10 text-blue-600 text-[8px] font-black px-2 py-1 rounded-lg uppercase border border-blue-600/20">HTML</span>` : ''}
+                                                        </div>
+                                                        <div class="bg-black/5 dark:bg-white/5 rounded-2xl p-5 text-xs leading-relaxed opacity-60 mb-8 flex-1 whitespace-pre-line font-medium overflow-y-auto max-h-[250px] no-scrollbar">
+                                                            ${item.content}
+                                                        </div>
+                                                        <div class="flex gap-2">
+                                                            <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
+                                                                class="flex-1 py-4 rounded-xl bg-blue-600 text-white font-black text-[10px] tracking-widest shadow-lg shadow-blue-600/20 active:scale-95 transition-all uppercase">
+                                                                Salin Teks
+                                                            </button>
+                                                            ${item.image_url ? `
+                                                                <a href="${item.image_url}" target="_blank" download class="w-14 h-14 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center opacity-40 hover:opacity-100 transition-all hover:bg-blue-100">
+                                                                    <i class="fas fa-download"></i>
+                                                                </a>
+                                                            ` : ''}
+                                                        </div>
                                                     </div>
-                                                    <div class="flex gap-2">
-                                                        <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)" 
-                                                            class="flex-1 py-3 rounded-xl bg-blue-600 text-white font-bold text-[10px] tracking-widest btn-action uppercase">
-                                                            Salin Teks
-                                                        </button>
-                                                        ${item.image_url ? `<a href="${item.image_url}" target="_blank" download class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center opacity-40 hover:opacity-100 transition-all"><i class="fas fa-download"></i></a>` : ''}
-                                                    </div>
-                                                </div>
-                                            `).join('')}
+                                                `;
+                                            }).join('')}
                                         </div>
                                     </div>
                                 `;
@@ -410,7 +473,8 @@
                 const filtered = allData.filter(d => 
                     d.title.toLowerCase().includes(q) || 
                     d.content.toLowerCase().includes(q) || 
-                    d.category.toLowerCase().includes(q)
+                    d.category.toLowerCase().includes(q) ||
+                    d.product.toLowerCase().includes(q)
                 );
                 renderSearchResults(filtered);
             } else { renderGrid(); }
@@ -419,14 +483,14 @@
         function renderSearchResults(data) {
             const grid = document.getElementById('productGrid');
             if(data.length === 0) {
-                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-bold text-xl uppercase">No matches found</div>`;
+                grid.innerHTML = `<div class="col-span-full py-32 text-center opacity-10 font-black text-4xl uppercase tracking-tighter">DATA TIDAK DITEMUKAN</div>`;
                 return;
             }
             grid.innerHTML = data.map(item => `
-                <div class="frosted-card p-6">
-                    <span class="text-[7px] font-bold uppercase text-blue-600 mb-2 block">${item.product} • ${item.category}</span>
-                    <h5 class="text-sm font-bold mb-4">${item.title}</h5>
-                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-[9px] uppercase tracking-widest">
+                <div class="frosted-card p-8 border-white/50">
+                    <span class="text-[9px] font-black uppercase text-blue-600 mb-2 block tracking-widest">${item.product} • ${item.category}</span>
+                    <h5 class="text-xl font-black mb-6 uppercase tracking-tighter leading-tight">${item.title}</h5>
+                    <button onclick="copyContent(event, \`${item.content.replace(/`/g, '\\`')}\`)" class="w-full py-4 rounded-xl bg-blue-600 text-white font-black text-[10px] uppercase tracking-widest shadow-xl">
                         Copy Asset
                     </button>
                 </div>
@@ -460,14 +524,14 @@
                     document.getElementById('adminPanel').classList.remove('hidden');
                     renderAdminList();
                 } else { alert('Master Key Incorrect'); }
-            } catch (e) { alert('Server Error'); }
+            } catch (e) { alert('Server Connection Error'); }
         }
 
         async function saveAsset(event) {
             event.preventDefault();
             const btn = document.getElementById('submitBtn');
             const originalText = btn.innerText;
-            btn.innerText = "Processing...";
+            btn.innerText = "UPLOADING...";
             btn.disabled = true;
             
             const payload = {
@@ -490,10 +554,10 @@
                     document.getElementById('editId').value = '';
                     await loadData();
                     renderAdminList();
-                    btn.innerText = "Asset Published!";
-                    setTimeout(() => { btn.innerText = "Publish to Vault"; btn.disabled = false; }, 2000);
-                } else { alert('Error: ' + data.message); btn.innerText = "Error"; btn.disabled = false; }
-            } catch (e) { alert('Network error'); btn.innerText = "Error"; btn.disabled = false; }
+                    btn.innerText = "DONE!";
+                    setTimeout(() => { btn.innerText = originalText; btn.disabled = false; }, 2000);
+                } else { alert('Error: ' + data.message); btn.innerText = "ERROR"; btn.disabled = false; }
+            } catch (e) { alert('Network Error'); btn.innerText = originalText; btn.disabled = false; }
         }
 
         async function deleteItem(id) {
@@ -515,28 +579,28 @@
             document.getElementById('fTitle').value = item.title;
             document.getElementById('fContent').value = item.content;
             document.getElementById('fImage').value = item.image_url || '';
-            document.getElementById('submitBtn').innerText = "Update Asset";
+            document.getElementById('submitBtn').innerText = "Update Info";
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function renderAdminList() {
             const sorted = [...allData].sort((a,b) => a.product.localeCompare(b.product));
             document.getElementById('adminList').innerHTML = sorted.map(item => `
-                <div class="frosted-card p-4 flex justify-between items-center">
-                    <div class="flex items-center gap-4 text-left">
-                        ${item.image_url ? `<img src="${item.image_url}" class="w-10 h-10 rounded-lg object-cover shadow-lg">` : `<div class="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-lg flex items-center justify-center opacity-50"><i class="fas fa-file text-[10px]"></i></div>`}
+                <div class="frosted-card p-6 flex justify-between items-center bg-white/40">
+                    <div class="flex items-center gap-5 text-left">
+                        ${item.image_url ? `<img src="${item.image_url}" class="w-14 h-14 rounded-2xl object-cover border border-white shadow-lg">` : `<div class="w-14 h-14 bg-slate-200 dark:bg-slate-700 rounded-2xl flex items-center justify-center opacity-30 border border-white/20"><i class="fas fa-file-alt"></i></div>`}
                         <div>
-                            <div class="flex items-center gap-2 mb-0.5">
-                                <span class="text-[7px] font-bold uppercase text-blue-600">${item.product}</span>
-                                <span class="text-[7px] opacity-40 font-bold uppercase">• ${item.category}</span>
-                                <span class="text-[7px] opacity-40 font-bold uppercase">• ${item.sub_category || 'General'}</span>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[8px] font-black uppercase text-blue-600 tracking-widest">${item.product}</span>
+                                <span class="text-[8px] opacity-30 font-black uppercase tracking-widest">• ${item.category}</span>
+                                <span class="text-[8px] opacity-30 font-black uppercase tracking-widest">• ${item.sub_category || 'General'}</span>
                             </div>
-                            <p class="font-bold text-[13px] tracking-tight">${item.title}</p>
+                            <p class="font-black text-base tracking-tighter uppercase leading-none">${item.title}</p>
                         </div>
                     </div>
-                    <div class="flex gap-1.5">
-                        <button onclick="editItem('${item.id}')" class="w-9 h-9 rounded-lg bg-blue-500/10 text-blue-600 hover:bg-blue-600 hover:text-white transition-all"><i class="fas fa-edit text-[10px]"></i></button>
-                        <button onclick="deleteItem('${item.id}')" class="w-9 h-9 rounded-lg bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white transition-all"><i class="fas fa-trash-alt text-[10px]"></i></button>
+                    <div class="flex gap-2">
+                        <button onclick="editItem('${item.id}')" class="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-md"><i class="fas fa-edit text-xs"></i></button>
+                        <button onclick="deleteItem('${item.id}')" class="w-12 h-12 rounded-xl bg-red-500/10 text-red-600 hover:bg-red-600 hover:text-white transition-all shadow-md"><i class="fas fa-trash text-xs"></i></button>
                     </div>
                 </div>
             `).join('');
