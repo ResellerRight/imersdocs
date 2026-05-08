@@ -169,7 +169,9 @@
             color: #9CA3AF; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
         }
 
-        .mobile-nav-icon { font-size: 18px; transition: all 0.2s; }
+        .mobile-nav-item i {
+            font-size: 18px; transition: all 0.2s;
+        }
 
         /* Utility Classes */
         .text-primary { color: var(--brand-primary); }
@@ -222,8 +224,8 @@
         </div>
     </div>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="sidebar flex flex-col h-full">
+    <!-- SIDEBAR NAVIGATION - LOGIC: hidden (mobile) md:flex (desktop) -->
+    <aside class="sidebar hidden md:flex flex-col h-full">
         <!-- Logo Brand & Nama Interaktif -->
         <div class="p-8 flex items-center gap-3 cursor-pointer group" id="logoBtn">
             <div id="brandLogoContainer" class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center shadow-lg group-active:scale-90 transition-all overflow-hidden">
@@ -289,7 +291,7 @@
                 </div>
             </div>
 
-            <!-- Search Area (Fungsi dinonaktifkan untuk stabilitas) -->
+            <!-- Search Area -->
             <div class="flex items-center gap-6">
                 <div class="relative w-64 group">
                     <input type="text" id="globalSearch" placeholder="Cari aset..." class="saas-input pl-10 text-xs bg-gray-50 border-transparent focus:bg-white focus:border-gray-200 py-2.5">
@@ -308,11 +310,11 @@
     <!-- MOBILE NAVIGATION BAR (Muncul hanya di HP) -->
     <nav class="mobile-nav-bar md:hidden">
         <div onclick="showHome()" class="mobile-nav-item">
-            <i class="fa-solid fa-house mobile-nav-icon text-indigo-500"></i>
+            <i class="fa-solid fa-house text-indigo-500"></i>
             <span>Home</span>
         </div>
         <div onclick="showHome()" class="mobile-nav-item">
-            <i class="fa-solid fa-boxes-stacked mobile-nav-icon text-pink-500"></i>
+            <i class="fa-solid fa-boxes-stacked text-pink-500"></i>
             <span>Vault</span>
         </div>        
     </nav>
