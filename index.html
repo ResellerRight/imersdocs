@@ -128,31 +128,48 @@
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1); 
         }
 
-        /* Tombol Utama Hitam */
+        /* Tombol Utama - Gradient Indigo Purple Blue */
         .btn-black {
-            background-color: var(--brand-secondary); 
-            color: white; 
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #3b82f6 100%) !important; 
+            color: white !important; 
             padding: 12px 20px;
             border-radius: 10px; 
             font-size: 0.875rem; 
             font-weight: 600; 
-            transition: all 0.2s;
+            transition: all 0.3s ease;
             display: flex; 
             align-items: center; 
             justify-content: center; 
             gap: 8px;
             cursor: pointer;
+            border: none;
         }
         
         .btn-black:hover { 
             opacity: 0.9; 
             transform: translateY(-1px); 
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
         }
         
         .btn-black:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+        /* Mobile Navigation Bar Styling */
+        .mobile-nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 70px;
+            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+            border-top: 1px solid #F3F4F6; display: flex; justify-content: space-around;
+            align-items: center; z-index: 100; padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .mobile-nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #9CA3AF; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .mobile-nav-icon { font-size: 18px; transition: all 0.2s; }
 
         /* Utility Classes */
         .text-primary { color: var(--brand-primary); }
@@ -185,6 +202,12 @@
             border-top: 1px solid #F3F4F6;
             margin-top: auto; 
             background: #FAFBFC;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .content-area { padding-bottom: 80px; }
         }
     </style>
 </head>
@@ -282,6 +305,22 @@
 
     </main>
 
+    <!-- MOBILE NAVIGATION BAR (Muncul hanya di HP) -->
+    <nav class="mobile-nav-bar md:hidden">
+        <div onclick="showHome()" class="mobile-nav-item">
+            <i class="fa-solid fa-house mobile-nav-icon text-indigo-500"></i>
+            <span>Home</span>
+        </div>
+        <div onclick="showHome()" class="mobile-nav-item">
+            <i class="fa-solid fa-boxes-stacked mobile-nav-icon text-pink-500"></i>
+            <span>Vault</span>
+        </div>
+        <div onclick="document.getElementById('logoBtn').click()" class="mobile-nav-item">
+            <i class="fa-solid fa-shield-halved mobile-nav-icon text-emerald-500"></i>
+            <span>Admin</span>
+        </div>
+    </nav>
+
     <!-- ADMIN AUTH MODAL -->
     <div id="adminAuth" class="hidden fixed inset-0 z-[100] bg-gray-900/40 backdrop-blur-sm flex items-center justify-center p-6">
         <div class="bg-white p-10 w-full max-w-sm rounded-2xl shadow-2xl">
@@ -299,7 +338,7 @@
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-10 right-10 z-[200] opacity-0 pointer-events-none transition-all duration-500">
+    <div id="toast" class="fixed bottom-24 md:bottom-10 right-10 z-[200] opacity-0 pointer-events-none transition-all duration-500">
         <div class="bg-indigo-600 text-white px-6 py-3 rounded-xl flex items-center gap-3 shadow-2xl border border-white/10">
             <i class="fa-solid fa-circle-check text-white"></i>
             <span id="toastMsg" class="text-xs font-semibold">Teks berhasil disalin!</span>
@@ -516,6 +555,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
+        // --- STREAMING_CHUNK:Rendering sidebar dan elemen UI inti... ---
         // --- CORE UI LOGIC ---
 
         function renderSidebar() {
@@ -582,6 +622,7 @@
             else { activeView = view; renderByView(); }
         }
 
+        // --- STREAMING_CHUNK:Mengimplementasikan fungsi Admin Console... ---
         function renderAdminAssets() {
             updateNav('navAsset'); 
             document.getElementById('headerTitle').innerText = "Editor Konten"; 
@@ -653,6 +694,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
+        // --- STREAMING_CHUNK:Menambahkan fungsi Manajemen Produk asli lo... ---
         function renderAdminProducts() {
             updateNav('navProduct'); 
             document.getElementById('headerTitle').innerText = "Manajemen Produk"; 
@@ -714,6 +756,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
+        // --- STREAMING_CHUNK:Mengimplementasikan utilitas CRUD asli... ---
         // --- UTILS (No Delete) ---
 
         async function handleAssetSubmit(e) {
@@ -827,6 +870,7 @@
             document.querySelector('.content-area').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // --- STREAMING_CHUNK:Menyelesaikan fungsi pembantu dan inisialisasi... ---
         function showToast(msg) { document.getElementById('toastMsg').innerText = msg; const t = document.getElementById('toast'); t.style.opacity = '1'; t.style.pointerEvents = 'auto'; setTimeout(() => { t.style.opacity = '0'; t.style.pointerEvents = 'none'; }, 3000); }
         function copyToClip(text) { const el = document.createElement('textarea'); el.value = text; el.setAttribute('readonly', ''); el.style.position = 'absolute'; el.style.left = '-9999px'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); showToast("Disalin ke clipboard!"); }
         function previewHtml(code) { document.getElementById('previewFrame').srcdoc = code; document.getElementById('htmlPreview').classList.remove('hidden'); }
