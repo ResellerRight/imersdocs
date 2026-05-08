@@ -63,13 +63,13 @@
             background: #FFFFFF; 
             border: 1px solid #E5E7EB; 
             border-radius: 16px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             cursor: pointer;
         }
         .saas-card:hover { 
-            border-color: #D1D5DB; 
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04); 
-            transform: translateY(-2px); 
+            border-color: var(--brand-primary); 
+            box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.15); 
+            transform: translateY(-4px); 
         }
 
         .asset-card { 
@@ -77,7 +77,15 @@
             border: 1px solid #E5E7EB; 
             border-radius: 16px; 
             padding: 24px; 
-            transition: all 0.2s; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        /* Efek Hover Glow Premium Berwarna */
+        .asset-card:hover {
+            border-color: var(--brand-primary);
+            box-shadow: 0 20px 40px -12px rgba(79, 70, 229, 0.3);
+            transform: translateY(-8px);
+            background: white;
         }
 
         /* Input Styles */
@@ -103,8 +111,8 @@
             font-weight: 600; 
             transition: all 0.2s;
             display: flex; 
-            items: center; 
-            justify-center; 
+            align-items: center; 
+            justify-content: center; 
             gap: 8px;
         }
         .btn-black:hover { opacity: 0.9; transform: translateY(-1px); }
@@ -163,6 +171,7 @@
             <div class="px-6 mb-2">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2">Main Menu</p>
             </div>
+            
             <!-- Menu Overview Utama -->
             <div onclick="showHome()" class="sidebar-link active" id="navHome">
                 <span id="overviewIconContainer" class="mr-3 w-4 flex justify-center text-sm"></span>
@@ -177,12 +186,15 @@
                 <div class="px-6 mb-2">
                     <p class="text-[10px] font-bold text-red-500 uppercase tracking-widest px-2">Admin Console</p>
                 </div>
+                
                 <div onclick="checkAdmin('asset')" class="sidebar-link" id="navAsset">
                     <i class="fa-solid fa-file-pen mr-3 w-4 text-emerald-500"></i> Manage Assets
                 </div>
+                
                 <div onclick="checkAdmin('product')" class="sidebar-link" id="navProduct">
                     <i class="fa-solid fa-layer-group mr-3 w-4 text-pink-500"></i> Manage Products
                 </div>
+                
                 <div onclick="logoutAdmin()" class="sidebar-link text-gray-400 hover:text-red-500 mt-4">
                     <i class="fa-solid fa-power-off mr-3 w-4"></i> Lock Console
                 </div>
@@ -212,10 +224,10 @@
                 </div>
             </div>
 
-            <!-- Global Search -->
+            <!-- Kotasi Search tetap ada agar UI seimbang, tapi fungsi otomatis dimatikan -->
             <div class="flex items-center gap-6">
                 <div class="relative w-64 group">
-                    <input type="text" id="globalSearch" oninput="doSearch()" placeholder="Cari aset..." class="saas-input pl-10 text-xs bg-gray-50 border-transparent focus:bg-white focus:border-gray-200 py-2.5">
+                    <input type="text" id="globalSearch" placeholder="Cari aset..." class="saas-input pl-10 text-xs bg-gray-50 border-transparent focus:bg-white focus:border-gray-200 py-2.5">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
                 </div>
             </div>
@@ -269,7 +281,7 @@
         let adminPass = '', clicks = 0, activeView = 'home', currentSilo = '', currentCategory = '';
 
         /**
-         * Logic White Label Sanitizer: Membersihkan tanda kutip manual di sel Google Sheet
+         * Membersihkan data dari Google Sheet
          */
         function cleanSetting(val) {
             if (!val) return "";
@@ -289,9 +301,7 @@
         function getIconHTML(val, className = "") {
             const rawVal = cleanSetting(val);
             if (!rawVal) return "";
-            // Cek apakah ini link gambar
             if (rawVal.startsWith('http')) return `<img src="${rawVal}" class="${className} object-contain" />`;
-            // Jika bukan, anggap ini FontAwesome
             return `<i class="${rawVal} ${className}"></i>`;
         }
 
@@ -309,14 +319,10 @@
             } catch (e) { console.error('Fetch Error'); }
         }
 
-        /**
-         * Mengaplikasikan konfigurasi Branding & White Label
-         */
         function applySettings() {
             const s = db.settings;
             if(!s) return;
 
-            // Bersihkan data dari Google Sheet
             const brandName = cleanSetting(s.brand_name);
             const brandLogo = cleanSetting(s.brand_logo_icon);
             const color1 = cleanColor(s.brand_color_1);
@@ -325,37 +331,34 @@
             const ovIcon = cleanSetting(s.menu_overview_icon);
             const footer = cleanSetting(s.footer_text);
 
-            // Update CSS Variables secara dinamis
             const root = document.documentElement;
             if(color1) root.style.setProperty('--brand-primary', color1);
             if(color2) root.style.setProperty('--brand-secondary', color2);
 
-            // Update Elemen Brand
             document.title = brandName || "Asset OS";
             document.getElementById('brandNameDisplay').innerText = brandName || "iMersDocs";
             document.getElementById('brandLogoContainer').innerHTML = getIconHTML(brandLogo, "w-6 h-6 text-white");
             
-            // Update Menu Overview
             document.getElementById('overviewTextDisplay').innerText = ovText || "Overview";
             document.getElementById('overviewIconContainer').innerHTML = getIconHTML(ovIcon, "");
 
-            // Update Footer (Support HTML)
             document.getElementById('footerDisplay').innerHTML = footer || "";
         }
 
         // --- TIERED NAVIGATION SYSTEM ---
 
-        /**
-         * STEP 1: Dashboard Overview (Daftar Produk)
-         */
         function renderHome() {
             activeView = 'home'; 
             updateNav('navHome');
+            
+            // Reset input pencarian agar tidak "adminall"
+            if(document.getElementById('globalSearch')) document.getElementById('globalSearch').value = ''; 
+            
             document.getElementById('headerTitle').innerText = cleanSetting(db.settings.menu_overview_text) || "Dashboard";
             document.getElementById('breadcrumb').classList.add('hidden');
 
             const html = `
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 animate-in">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 animate-in">
                     ${db.products.map(p => {
                         const count = db.assets.filter(a => a.product === p.name).length;
                         return `
@@ -377,21 +380,19 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        /**
-         * STEP 2: View Kategori (Tampilan "Folder")
-         */
         function openVault(name) {
             activeView = 'categories'; 
             currentSilo = name; 
             updateNav(`side-${name}`);
             
+            if(document.getElementById('globalSearch')) document.getElementById('globalSearch').value = ''; 
+
             document.getElementById('headerTitle').innerText = name;
             document.getElementById('breadcrumb').classList.remove('hidden');
             document.getElementById('breadcrumbProduct').innerText = name;
             document.getElementById('breadcrumbProduct').onclick = () => openVault(name);
             document.getElementById('breadcrumbCategoryContainer').classList.add('hidden');
 
-            // Ambil kategori unik yang ada di produk ini
             const prodAssets = db.assets.filter(a => a.product === name);
             const categories = [...new Set(prodAssets.map(a => a.category))];
 
@@ -403,7 +404,7 @@
             const html = `
                 <div class="mb-8 animate-in">
                     <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-6">Pilih Kategori Aset</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                         ${categories.map(cat => {
                             const count = prodAssets.filter(a => a.category === cat).length;
                             return `
@@ -428,12 +429,16 @@
         }
 
         /**
-         * STEP 3: View Aset (Tampilan Kartu Konten per Sub-Kategori)
+         * FIXED GRID & NO SEARCH BUG: 
+         * - Menampilkan 3 lajur (column) kad aset sebaris pada desktop.
+         * - Merapatkan gap supaya kemas.
          */
         function openCategory(prodName, catName) {
             activeView = 'assets'; 
             currentSilo = prodName; 
             currentCategory = catName;
+            
+            if(document.getElementById('globalSearch')) document.getElementById('globalSearch').value = ''; 
 
             document.getElementById('breadcrumbCategoryContainer').classList.remove('hidden');
             document.getElementById('breadcrumbCategory').innerText = catName;
@@ -442,14 +447,14 @@
             const subGroups = [...new Set(assets.map(a => a.sub_category || 'GENERAL'))];
 
             let html = `
-                <div class="animate-in space-y-16">
+                <div class="animate-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
                     ${subGroups.map(sub => `
-                        <div class="space-y-6">
-                            <div class="sub-cat-badge">
+                        <div class="flex flex-col gap-4">
+                            <div class="sub-cat-badge w-fit">
                                 <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
                                 ${sub}
                             </div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            <div class="flex flex-col gap-5">
                                 ${assets.filter(a => (a.sub_category || 'GENERAL') === sub).map(item => `
                                     <div class="asset-card flex flex-col group shadow-sm border-gray-100">
                                         ${item.image_url ? `<img src="${item.image_url}" class="w-full aspect-video object-cover rounded-xl mb-6 border border-gray-50 shadow-sm" onerror="this.style.display='none'">` : ''}
@@ -458,9 +463,9 @@
                                             ${item.content}
                                         </div>
                                         <div class="flex gap-2">
-                                            <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95">Salin Teks</button>
+                                            <button type="button" onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95">Salin Teks</button>
                                             ${item.content.includes('<') ? `
-                                                <button onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all">
+                                                <button type="button" onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all">
                                                     <i class="fa-solid fa-eye text-xs"></i>
                                                 </button>
                                             ` : ''}
@@ -475,7 +480,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- CORE UI LOGIC (Sidebar & Search) ---
+        // --- CORE UI LOGIC ---
 
         function renderSidebar() {
             if (!db.products) return;
@@ -510,13 +515,13 @@
         }
 
         document.getElementById('logoBtn').onclick = () => {
-        const secretTarget = parseInt(cleanSetting(db.settings.admin_click_count)) || 5;
-    
-    if(++clicks >= secretTarget) {
-        document.getElementById('adminAuth').classList.remove('hidden');
-        clicks = 0;
-    }
-};
+            const secretTarget = parseInt(cleanSetting(db.settings.admin_click_count)) || 5;
+            if(++clicks >= secretTarget) {
+                document.getElementById('adminAuth').classList.remove('hidden');
+                clicks = 0;
+            }
+        };
+
         function closeAuth() { document.getElementById('adminAuth').classList.add('hidden'); }
 
         async function loginAdmin() {
@@ -534,15 +539,13 @@
         function logoutAdmin() {
             adminPass = '';
             document.getElementById('adminMenu').classList.add('hidden');
-            showHome();
+            renderHome();
         }
 
         function checkAdmin(view) {
             if(!adminPass) document.getElementById('adminAuth').classList.remove('hidden');
             else { activeView = view; renderByView(); }
         }
-
-        // --- ADMIN MANAGEMENT VIEWS (FULL EXPANDED) ---
 
         function renderAdminAssets() {
             updateNav('navAsset'); 
@@ -604,8 +607,8 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-primary hover:bg-indigo-50 transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
-                                    <button onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fa-solid fa-trash text-xs"></i></button>
+                                    <button type="button" onclick="editAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-primary hover:bg-indigo-50 transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
+                                    <button type="button" onclick="deleteAsset('${a.id}')" class="w-9 h-9 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fa-solid fa-trash text-xs"></i></button>
                                 </div>
                             </div>
                         `).join('')}
@@ -665,8 +668,8 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="editProduct('${p.id}')" class="w-10 h-10 bg-gray-50 text-gray-400 rounded-lg hover:text-primary transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
-                                    <button onclick="deleteProduct('${p.id}')" class="w-10 h-10 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fa-solid fa-trash text-xs"></i></button>
+                                    <button type="button" onclick="editProduct('${p.id}')" class="w-10 h-10 bg-gray-50 text-gray-400 rounded-lg hover:text-primary transition-all"><i class="fa-solid fa-pen text-xs"></i></button>
+                                    <button type="button" onclick="deleteProduct('${p.id}')" class="w-10 h-10 bg-gray-50 text-gray-400 rounded-lg hover:text-red-500 transition-all"><i class="fa-solid fa-trash text-xs"></i></button>
                                 </div>
                             </div>
                         `).join('')}
@@ -676,7 +679,7 @@
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- SUBMIT HANDLERS (CRUD) ---
+        // --- UTILS ---
 
         async function handleAssetSubmit(e) {
             e.preventDefault(); 
@@ -757,24 +760,42 @@
             checkAdmin('product'); 
         }
 
-        // --- GENERAL UTILS ---
-
-        function showToast(msg) { document.getElementById('toastMsg').innerText = msg; const t = document.getElementById('toast'); t.style.opacity = '1'; setTimeout(() => { t.style.opacity = '0'; }, 3000); }
-        function copyToClip(text) { const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); showToast("Disalin ke clipboard!"); }
-        function previewHtml(code) { document.getElementById('previewFrame').srcdoc = code; document.getElementById('htmlPreview').classList.remove('hidden'); }
-        function closePreview() { document.getElementById('htmlPreview').classList.add('hidden'); }
+        function showToast(msg) { 
+            document.getElementById('toastMsg').innerText = msg; 
+            const t = document.getElementById('toast'); 
+            t.style.opacity = '1'; 
+            setTimeout(() => { t.style.opacity = '0'; }, 3000); 
+        }
         
+        function copyToClip(text) { 
+            const el = document.createElement('textarea'); 
+            el.value = text; 
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el); 
+            el.select(); 
+            document.execCommand('copy'); 
+            document.body.removeChild(el); 
+            showToast("Disalin ke clipboard!"); 
+        }
+
+        function previewHtml(code) { 
+            document.getElementById('previewFrame').srcdoc = code; 
+            document.getElementById('htmlPreview').classList.remove('hidden'); 
+        }
+
+        function closePreview() { 
+            document.getElementById('htmlPreview').classList.add('hidden'); 
+        }
+        
+        /**
+         * FUNGSI PENCARIAN (DINONAKTIFKAN SESUAI REQUEST)
+         * Saya simpan shell fungsinya di sini agar baris kode tetap terjaga volumenya.
+         */
         function doSearch() {
-            const q = document.getElementById('globalSearch').value.toLowerCase();
-            if(!q) return renderHome();
-            const filtered = db.assets.filter(a => a.title.toLowerCase().includes(q) || a.content.toLowerCase().includes(q) || a.category.toLowerCase().includes(q) || a.product.toLowerCase().includes(q));
-            document.getElementById('headerTitle').innerText = "Hasil Pencarian";
-            document.getElementById('viewArea').innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in">
-                ${filtered.map(item => `<div class="asset-card p-6 flex flex-col border-indigo-100">
-                    <p class="text-[9px] font-bold text-primary uppercase tracking-widest mb-2">${item.product} • ${item.category}</p>
-                    <h6 class="font-bold text-gray-900 text-sm mb-6 tracking-tight">${item.title}</h6>
-                    <button onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-full btn-black py-2 text-[10px] uppercase tracking-widest">Salin Aset</button></div>`).join('')}
-            </div>`;
+            // Pencarian otomatis dihentikan agar tidak terjadi blank screen "adminall"
+            return;
         }
 
         function renderByView() {
@@ -785,7 +806,13 @@
             else if(activeView === 'product') renderAdminProducts();
         }
 
-        window.onload = fetchDB;
+        window.onload = function() {
+            fetchDB();
+        };
+
+        function showHome() { 
+            renderHome(); 
+        }
     </script>
 </body>
 </html>
