@@ -438,50 +438,149 @@
         }
 
         function applySettings() {
-            const s = db.settings;
-            if(!s) return;
 
-            const color1 = cleanColor(s.brand_color_1);
-            const rawColor2 = cleanSetting(s.brand_color_2); // Teks mentah (bisa HTML/HEX/Gradient)
-            const root = document.documentElement;
-            const brandDisplay = document.getElementById('brandNameDisplay');
+    const s = db.settings;
 
-            // 1. Set Warna Primary (Logo Kotak & Ikon Aktif)
-            if(color1) root.style.setProperty('--brand-primary', color1);
+    if (!s) return;
 
-            // 2. Logic Warna Secondary & Tampilan Nama Brand
-            if (rawColor2.includes('linear-gradient')) {
-                // Handle Gradient
-                root.style.setProperty('--brand-secondary', '#111827');
-                brandDisplay.classList.add('gradient-text');
-                brandDisplay.style.backgroundImage = rawColor2;
-                brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
-            } else if (rawColor2.includes('<')) {
-                // Handle HTML (Membaca Reseller RIGHT lo)
-                // Coba ambil kode HEX warna dari style="..." di HTML lo
-                const hexMatch = rawColor2.match(/#[0-9A-Fa-f]{6}/);
-                const themeColor = hexMatch ? hexMatch[0] : '#111827';
-                
-                root.style.setProperty('--brand-secondary', themeColor);
-                brandDisplay.classList.remove('gradient-text');
-                brandDisplay.style.backgroundImage = 'none';
-                brandDisplay.innerHTML = rawColor2; // Tampilkan HTML asli dari Sheet
-            } else {
-                // Handle HEX Warna Biasa
-                root.style.setProperty('--brand-secondary', rawColor2 || '#111827');
-                brandDisplay.classList.remove('gradient-text');
-                brandDisplay.style.backgroundImage = 'none';
-                brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
-            }
+    const color1 = cleanColor(s.brand_color_1);
 
-            // 3. Update Elemen Lainnya
-            document.title = cleanSetting(s.brand_name) || "Asset OS";
-            const logoContainer = document.getElementById('brandLogoContainer');
-            if(logoContainer) logoContainer.style.backgroundColor = color1;
-            
-            logoContainer.innerHTML = getIconHTML(s.brand_logo_icon, "w-6 h-6 text-white");
-            document.getElementById('footerDisplay').innerHTML = cleanSetting(s.footer_text) || "";
-        }
+    const rawColor2 = cleanSetting(s.brand_color_2) || '';
+
+    const root = document.documentElement;
+
+    const brandDisplay =
+        document.getElementById('brandNameDisplay');
+
+    /* PRIMARY */
+    if (color1) {
+
+        root.style.setProperty(
+            '--brand-primary',
+            color1
+        );
+
+    }
+
+    /* DEFAULT */
+    root.style.setProperty(
+        '--brand-secondary',
+        '#111827'
+    );
+
+    /* RESET STYLE */
+    brandDisplay.classList.remove('gradient-text');
+
+    brandDisplay.style.backgroundImage = 'none';
+
+    brandDisplay.style.webkitTextFillColor = '';
+
+    brandDisplay.style.color = '';
+
+    /* =========================
+       GRADIENT
+    ========================= */
+
+    if (
+        rawColor2 &&
+        rawColor2.includes('linear-gradient')
+    ) {
+
+        brandDisplay.classList.add('gradient-text');
+
+        brandDisplay.style.backgroundImage =
+            rawColor2;
+
+        brandDisplay.style.backgroundClip =
+            'text';
+
+        brandDisplay.style.webkitBackgroundClip =
+            'text';
+
+        brandDisplay.style.webkitTextFillColor =
+            'transparent';
+
+        brandDisplay.innerHTML =
+            cleanSetting(s.brand_name)
+            || "iMersDocs";
+
+    }
+
+    /* =========================
+       HTML CUSTOM
+    ========================= */
+
+    else if (
+        rawColor2 &&
+        rawColor2.includes('<')
+    ) {
+
+        const hexMatch =
+            rawColor2.match(/#[0-9A-Fa-f]{6}/);
+
+        const themeColor =
+            hexMatch
+            ? hexMatch[0]
+            : '#111827';
+
+        root.style.setProperty(
+            '--brand-secondary',
+            themeColor
+        );
+
+        brandDisplay.innerHTML = rawColor2;
+
+    }
+
+    /* =========================
+       NORMAL HEX
+    ========================= */
+
+    else {
+
+        root.style.setProperty(
+            '--brand-secondary',
+            rawColor2 || '#111827'
+        );
+
+        brandDisplay.style.color =
+            rawColor2 || '#111827';
+
+        brandDisplay.innerHTML =
+            cleanSetting(s.brand_name)
+            || "iMersDocs";
+    }
+
+    /* TITLE */
+    document.title =
+        cleanSetting(s.brand_name)
+        || "Asset OS";
+
+    /* LOGO */
+    const logoContainer =
+        document.getElementById(
+            'brandLogoContainer'
+        );
+
+    if (logoContainer) {
+
+        logoContainer.style.backgroundColor =
+            color1;
+
+        logoContainer.innerHTML =
+            getIconHTML(
+                s.brand_logo_icon,
+                "w-6 h-6 text-white"
+            );
+    }
+
+    /* FOOTER */
+    document.getElementById(
+        'footerDisplay'
+    ).innerHTML =
+        cleanSetting(s.footer_text)
+        || "";
+}
         // --- TIERED NAVIGATION & GRID ENGINE ---
 
         function renderHome() {
