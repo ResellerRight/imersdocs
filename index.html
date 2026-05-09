@@ -1125,6 +1125,7 @@ function copyToClip(text) {
 }
 
 /* DOWNLOAD IMAGE */
+/* DOWNLOAD IMAGE */
 function downloadImage(url, filename = 'imersdocs-file') {
 
     try {
@@ -1134,8 +1135,6 @@ function downloadImage(url, filename = 'imersdocs-file') {
         link.href = url;
 
         link.download = filename;
-
-        link.target = '_blank';
 
         document.body.appendChild(link);
 
@@ -1149,9 +1148,7 @@ function downloadImage(url, filename = 'imersdocs-file') {
 
         console.error(err);
 
-        window.open(url, '_blank');
-
-        showToast("Gagal download, membuka file...");
+        showToast("Gagal download!");
 
     }
 }
