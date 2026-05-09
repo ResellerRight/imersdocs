@@ -17,16 +17,31 @@
     <style id="dynamicStyles">
         /* Variabel Warna Utama - Dinamis berdasarkan Settings di Google Sheet */
         :root {
-            --brand-primary: #4F46E5;
-            --brand-secondary: #111827;
+            --brand-primary: #4F46E5;   /* Default Indigo */
+            --brand-secondary: #111827; /* Default Hitam */
         }
         
         body { 
             font-family: 'Poppins', sans-serif; 
             background-color: #F9FAFB; 
-            color: #111827;
+            color: var(--brand-secondary) !important; 
             -webkit-font-smoothing: antialiased;
             transition: background-color 0.3s ease;
+        }
+
+        /* OVERRIDE TAILWIND: Biar warna di Google Sheet mengalahkan warna default CSS */
+        .text-gray-900 { color: var(--brand-secondary) !important; }
+        .text-primary { color: var(--brand-primary) !important; }
+        .bg-primary { background-color: var(--brand-primary) !important; }
+        
+        /* Sidebar link active background (Soft Orange) */
+        .sidebar-link.active { 
+            background-color: rgba(255, 90, 31, 0.1) !important; 
+            color: var(--brand-primary) !important; 
+        }
+
+        .saas-card:hover { 
+            border-color: var(--brand-primary) !important; 
         }
 
         /* Styling Sidebar Kiri */
@@ -407,29 +422,34 @@
         }
 
         function applySettings() {
-            const s = db.settings;
-            if(!s) return;
-            const brandName = cleanSetting(s.brand_name);
-            const brandLogo = cleanSetting(s.brand_logo_icon);
-            const color1 = cleanColor(s.brand_color_1);
-            const color2 = cleanColor(s.brand_color_2);
-            const ovText = cleanSetting(s.menu_overview_text);
-            const ovIcon = cleanSetting(s.menu_overview_icon);
-            const footer = cleanSetting(s.footer_text);
+    const s = db.settings;
+    if(!s) return;
+    const brandName = cleanSetting(s.brand_name);
+    const brandLogo = cleanSetting(s.brand_logo_icon);
+    const color1 = cleanColor(s.brand_color_1);
+    const color2 = cleanColor(s.brand_color_2);
+    const ovText = cleanSetting(s.menu_overview_text);
+    const ovIcon = cleanSetting(s.menu_overview_icon);
+    const footer = cleanSetting(s.footer_text);
 
-            const root = document.documentElement;
-            if(color1) root.style.setProperty('--brand-primary', color1);
-            if(color2) root.style.setProperty('--brand-secondary', color2);
+    const root = document.documentElement;
+    if(color1) root.style.setProperty('--brand-primary', color1);
+    if(color2) root.style.setProperty('--brand-secondary', color2);
 
-            document.title = brandName || "Asset OS";
-            document.getElementById('brandNameDisplay').innerText = brandName || "iMersDocs";
-            document.getElementById('brandLogoContainer').innerHTML = getIconHTML(brandLogo, "w-6 h-6 text-white");
-            
-            document.getElementById('overviewTextDisplay').innerText = ovText || "Overview";
-            document.getElementById('overviewIconContainer').innerHTML = getIconHTML(ovIcon, "");
+    document.title = brandName || "Asset OS";
+    document.getElementById('brandNameDisplay').innerText = brandName || "iMersDocs";
+    
+    const logoContainer = document.getElementById('brandLogoContainer');
+    if(logoContainer && color1) {
+        logoContainer.style.backgroundColor = color1; // Paksa warna background logo
+    }
+    document.getElementById('brandLogoContainer').innerHTML = getIconHTML(brandLogo, "w-6 h-6 text-white");
+    
+    document.getElementById('overviewTextDisplay').innerText = ovText || "Overview";
+    document.getElementById('overviewIconContainer').innerHTML = getIconHTML(ovIcon, "");
 
-            document.getElementById('footerDisplay').innerHTML = footer || "";
-        }
+    document.getElementById('footerDisplay').innerHTML = footer || "";
+}
 
         // --- TIERED NAVIGATION & GRID ENGINE ---
 
@@ -520,37 +540,103 @@
             const subGroups = [...new Set(assets.map(a => a.sub_category || 'GENERAL'))];
 
             let html = `
-                <div class="animate-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-                    ${subGroups.map(sub => `
-                        <div class="flex flex-col gap-4">
-                            <div class="sub-cat-badge w-fit">
-                                <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
-                                ${sub}
-                            </div>
-                            <div class="flex flex-col gap-5">
-                                ${assets.filter(a => (a.sub_category || 'GENERAL') === sub).map(item => `
-                                    <div class="asset-card flex flex-col group shadow-sm border-gray-100">
-                                        ${item.image_url ? `<img src="${item.image_url}" class="w-full aspect-video object-cover rounded-xl mb-6 border border-gray-50 shadow-sm" onerror="this.style.display='none'">` : ''}
-                                        <h6 class="font-bold text-gray-900 text-base leading-tight mb-4 uppercase tracking-tight">${item.title}</h6>
-                                        <div class="bg-gray-50 border border-gray-100 rounded-xl p-5 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line font-medium max-h-48 overflow-y-auto no-scrollbar">
-                                            ${item.content}
-                                        </div>
-                                        <div class="flex gap-2">
-                                            <button type="button" onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95">Salin Teks</button>
-                                            ${item.content.includes('<') ? `
-                                                <button type="button" onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)" class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all">
-                                                    <i class="fa-solid fa-eye text-xs"></i>
-                                                </button>
-                                            ` : ''}
-                                        </div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('')}
+    <div class="animate-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        ${subGroups.map(sub => `
+            <div class="flex flex-col gap-4">
+
+                <div class="sub-cat-badge w-fit">
+                    <div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                    ${sub}
                 </div>
-            `;
-            document.getElementById('viewArea').innerHTML = html;
+
+                <div class="flex flex-col gap-5">
+
+                    ${assets.filter(a => (a.sub_category || 'GENERAL') === sub).map(item => `
+
+                        <div class="asset-card flex flex-col group shadow-sm border-gray-100">
+
+                            ${item.image_url ? `
+                                <div class="mb-6">
+
+                                    <!-- IMAGE -->
+                                    <img 
+                                        src="${item.image_url}" 
+                                        class="w-full aspect-video object-cover rounded-xl border border-gray-50 shadow-sm mb-3"
+                                        onerror="this.style.display='none'"
+                                    >
+
+                                    <!-- IMAGE ACTION -->
+                                    <div class="grid grid-cols-2 gap-2">
+
+                                        <!-- COPY URL -->
+                                        <button
+                                            onclick="copyToClip('${item.image_url}')"
+                                            class="bg-indigo-500 text-white py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition"
+                                        >
+                                            <i class="fa-solid fa-copy mr-1"></i>
+                                            Salin URL
+                                        </button>
+
+                                        <!-- DOWNLOAD -->
+                                        <button
+                                            onclick="downloadImage('${item.image_url}')"
+                                            class="bg-emerald-500 text-white py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition"
+                                        >
+                                            <i class="fa-solid fa-download mr-1"></i>
+                                            Download
+                                        </button>
+
+                                    </div>
+
+                                </div>
+                            ` : ''}
+
+                            <!-- TITLE -->
+                            <h6 class="font-bold text-gray-900 text-base leading-tight mb-4 uppercase tracking-tight">
+                                ${item.title}
+                            </h6>
+
+                            <!-- CONTENT -->
+                            <div class="bg-gray-50 border border-gray-100 rounded-xl p-5 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line font-medium max-h-48 overflow-y-auto no-scrollbar">
+                                ${item.content}
+                            </div>
+
+                            <!-- ACTION -->
+                            <div class="flex gap-2">
+
+                                <!-- COPY TEXT -->
+                                <button 
+                                    type="button"
+                                    onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)"
+                                    class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95"
+                                >
+                                    Salin Teks
+                                </button>
+
+                                <!-- HTML PREVIEW -->
+                                ${item.content.includes('<') ? `
+                                    <button 
+                                        type="button"
+                                        onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)"
+                                        class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all"
+                                    >
+                                        <i class="fa-solid fa-eye text-xs"></i>
+                                    </button>
+                                ` : ''}
+
+                            </div>
+
+                        </div>
+
+                    `).join('')}
+
+                </div>
+            </div>
+        `).join('')}
+    </div>
+`;
+
+document.getElementById('viewArea').innerHTML = html;
         }
 
         // --- STREAMING_CHUNK:Rendering sidebar dan elemen UI inti... ---
@@ -869,10 +955,76 @@
         }
 
         // --- STREAMING_CHUNK:Menyelesaikan fungsi pembantu dan inisialisasi... ---
-        function showToast(msg) { document.getElementById('toastMsg').innerText = msg; const t = document.getElementById('toast'); t.style.opacity = '1'; t.style.pointerEvents = 'auto'; setTimeout(() => { t.style.opacity = '0'; t.style.pointerEvents = 'none'; }, 3000); }
-        function copyToClip(text) { const el = document.createElement('textarea'); el.value = text; el.setAttribute('readonly', ''); el.style.position = 'absolute'; el.style.left = '-9999px'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); showToast("Disalin ke clipboard!"); }
-        function previewHtml(code) { document.getElementById('previewFrame').srcdoc = code; document.getElementById('htmlPreview').classList.remove('hidden'); }
-        function closePreview() { document.getElementById('htmlPreview').classList.add('hidden'); }
+
+function showToast(msg) {
+
+    document.getElementById('toastMsg').innerText = msg;
+
+    const t = document.getElementById('toast');
+
+    t.style.opacity = '1';
+    t.style.pointerEvents = 'auto';
+
+    setTimeout(() => {
+        t.style.opacity = '0';
+        t.style.pointerEvents = 'none';
+    }, 3000);
+}
+
+function copyToClip(text) {
+
+    const el = document.createElement('textarea');
+
+    el.value = text;
+
+    el.setAttribute('readonly', '');
+
+    el.style.position = 'absolute';
+
+    el.style.left = '-9999px';
+
+    document.body.appendChild(el);
+
+    el.select();
+
+    document.execCommand('copy');
+
+    document.body.removeChild(el);
+
+    showToast("Disalin ke clipboard!");
+}
+
+/* DOWNLOAD IMAGE FIX */
+function downloadImage(url) {
+
+    const iframe = document.createElement('iframe');
+
+    iframe.style.display = 'none';
+
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    showToast("Download dimulai!");
+
+    setTimeout(() => {
+        iframe.remove();
+    }, 5000);
+}
+
+/* PREVIEW HTML */
+function previewHtml(code) {
+
+    document.getElementById('previewFrame').srcdoc = code;
+
+    document.getElementById('htmlPreview').classList.remove('hidden');
+}
+
+/* CLOSE PREVIEW */
+function closePreview() {
+
+    document.getElementById('htmlPreview').classList.add('hidden');
+}
         
         /**
          * FUNGSI PENCARIAN (DEACTIVATED)
