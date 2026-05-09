@@ -15,18 +15,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <style id="dynamicStyles">
-        /* Variabel Warna Utama - Dinamis berdasarkan Settings di Google Sheet */
         :root {
-            --brand-primary: #4F46E5;   /* Default Indigo */
-            --brand-secondary: #111827; /* Default Hitam */
+            --brand-primary: #4F46E5;
+            --brand-secondary: #111827;
         }
         
         body { 
             font-family: 'Poppins', sans-serif; 
             background-color: #F9FAFB; 
-            color: var(--brand-secondary) !important; 
+            color: var(--brand-secondary) !important;
             -webkit-font-smoothing: antialiased;
             transition: background-color 0.3s ease;
+        }
+
+        /* Paksa semua teks judul yang tadinya hitam pekat jadi warna brand_color_2 */
+        .text-gray-900, h1, h2, h3, h4, h5, h6 { 
+            color: var(--brand-secondary) !important; 
+        }
+
+        /* Support Teks Gradient */
+        .gradient-text {
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent !important;
+            display: inline-block;
         }
 
         /* OVERRIDE TAILWIND: Biar warna di Google Sheet mengalahkan warna default CSS */
@@ -422,34 +434,37 @@
         }
 
         function applySettings() {
-    const s = db.settings;
-    if(!s) return;
-    const brandName = cleanSetting(s.brand_name);
-    const brandLogo = cleanSetting(s.brand_logo_icon);
-    const color1 = cleanColor(s.brand_color_1);
-    const color2 = cleanColor(s.brand_color_2);
-    const ovText = cleanSetting(s.menu_overview_text);
-    const ovIcon = cleanSetting(s.menu_overview_icon);
-    const footer = cleanSetting(s.footer_text);
+            const s = db.settings;
+            if(!s) return;
+            const color1 = cleanColor(s.brand_color_1);
+            const color2 = cleanSetting(s.brand_color_2); // Ambil data mentah (bisa HEX atau Gradient)
+            const root = document.documentElement;
 
-    const root = document.documentElement;
-    if(color1) root.style.setProperty('--brand-primary', color1);
-    if(color2) root.style.setProperty('--brand-secondary', color2);
+            // Atur Warna Primary (Logo/Icon)
+            if(color1) root.style.setProperty('--brand-primary', color1);
 
-    document.title = brandName || "Asset OS";
-    document.getElementById('brandNameDisplay').innerText = brandName || "iMersDocs";
-    
-    const logoContainer = document.getElementById('brandLogoContainer');
-    if(logoContainer && color1) {
-        logoContainer.style.backgroundColor = color1; // Paksa warna background logo
-    }
-    document.getElementById('brandLogoContainer').innerHTML = getIconHTML(brandLogo, "w-6 h-6 text-white");
-    
-    document.getElementById('overviewTextDisplay').innerText = ovText || "Overview";
-    document.getElementById('overviewIconContainer').innerHTML = getIconHTML(ovIcon, "");
+            // Atur Warna Secondary (Teks/Judul)
+            const brandDisplay = document.getElementById('brandNameDisplay');
+            if (color2.includes('gradient')) {
+                root.style.setProperty('--brand-secondary', '#111827'); // Fallback hitam
+                brandDisplay.classList.add('gradient-text');
+                brandDisplay.style.backgroundImage = color2;
+            } else {
+                root.style.setProperty('--brand-secondary', color2 || '#111827');
+                brandDisplay.classList.remove('gradient-text');
+                brandDisplay.style.backgroundImage = 'none';
+            }
 
-    document.getElementById('footerDisplay').innerHTML = footer || "";
-}
+            // Update elemen lainnya
+            document.title = cleanSetting(s.brand_name) || "Asset OS";
+            brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
+            
+            const logoContainer = document.getElementById('brandLogoContainer');
+            if(logoContainer) logoContainer.style.backgroundColor = color1;
+            
+            document.getElementById('brandLogoContainer').innerHTML = getIconHTML(s.brand_logo_icon, "w-6 h-6 text-white");
+            document.getElementById('footerDisplay').innerHTML = cleanSetting(s.footer_text) || "";
+        }
 
         // --- TIERED NAVIGATION & GRID ENGINE ---
 
