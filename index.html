@@ -28,8 +28,8 @@
             transition: background-color 0.3s ease;
         }
 
-        /* OVERRIDE TAILWIND: Memaksa warna dari Google Sheet muncul */
-        .text-gray-900, h1, h2, h3, h4, h5, h6 { 
+        /* OVERRIDE TAILWIND: Memaksa warna dari Google Sheet muncul di judul & teks */
+        .text-gray-900, h1, h2, h3, h4, h5, h6, #headerTitle { 
             color: var(--brand-secondary) !important; 
         }
 
@@ -37,13 +37,14 @@
         .text-primary { color: var(--brand-primary) !important; }
         .bg-primary { background-color: var(--brand-primary) !important; }
 
-        /* Support Teks Gradient untuk Logo Brand */
+        /* Support Teks Gradient */
         .gradient-text {
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent !important;
             display: inline-block;
         }
+    </style>
 
         /* OVERRIDE TAILWIND: Biar warna di Google Sheet mengalahkan warna default CSS */
         .text-gray-900 { color: var(--brand-secondary) !important; }
@@ -440,36 +441,48 @@
         function applySettings() {
             const s = db.settings;
             if(!s) return;
-            const color1 = cleanColor(s.brand_color_1);
-            const color2 = cleanSetting(s.brand_color_2); // Ambil data mentah (bisa HEX atau Gradient)
-            const root = document.documentElement;
 
-            // Atur Warna Primary (Logo/Icon)
+            const color1 = cleanColor(s.brand_color_1);
+            const rawColor2 = cleanSetting(s.brand_color_2); // Teks mentah (bisa HTML/HEX/Gradient)
+            const root = document.documentElement;
+            const brandDisplay = document.getElementById('brandNameDisplay');
+
+            // 1. Set Warna Primary (Logo Kotak & Ikon Aktif)
             if(color1) root.style.setProperty('--brand-primary', color1);
 
-            // Atur Warna Secondary (Teks/Judul)
-            const brandDisplay = document.getElementById('brandNameDisplay');
-            if (color2.includes('gradient')) {
-                root.style.setProperty('--brand-secondary', '#111827'); // Fallback hitam
+            // 2. Logic Warna Secondary & Tampilan Nama Brand
+            if (rawColor2.includes('linear-gradient')) {
+                // Handle Gradient
+                root.style.setProperty('--brand-secondary', '#111827');
                 brandDisplay.classList.add('gradient-text');
-                brandDisplay.style.backgroundImage = color2;
-            } else {
-                root.style.setProperty('--brand-secondary', color2 || '#111827');
+                brandDisplay.style.backgroundImage = rawColor2;
+                brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
+            } else if (rawColor2.includes('<')) {
+                // Handle HTML (Membaca Reseller RIGHT lo)
+                // Coba ambil kode HEX warna dari style="..." di HTML lo
+                const hexMatch = rawColor2.match(/#[0-9A-Fa-f]{6}/);
+                const themeColor = hexMatch ? hexMatch[0] : '#111827';
+                
+                root.style.setProperty('--brand-secondary', themeColor);
                 brandDisplay.classList.remove('gradient-text');
                 brandDisplay.style.backgroundImage = 'none';
+                brandDisplay.innerHTML = rawColor2; // Tampilkan HTML asli dari Sheet
+            } else {
+                // Handle HEX Warna Biasa
+                root.style.setProperty('--brand-secondary', rawColor2 || '#111827');
+                brandDisplay.classList.remove('gradient-text');
+                brandDisplay.style.backgroundImage = 'none';
+                brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
             }
 
-            // Update elemen lainnya
+            // 3. Update Elemen Lainnya
             document.title = cleanSetting(s.brand_name) || "Asset OS";
-            brandDisplay.innerHTML = cleanSetting(s.brand_name) || "iMersDocs";
-            
             const logoContainer = document.getElementById('brandLogoContainer');
             if(logoContainer) logoContainer.style.backgroundColor = color1;
             
-            document.getElementById('brandLogoContainer').innerHTML = getIconHTML(s.brand_logo_icon, "w-6 h-6 text-white");
+            logoContainer.innerHTML = getIconHTML(s.brand_logo_icon, "w-6 h-6 text-white");
             document.getElementById('footerDisplay').innerHTML = cleanSetting(s.footer_text) || "";
         }
-
         // --- TIERED NAVIGATION & GRID ENGINE ---
 
         function renderHome() {
