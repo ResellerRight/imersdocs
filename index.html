@@ -1126,23 +1126,19 @@ function copyToClip(text) {
 
 /* DOWNLOAD IMAGE */
 
-async function downloadImage(url, filename = 'imersdocs-file') {
+function downloadImage(url, filename = 'imersdocs-file') {
 
     try {
 
         showToast("Menyiapkan download...");
 
-        const response = await fetch(url);
-
-        const blob = await response.blob();
-
-        const blobUrl = window.URL.createObjectURL(blob);
-
         const link = document.createElement('a');
 
-        link.href = blobUrl;
+        link.href = url;
 
-        link.download = filename;
+        link.setAttribute('download', filename);
+
+        link.style.display = 'none';
 
         document.body.appendChild(link);
 
@@ -1150,9 +1146,7 @@ async function downloadImage(url, filename = 'imersdocs-file') {
 
         document.body.removeChild(link);
 
-        window.URL.revokeObjectURL(blobUrl);
-
-        showToast("Download berhasil!");
+        showToast("Download dimulai!");
 
     }
 
@@ -1164,6 +1158,7 @@ async function downloadImage(url, filename = 'imersdocs-file') {
 
     }
 }
+        
 /* PREVIEW HTML */
 function previewHtml(code) {
 
