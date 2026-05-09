@@ -28,12 +28,16 @@
             transition: background-color 0.3s ease;
         }
 
-        /* Paksa semua teks judul yang tadinya hitam pekat jadi warna brand_color_2 */
+        /* OVERRIDE TAILWIND: Memaksa warna dari Google Sheet muncul */
         .text-gray-900, h1, h2, h3, h4, h5, h6 { 
             color: var(--brand-secondary) !important; 
         }
 
-        /* Support Teks Gradient */
+        /* Warna Ikon & Background Utama */
+        .text-primary { color: var(--brand-primary) !important; }
+        .bg-primary { background-color: var(--brand-primary) !important; }
+
+        /* Support Teks Gradient untuk Logo Brand */
         .gradient-text {
             background-clip: text;
             -webkit-background-clip: text;
