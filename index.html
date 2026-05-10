@@ -708,66 +708,45 @@
                                         </button>
 
                                         <!-- DOWNLOAD -->
-<button
-    onclick="downloadImage('${item.image_url}','${item.title}')"
-    class="bg-emerald-500 text-white py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition"
->
-    <i class="fa-solid fa-download mr-1"></i>
-    Download
-</button>
 
-                                    </div>
-
-                                </div>
-                            ` : ''}
-
-                            <!-- TITLE -->
-                            <h6 class="font-bold text-gray-900 text-base leading-tight mb-4 uppercase tracking-tight">
-                                ${item.title}
-                            </h6>
-
-                            <!-- CONTENT -->
-                            <div class="bg-gray-50 border border-gray-100 rounded-xl p-5 text-[11px] leading-relaxed text-gray-500 mb-8 flex-1 whitespace-pre-line font-medium max-h-48 overflow-y-auto no-scrollbar">
-                                ${item.content}
-                            </div>
-
-                            <!-- ACTION -->
-                            <div class="flex gap-2">
-
-                                <!-- COPY TEXT -->
-                                <button 
-                                    type="button"
-                                    onclick="copyToClip(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)"
-                                    class="flex-1 btn-black text-[10px] uppercase tracking-widest transition-transform active:scale-95"
-                                >
-                                    Salin Teks
-                                </button>
-
-                                <!-- HTML PREVIEW -->
-                                ${item.content.includes('<') ? `
-                                    <button 
-                                        type="button"
-                                        onclick="previewHtml(\`${item.content.replace(/`/g,'\\`').replace(/\$/g,'\\$')}\`)"
-                                        class="w-12 h-12 bg-white border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-primary transition-all"
-                                    >
-                                        <i class="fa-solid fa-eye text-xs"></i>
-                                    </button>
-                                ` : ''}
-
-                            </div>
-
-                        </div>
-
-                    `).join('')}
-
-                </div>
-            </div>
-        `).join('')}
-    </div>
-`;
-
-document.getElementById('viewArea').innerHTML = html;
-        }
+                                        async function downloadImage(url, filename = 'imersdocs-file') {
+    try {
+        // Kasih feedback ke user
+        showToast("Sedang Mengunduh...");
+        
+        // 1. Sedot data binernya (pasti tembus karena satu hosting)
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("File tidak ditemukan di server");
+        
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        // 2. Eksekusi download paksa
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        
+        // Ambil ekstensi asli dari URL (misal: .jpg atau .png)
+        const extension = url.split('.').pop().split(/\#|\?/)[0] || 'png';
+        link.download = `${filename}.${extension}`;
+        
+        document.body.appendChild(link);
+        link.click();
+        
+        // 3. Bersihkan memori
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+        
+        showToast("Download Berhasil!");
+    } catch(err) {
+        console.error("Gagal download:", err);
+        // Fallback kalau ada masalah jaringan tetap download cara biasa
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        showToast("Proses Mengunduh...");
+    }
+}
 
         // --- STREAMING_CHUNK:Rendering sidebar dan elemen UI inti... ---
         // --- CORE UI LOGIC ---
