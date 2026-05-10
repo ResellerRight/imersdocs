@@ -669,8 +669,9 @@
             const assets = db.assets.filter(a => a.product === prodName && a.category === catName);
             const subGroups = [...new Set(assets.map(a => a.sub_category || 'GENERAL'))];
 
+            // GRID UPDATED: Menyamakan responsivitas dengan halaman Home
             let html = `
-    <div class="animate-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+    <div class="animate-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 items-start">
         ${subGroups.map(sub => `
             <div class="flex flex-col gap-4">
 
@@ -707,14 +708,14 @@
                                             Salin URL
                                         </button>
 
-                                        <!-- DOWNLOAD -->
-<button
-    onclick="downloadImage('${item.image_url}','${item.title}')"
-    class="bg-emerald-500 text-white py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition"
->
-    <i class="fa-solid fa-download mr-1"></i>
-    Download
-</button>
+                                        <!-- DOWNLOAD BUTTON UPDATED -->
+                                        <button
+                                            onclick="downloadImage('${item.image_url}','${item.title}')"
+                                            class="bg-emerald-500 text-white py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition"
+                                        >
+                                            <i class="fa-solid fa-download mr-1"></i>
+                                            Download
+                                        </button>
 
                                     </div>
 
@@ -769,7 +770,6 @@
 document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- STREAMING_CHUNK:Rendering sidebar dan elemen UI inti... ---
         // --- CORE UI LOGIC ---
 
         function renderSidebar() {
@@ -787,12 +787,12 @@ document.getElementById('viewArea').innerHTML = html;
                 html += `<div class="alphabet-label">${letter}</div>`;
                 grouped[letter].forEach(p => {
                     html += `
-                        <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
-                            <span class="mr-3 w-4 flex justify-center opacity-50" style="color: ${cleanColor(p.color) || 'var(--brand-primary)'}">
-                                ${getIconHTML(p.icon)}
-                            </span> 
-                            ${p.name}
-                        </div>`;
+                    <div onclick="openVault('${p.name}')" class="sidebar-link" id="side-${p.name}">
+                        <span class="mr-3 w-4 flex justify-center opacity-50" style="color: ${cleanColor(p.color) || 'var(--brand-primary)'}">
+                            ${getIconHTML(p.icon)}
+                        </span> 
+                        ${p.name}
+                    </div>`;
                 });
             });
             document.getElementById('sidebarProductList').innerHTML = html;
@@ -836,7 +836,6 @@ document.getElementById('viewArea').innerHTML = html;
             else { activeView = view; renderByView(); }
         }
 
-        // --- STREAMING_CHUNK:Mengimplementasikan fungsi Admin Console... ---
         function renderAdminAssets() {
             updateNav('navAsset'); 
             document.getElementById('headerTitle').innerText = "Editor Konten"; 
@@ -908,7 +907,6 @@ document.getElementById('viewArea').innerHTML = html;
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- STREAMING_CHUNK:Menambahkan fungsi Manajemen Produk asli lo... ---
         function renderAdminProducts() {
             updateNav('navProduct'); 
             document.getElementById('headerTitle').innerText = "Manajemen Produk"; 
@@ -970,8 +968,7 @@ document.getElementById('viewArea').innerHTML = html;
             document.getElementById('viewArea').innerHTML = html;
         }
 
-        // --- STREAMING_CHUNK:Mengimplementasikan utilitas CRUD asli... ---
-        // --- UTILS (No Delete) ---
+        // --- UTILS ---
 
         async function handleAssetSubmit(e) {
             e.preventDefault(); 
@@ -1036,20 +1033,14 @@ document.getElementById('viewArea').innerHTML = html;
         async function deleteAsset(id) { if(confirm('Hapus aset ini secara permanen?')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_ASSET', password:adminPass, id})}); await fetchDB(); showToast("Aset dihapus."); } }
         async function deleteProduct(id) { if(confirm('Hapus produk? Data aset tidak akan hilang.')) { await fetch(API_URL, {method:'POST', body: JSON.stringify({action:'DELETE_PRODUCT', password:adminPass, id})}); await fetchDB(); showToast("Produk dihapus."); } }
         
-        /**
-         * FIXED editAsset: Memanggil renderAdminAssets() TERLEBIH DAHULU agar form ada di DOM, 
-         * baru mengisi value ke elemen DOM tersebut.
-         */
         function editAsset(id) { 
             if(!adminPass) { document.getElementById('adminAuth').classList.remove('hidden'); return; }
             const a = db.assets.find(item => item.id == id); 
             if(!a) return;
             
-            // Step 1: Render View Admin (Ini akan menghapus area konten lama dan menggambar Form baru)
             activeView = 'asset';
             renderAdminAssets(); 
             
-            // Step 2: Baru masukkan data ke elemen yang baru saja dibuat
             document.getElementById('assetId').value = a.id; 
             document.getElementById('fAssetProduct').value = a.product; 
             document.getElementById('fAssetCat').value = a.category; 
@@ -1059,13 +1050,9 @@ document.getElementById('viewArea').innerHTML = html;
             document.getElementById('fAssetContent').value = a.content; 
             document.getElementById('assetBtn').innerHTML = '<i class="fa-solid fa-save"></i> Update Asset';
             
-            // Scroll ke atas agar admin bisa melihat Form
             document.querySelector('.content-area').scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        /**
-         * FIXED editProduct: Sama seperti editAsset, panggil render form dulu.
-         */
         function editProduct(id) { 
             if(!adminPass) { document.getElementById('adminAuth').classList.remove('hidden'); return; }
             const p = db.products.find(item => item.id == id); 
@@ -1084,17 +1071,11 @@ document.getElementById('viewArea').innerHTML = html;
             document.querySelector('.content-area').scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- STREAMING_CHUNK:Menyelesaikan fungsi pembantu dan inisialisasi... ---
-
 function showToast(msg) {
-
     document.getElementById('toastMsg').innerText = msg;
-
     const t = document.getElementById('toast');
-
     t.style.opacity = '1';
     t.style.pointerEvents = 'auto';
-
     setTimeout(() => {
         t.style.opacity = '0';
         t.style.pointerEvents = 'none';
@@ -1102,84 +1083,77 @@ function showToast(msg) {
 }
 
 function copyToClip(text) {
-
     const el = document.createElement('textarea');
-
     el.value = text;
-
     el.setAttribute('readonly', '');
-
     el.style.position = 'absolute';
-
     el.style.left = '-9999px';
-
     document.body.appendChild(el);
-
     el.select();
-
     document.execCommand('copy');
-
     document.body.removeChild(el);
-
     showToast("Disalin ke clipboard!");
 }
 
-/* DOWNLOAD IMAGE */
-
-function downloadImage(url, filename = 'imersdocs-file') {
-
+/**
+ * 🛡️ FUNGSI DOWNLOAD SAKTI (ANTI-OPEN WINDOW)
+ * Sudah diperbaiki untuk mendukung URL hosting sendiri dengan Blob Fetching
+ */
+async function downloadImage(url, filename = 'imersdocs-file') {
+    if (!url) return showToast("URL tidak tersedia!");
+    
     try {
-
-        showToast("Menyiapkan download...");
-
+        showToast("Sedang Mengunduh...");
+        
+        // 1. Ambil data biner gambar (Force Fetch)
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'cors', // Penting untuk download cross-origin
+            cache: 'no-cache'
+        });
+        
+        if (!response.ok) throw new Error("Gagal mengambil file dari server.");
+        
+        const blob = await response.blob();
+        const blobUrl = window.URL.createObjectURL(blob);
+        
+        // 2. Triger download via link hantu dengan Object URL
         const link = document.createElement('a');
-
-        link.href = url;
-
-        link.setAttribute('download', filename);
-
-        link.style.display = 'none';
-
+        link.href = blobUrl;
+        
+        // Deteksi extension dari URL asli agar file tidak rusak
+        const extension = url.split('.').pop().split(/\#|\?/)[0] || 'png';
+        link.download = `${filename}.${extension}`;
+        
         document.body.appendChild(link);
-
         link.click();
-
+        
+        // 3. Bersihkan memori browser
         document.body.removeChild(link);
-
-        showToast("Download dimulai!");
-
-    }
-
-    catch(err){
-
-        console.error(err);
-
-        showToast("Gagal download!");
-
+        window.URL.revokeObjectURL(blobUrl);
+        
+        showToast("Download Berhasil!");
+    } catch(err) {
+        console.error("Download Error Detail:", err);
+        // Fallback terakhir: jika fetch gagal total (misal CORS hosting sangat ketat), baru buka tab
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        link.target = "_blank";
+        link.click();
+        showToast("Proses mengunduh...");
     }
 }
-        
-/* PREVIEW HTML */
+
 function previewHtml(code) {
-
     document.getElementById('previewFrame').srcdoc = code;
-
     document.getElementById('htmlPreview').classList.remove('hidden');
 }
-/* CLOSE PREVIEW */
-function closePreview() {
 
+function closePreview() {
     document.getElementById('htmlPreview').classList.add('hidden');
 }
         
-        /**
-         * FUNGSI PENCARIAN (DEACTIVATED)
-         * Kami menonaktifkan fitur ini agar tidak terjadi bug blank screen 'adminall'
-         */
-        function doSearch() {
-            return;
-        }
-
         function renderByView() {
             if(activeView === 'home') renderHome();
             else if(activeView === 'categories') openVault(currentSilo);
